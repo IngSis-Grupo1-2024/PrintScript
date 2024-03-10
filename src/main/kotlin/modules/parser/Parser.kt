@@ -21,9 +21,13 @@ class Parser : ParserInterface {
         val compareTokens = typeComparator.compare(token.type, rootToken.type)
         if (rootIsBigger(compareTokens)) {
             if (ast.isLeaf()) return AST(rootToken, getLeaf(token), null)
+            // lo que podes hacer es chequear con los hijos
+            // sabes que si hay un identifier, un type o un const (o value) esos si o si
+            // tienen que ser hoja, por lo que si se encuentran con otro, lo mandas como hermano
             if (rootToken.type == TokenType.ASSIGNATION) return addInEmptyLeaf(token, ast)
             if (ast.left != null) return AST(rootToken, add(token, ast.left!!), ast.right)
         } else if (compareTokens == 1) return AST(token, ast, null)
+        // en caso de que compareTokens == 0, tenes que comparar los valores
         return getLeaf(token)
     }
 

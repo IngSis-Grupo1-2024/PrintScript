@@ -22,7 +22,7 @@ class ParserDeclaration {
                     AST(Token(position, "", TokenType.LET_KEYWORD),
                         AST(Token(position, ":", TokenType.ASSIGNATION),
                             AST(Token(position, "x", TokenType.IDENTIFIER), null, null),
-                            AST(Token(position, "x", TokenType.STRING_TYPE), null, null)),
+                            AST(Token(position, "", TokenType.STRING_TYPE), null, null)),
                     null),
                 null)
         println(parser.parse(tokens))
