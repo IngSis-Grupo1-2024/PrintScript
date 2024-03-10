@@ -6,49 +6,196 @@ import components.TokenType
 
 class Lexer(override val position: Position) : LexerInterface {
 
+
     override fun tokenize(input: String): List<Token> {
-        val splitString = input.split(" ", ":")
         val tokenList = ArrayList<Token>()
-        for (i in splitString){
-//            if (i.contains('"')) {
-//                count += 1
-//                val string = i.replace('"', "")
-//                tokenList.add(Token(position, string, TokenType.STRING_TYPE))
-//            }
-            when (i) {
-                "let" -> tokenList.add(Token(position, "", TokenType.LET_KEYWORD))
-                "=" -> tokenList.add(Token(position, "", TokenType.ASSIGNATION))
-                "string" -> tokenList.add(Token(position, "", TokenType.STRING_TYPE))
-                "number" -> tokenList.add(Token(position, "", TokenType.NUMBER_TYPE))
-                "+" -> tokenList.add(Token(position, "+", TokenType.OPERATOR))
-                "-" -> tokenList.add(Token(position, "-", TokenType.OPERATOR))
-                "*" -> tokenList.add(Token(position, "*", TokenType.OPERATOR))
-                "/" -> tokenList.add(Token(position, "/", TokenType.OPERATOR))
-                "(" -> tokenList.add(Token(position, "(", TokenType.PARENTHESIS))
-                ")" -> tokenList.add(Token(position, ")", TokenType.PARENTHESIS))
-                "println" -> tokenList.add(Token(position, "println", TokenType.FUNCTION_KEYWORD))
-                ";" -> tokenList.add(Token(position, ";", TokenType.SEMICOLON))
-                else -> {
-                    if (i.contains("//")) {
-                        tokenList.add(Token(position, i, TokenType.COMMENT))
-                    } else {
-                        tokenList.add(Token(position, i, TokenType.IDENTIFIER))
+        var isInsideString = false
+        val currentString = StringBuilder()
+
+        var currentOffset = position.startOffset
+
+        for (char in input) {
+
+            currentOffset++
+
+            when (char) {
+                '"' -> {
+                    isInsideString = !isInsideString
+                    currentString.append(char)
+                    if (!isInsideString) {
+                        tokenList.add(Token(position.copy(endOffset = currentOffset + currentString.length), currentString.toString(), TokenType.VALUE))
+                        currentString.clear()
                     }
+                }
+
+                '+' -> {
+                    when (isInsideString) {
+                        true -> {
+                            currentString.append(char)
+                        }
+
+                        false -> {
+                            tokenList.add(Token(position.copy(endOffset = currentOffset), "+", TokenType.OPERATOR))
+                        }
+                    }
+                }
+
+                '-' -> {
+                    when (isInsideString) {
+                        true -> {
+                            currentString.append(char)
+                        }
+
+                        false -> {
+                            tokenList.add(Token(position.copy(endOffset = currentOffset), "-", TokenType.OPERATOR))
+                        }
+                    }
+                }
+
+                '*' -> {
+                    when (isInsideString) {
+                        true -> {
+                            currentString.append(char)
+                        }
+
+                        false -> {
+                            tokenList.add(Token(position.copy(endOffset = currentOffset), "*", TokenType.OPERATOR))
+                        }
+                    }
+                }
+
+                '/' -> {
+                    when (isInsideString) {
+                        true -> {
+                            currentString.append(char)
+                        }
+
+                        false -> {
+                            tokenList.add(Token(position.copy(endOffset = currentOffset), "/", TokenType.OPERATOR))
+                        }
+                    }
+                }
+
+                '(' -> {
+                    when (isInsideString) {
+                        true -> {
+                            currentString.append(char)
+                        }
+
+                        false -> {
+                            tokenList.add(Token(position.copy(endOffset = currentOffset), "(", TokenType.OPERATOR))
+                        }
+                    }
+                }
+
+                ')' -> {
+                    when (isInsideString) {
+                        true -> {
+                            currentString.append(char)
+                        }
+
+                        false -> {
+                            tokenList.add(Token(position.copy(endOffset = currentOffset), ")", TokenType.OPERATOR))
+                        }
+                    }
+                }
+
+                ';' -> {
+                    when (isInsideString) {
+                        true -> {
+                            currentString.append(char)
+                        }
+
+                        false -> {
+                            if (currentString.isNotEmpty()) {
+                                tokenList.add(
+                                    Token(
+                                        position.copy(endOffset = currentOffset + currentString.length),
+                                        currentString.toString(),
+                                        TokenType.VALUE
+                                    )
+                                )
+                            }
+                            tokenList.add(Token(position.copy(startOffset = currentOffset, endOffset = currentOffset), ";", TokenType.SEMICOLON))
+                        }
+                    }
+                }
+
+                ':' -> {
+                    when (isInsideString) {
+                        true -> {
+                            currentString.append(char)
+                        }
+
+                        false -> {
+                            if (currentString.isNotEmpty()) {
+                                tokenList.add(
+                                    Token(
+                                        position.copy(endOffset = currentOffset + currentString.length),
+                                        currentString.toString(),
+                                        TokenType.IDENTIFIER
+                                    )
+                                )
+                            }
+                            tokenList.add(Token(position.copy(endOffset = currentOffset), ":", TokenType.ASSIGNATION))
+                            currentString.clear()
+                        }
+                    }
+                }
+
+                '=' -> {
+                    when (isInsideString) {
+                        true -> {
+                            currentString.append(char)
+                        }
+
+                        false -> {
+                            tokenList.add(Token(position.copy(endOffset = currentOffset), "=", TokenType.ASSIGNATION))
+                        }
+                    }
+                }
+
+                ' ' -> {
+                    when (isInsideString) {
+                        true -> {
+                            currentString.append(char)
+                        }
+
+                        false -> {
+                            when (currentString.toString()) {
+                                "let" -> tokenList.add(Token(position.copy(endOffset = currentOffset + 3), "let", TokenType.KEYWORD))
+                                "string" -> tokenList.add(Token(position.copy(endOffset = currentOffset + 6), "string", TokenType.TYPE))
+                                "number" -> tokenList.add(Token(position.copy(endOffset = currentOffset + 6), "number", TokenType.TYPE))
+                                "println" -> tokenList.add(Token(position.copy(endOffset = currentOffset + 7), "println", TokenType.KEYWORD))
+                                else ->
+                                    if (currentString.isNotEmpty()) tokenList.add(
+                                        Token(
+                                            position.copy(endOffset = currentOffset + currentString.length),
+                                            currentString.toString(),
+                                            TokenType.IDENTIFIER
+                                        )
+                                    )
+                            }
+                            currentString.clear()
+
+                        }
+                    }
+                }
+
+                else -> {
+                    currentString.append(char)
                 }
             }
         }
+
         return tokenList
     }
 
-    override fun tokenize(input: String, start: Int, end: Int): List<Token> {
+    override fun tokenize(input: String, line: Int, column: Int): List<Token> {
         TODO("Not yet implemented")
     }
 
-    override fun tokenize(input: String, start: Int, end: Int, line: Int, column: Int): List<Token> {
-        TODO("Not yet implemented")
-    }
-
-    override fun tokenize(input: String, start: Int, end: Int, line: Int, column: Int, offset: Int): List<Token> {
+    override fun tokenize(input: String, line: Int, column: Int, offset: Int): List<Token> {
         TODO("Not yet implemented")
     }
 
