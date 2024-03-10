@@ -1,17 +1,12 @@
 package components
 
-interface AST {
+class AST(override val token: Token, override val left: ASTInterface?, override val right: ASTInterface?) : ASTInterface {
 
-    val token: Token
-    val left: AST?
-    val right: AST?
+    override fun isLeaf(): Boolean {
+        return left == null && right == null
+    }
 
-    fun getToken(): Token
-
-    fun getLeft(): AST?
-
-    fun getRight(): AST?
-
-    fun put(token: Token, left: AST?, right: AST?)
-
+    override fun toString(): String {
+        return "{\n\ttoken: $token,\n\tleft: $left,\n\tright: $right\n}"
+    }
 }
