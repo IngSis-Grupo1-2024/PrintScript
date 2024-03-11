@@ -8,4 +8,6 @@ interface ASTInterface {
     val right: ASTInterface?
 
     fun isLeaf() : Boolean
+
+    fun addChildren(ast: ASTInterface): ASTInterface
 }
