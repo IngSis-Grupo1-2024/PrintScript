@@ -1,6 +1,8 @@
 package modules.parser
 
 import components.*
+import components.ast.AST
+import components.ast.ASTInterface
 
 class Parser : ParserInterface {
     private val typeComparator = ComparatorTokenType()
@@ -13,20 +15,20 @@ class Parser : ParserInterface {
     }
 
     private fun getLeaf(token: Token): ASTInterface {
-        return AST(token, null, null)
+        return AST(token)
     }
 
     private fun add(token: Token, ast: ASTInterface): ASTInterface {
         val rootToken: Token = ast.token
         val compareTokens = typeComparator.compare(token.type, rootToken.type)
         if (rootIsBigger(compareTokens)) {
-            if (ast.isLeaf()) return AST(rootToken, getLeaf(token), null)
+            if (ast.isLeaf()) return AST(rootToken, getLeaf(token))
             // lo que podes hacer es chequear con los hijos
             // sabes que si hay un identifier, un type o un const (o value) esos si o si
             // tienen que ser hoja, por lo que si se encuentran con otro, lo mandas como hermano
             if (rootToken.type == TokenType.ASSIGNATION) return addInEmptyLeaf(token, ast)
             if (ast.left != null) return AST(rootToken, add(token, ast.left!!), ast.right)
-        } else if (compareTokens == 1) return AST(token, ast, null)
+        } else if (compareTokens == 1) return AST(token, ast)
         // en caso de que compareTokens == 0, tenes que comparar los valores
         return getLeaf(token)
     }

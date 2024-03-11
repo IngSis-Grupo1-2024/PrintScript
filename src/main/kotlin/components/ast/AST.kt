@@ -2,19 +2,12 @@ package components.ast
 
 import components.Token
 
-class AST(val token: Token, val left: ASTInterface?, val right: ASTInterface?) : ASTInterface {
+class AST(override val token: Token, override val left: ASTInterface?, override val right: ASTInterface?) : ASTInterface {
+    constructor(token: Token, left: ASTInterface) : this(token, left, null)
 
-    fun constructor(token: Token): AST {
-        return AST(token, null, null)
-    }
+    constructor(token: Token): this(token, null, null)
 
-    fun constructor(token: Token, left: AST): AST {
-        return AST(token, left, null)
-    }
 
-    fun constructor(token: Token, left: AST, right: AST): AST {
-        return AST(token, left, right)
-    }
     override fun isLeaf(): Boolean {
         return left == null && right == null
     }

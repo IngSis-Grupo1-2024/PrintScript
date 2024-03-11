@@ -13,9 +13,7 @@ class ComparatorTokenType : Comparator<TokenType> {
             TokenType.SEMICOLON -> 1
             TokenType.KEYWORD -> checkSemicolon(o2)
             TokenType.ASSIGNATION -> checkSemicolonAndLet(o2)
-            TokenType.TYPE -> checkLeaf(o2)
-            TokenType.VALUE -> checkLeaf(o2)
-            TokenType.IDENTIFIER -> checkLeaf(o2)
+            in leafTypes -> checkLeaf(o2)
             else -> -1
         }
     }
