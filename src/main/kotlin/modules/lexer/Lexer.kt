@@ -5,26 +5,25 @@ import components.Token
 import components.TokenType
 
 class Lexer(override val position: Position) : LexerInterface {
-
-
     override fun tokenize(input: String): List<Token> {
         val tokenList = ArrayList<Token>()
         var isInsideString = false
         val currentString = StringBuilder()
 
-        var currentOffset = position.startOffset
+        var currentPosition = position.copy()
 
         for (char in input) {
 
-            currentOffset++
+            currentString.append(char)
 
             when (char) {
                 '"' -> {
                     isInsideString = !isInsideString
-                    currentString.append(char)
                     if (!isInsideString) {
-                        tokenList.add(Token(position.copy(endOffset = currentOffset + currentString.length), currentString.toString(), TokenType.VALUE))
-                        currentString.clear()
+                        currentPosition = currentPosition.copy(
+                            endOffset = currentPosition.endOffset + 2,
+                            endColumn = currentPosition.endColumn + 2
+                        )
                     }
                 }
 
@@ -35,7 +34,11 @@ class Lexer(override val position: Position) : LexerInterface {
                         }
 
                         false -> {
-                            tokenList.add(Token(position.copy(endOffset = currentOffset), "+", TokenType.OPERATOR))
+                            tokenList.add(Token(currentPosition, "+", TokenType.OPERATOR))
+                            currentPosition = currentPosition.copy(
+                                startOffset = currentPosition.endOffset + 1,
+                                startColumn = currentPosition.endColumn + 1
+                            )
                         }
                     }
                 }
@@ -47,7 +50,11 @@ class Lexer(override val position: Position) : LexerInterface {
                         }
 
                         false -> {
-                            tokenList.add(Token(position.copy(endOffset = currentOffset), "-", TokenType.OPERATOR))
+                            tokenList.add(Token(currentPosition, "-", TokenType.OPERATOR))
+                            currentPosition = currentPosition.copy(
+                                startOffset = currentPosition.endOffset + 1,
+                                startColumn = currentPosition.endColumn + 1
+                            )
                         }
                     }
                 }
@@ -59,7 +66,11 @@ class Lexer(override val position: Position) : LexerInterface {
                         }
 
                         false -> {
-                            tokenList.add(Token(position.copy(endOffset = currentOffset), "*", TokenType.OPERATOR))
+                            tokenList.add(Token(currentPosition, "*", TokenType.OPERATOR))
+                            currentPosition = currentPosition.copy(
+                                startOffset = currentPosition.endOffset + 1,
+                                startColumn = currentPosition.endColumn + 1
+                            )
                         }
                     }
                 }
@@ -71,7 +82,11 @@ class Lexer(override val position: Position) : LexerInterface {
                         }
 
                         false -> {
-                            tokenList.add(Token(position.copy(endOffset = currentOffset), "/", TokenType.OPERATOR))
+                            tokenList.add(Token(currentPosition, "/", TokenType.OPERATOR))
+                            currentPosition = currentPosition.copy(
+                                startOffset = currentPosition.endOffset + 1,
+                                startColumn = currentPosition.endColumn + 1
+                            )
                         }
                     }
                 }
@@ -83,7 +98,11 @@ class Lexer(override val position: Position) : LexerInterface {
                         }
 
                         false -> {
-                            tokenList.add(Token(position.copy(endOffset = currentOffset), "(", TokenType.OPERATOR))
+                            tokenList.add(Token(currentPosition, "(", TokenType.OPERATOR))
+                            currentPosition = currentPosition.copy(
+                                startOffset = currentPosition.endOffset + 1,
+                                startColumn = currentPosition.endColumn + 1
+                            )
                         }
                     }
                 }
@@ -95,7 +114,11 @@ class Lexer(override val position: Position) : LexerInterface {
                         }
 
                         false -> {
-                            tokenList.add(Token(position.copy(endOffset = currentOffset), ")", TokenType.OPERATOR))
+                            tokenList.add(Token(currentPosition, ")", TokenType.OPERATOR))
+                            currentPosition = currentPosition.copy(
+                                startOffset = currentPosition.endOffset + 1,
+                                startColumn = currentPosition.endColumn + 1
+                            )
                         }
                     }
                 }
@@ -107,16 +130,38 @@ class Lexer(override val position: Position) : LexerInterface {
                         }
 
                         false -> {
-                            if (currentString.isNotEmpty()) {
-                                tokenList.add(
-                                    Token(
-                                        position.copy(endOffset = currentOffset + currentString.length),
-                                        currentString.toString(),
-                                        TokenType.VALUE
-                                    )
+                            tokenList.add(
+                                Token(
+                                    currentPosition.copy(
+                                        endOffset = currentPosition.startOffset + currentString.length - 2,
+                                        endColumn = currentPosition.startColumn + currentString.length - 2
+                                    ),
+                                    currentString.deleteAt(currentString.length - 1).toString(),
+                                    TokenType.VALUE
                                 )
-                            }
-                            tokenList.add(Token(position.copy(startOffset = currentOffset, endOffset = currentOffset), ";", TokenType.SEMICOLON))
+                            )
+
+                            currentPosition = currentPosition.copy(
+                                startOffset = currentPosition.endOffset,
+                                startColumn = currentPosition.endColumn
+                            )
+
+                            tokenList.add(
+                                Token(
+                                    currentPosition,
+                                    ";",
+                                    TokenType.SEMICOLON
+                                )
+                            )
+
+                            currentPosition = Position(
+                                currentPosition.startOffset,
+                                currentPosition.endOffset,
+                                currentPosition.startLine + 1,
+                                currentPosition.endLine + 1,
+                                1,
+                                1
+                            )
                         }
                     }
                 }
@@ -129,15 +174,34 @@ class Lexer(override val position: Position) : LexerInterface {
 
                         false -> {
                             if (currentString.isNotEmpty()) {
+                                currentString.deleteAt(currentString.length - 1)
                                 tokenList.add(
                                     Token(
-                                        position.copy(endOffset = currentOffset + currentString.length),
+                                        currentPosition.copy(
+                                            endOffset = currentPosition.endOffset - 1,
+                                            endColumn = currentPosition.endColumn - 1
+                                        ),
                                         currentString.toString(),
                                         TokenType.IDENTIFIER
                                     )
                                 )
                             }
-                            tokenList.add(Token(position.copy(endOffset = currentOffset), ":", TokenType.ASSIGNATION))
+                            tokenList.add(
+                                Token(
+                                    currentPosition.copy(
+                                        startOffset = currentPosition.startOffset + currentString.length,
+                                        startColumn = currentPosition.startColumn + currentString.length
+                                    ),
+                                    ":",
+                                    TokenType.ASSIGNATION
+                                )
+                            )
+                            currentPosition = currentPosition.copy(
+                                startOffset = currentPosition.endOffset + 1,
+                                endOffset = currentPosition.endOffset + 1,
+                                startColumn = currentPosition.endColumn + 1,
+                                endColumn = currentPosition.endColumn + 1
+                            )
                             currentString.clear()
                         }
                     }
@@ -150,7 +214,14 @@ class Lexer(override val position: Position) : LexerInterface {
                         }
 
                         false -> {
-                            tokenList.add(Token(position.copy(endOffset = currentOffset), "=", TokenType.ASSIGNATION))
+                            tokenList.add(Token(currentPosition, "=", TokenType.ASSIGNATION))
+                            currentPosition = currentPosition.copy(
+                                startOffset = currentPosition.endOffset + 1,
+                                endOffset = currentPosition.endOffset + 1,
+                                startColumn = currentPosition.endColumn + 1,
+                                endColumn = currentPosition.endColumn + 1
+                            )
+                            currentString.clear()
                         }
                     }
                 }
@@ -162,28 +233,84 @@ class Lexer(override val position: Position) : LexerInterface {
                         }
 
                         false -> {
-                            when (currentString.toString()) {
-                                "let" -> tokenList.add(Token(position.copy(endOffset = currentOffset + 3), "let", TokenType.KEYWORD))
-                                "string" -> tokenList.add(Token(position.copy(endOffset = currentOffset + 6), "string", TokenType.TYPE))
-                                "number" -> tokenList.add(Token(position.copy(endOffset = currentOffset + 6), "number", TokenType.TYPE))
-                                "println" -> tokenList.add(Token(position.copy(endOffset = currentOffset + 7), "println", TokenType.KEYWORD))
-                                else ->
-                                    if (currentString.isNotEmpty()) tokenList.add(
-                                        Token(
-                                            position.copy(endOffset = currentOffset + currentString.length),
-                                            currentString.toString(),
-                                            TokenType.IDENTIFIER
-                                        )
-                                    )
-                            }
+                            currentPosition = currentPosition.copy(
+                                startOffset = currentPosition.endOffset + 1,
+                                endOffset = currentPosition.endOffset + 1,
+                                startColumn = currentPosition.endColumn + 1,
+                                endColumn = currentPosition.endColumn + 1
+                            )
                             currentString.clear()
-
                         }
                     }
                 }
 
                 else -> {
-                    currentString.append(char)
+                    when (currentString.toString()) {
+                        "let" -> {
+                            tokenList.add(
+                                Token(
+                                    currentPosition.copy(endOffset = currentPosition.endOffset),
+                                    "let",
+                                    TokenType.KEYWORD
+                                )
+
+                            )
+                            currentPosition = currentPosition.copy(
+                                startOffset = currentPosition.endOffset + 1,
+                                startColumn = currentPosition.endColumn + 1
+                            )
+                            currentString.clear()
+                        }
+
+                        "string" -> {
+                            tokenList.add(
+                                Token(
+                                    currentPosition.copy(endOffset = currentPosition.endOffset),
+                                    "string",
+                                    TokenType.TYPE
+                                )
+                            )
+                            currentPosition = currentPosition.copy(
+                                startOffset = currentPosition.endOffset + 1,
+                                startColumn = currentPosition.endColumn + 1
+                            )
+                            currentString.clear()
+                        }
+
+                        "number" -> {
+                            tokenList.add(
+                                Token(
+                                    currentPosition.copy(endOffset = currentPosition.endOffset),
+                                    "number",
+                                    TokenType.TYPE
+                                )
+                            )
+                            currentPosition = currentPosition.copy(
+                                startOffset = currentPosition.endOffset + 1,
+                                startColumn = currentPosition.endColumn + 1
+                            )
+                            currentString.clear()
+                        }
+
+                        "println" -> {
+                            tokenList.add(
+                                Token(
+                                    currentPosition.copy(endOffset = currentPosition.endOffset),
+                                    "println",
+                                    TokenType.KEYWORD
+                                )
+                            )
+                            currentPosition = currentPosition.copy(
+                                startOffset = currentPosition.endOffset + 1,
+                                startColumn = currentPosition.endColumn + 1
+                            )
+                            currentString.clear()
+                        }
+                    }
+                    currentPosition = currentPosition.copy(
+                        endOffset = currentPosition.endOffset + 1,
+                        endColumn = currentPosition.endColumn + 1
+                    )
                 }
             }
         }
@@ -198,5 +325,4 @@ class Lexer(override val position: Position) : LexerInterface {
     override fun tokenize(input: String, line: Int, column: Int, offset: Int): List<Token> {
         TODO("Not yet implemented")
     }
-
 }
