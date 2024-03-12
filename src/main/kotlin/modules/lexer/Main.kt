@@ -8,8 +8,6 @@ fun main(args: Array<String>) {
     val array1: List<Token> = lexer1.tokenize("let a: string = \"hola\";")
     for (i in array1) {
         println(i.type)
-        println(i.value)
-        println(i.position)
         println()
     }
 
