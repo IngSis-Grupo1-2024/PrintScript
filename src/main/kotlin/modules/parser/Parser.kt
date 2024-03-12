@@ -24,12 +24,9 @@ class Parser : ParserInterface {
     // sabes que si hay un identifier, un type o un const (o value) esos si o si
     // tienen que ser hoja, por lo que si se encuentran con otro, lo mandas como hermano
     private fun add(token: Token, ast: ASTInterface): ASTInterface {
-        val rootToken: Token = ast.token
         val compareTokens = compareValueAndType(token, ast)
-        return if (rootIsBigger(compareTokens)) {
-            if (ast.isLeaf()) AST(rootToken, getLeaf(token))
-            else compWChildren(token, ast)
-        } else if (compareTokens == 1) AST(token, ast)
+        return if (rootIsBigger(compareTokens)) compWChildren(token, ast)
+        else if (compareTokens == 1) AST(token, ast)
         else ast.addChildren(getLeaf(token))
     }
 
@@ -41,14 +38,15 @@ class Parser : ParserInterface {
     }
 
     private fun compWChildren(token: Token, ast: ASTInterface) : ASTInterface {
-        if(ast.token.type == TokenType.ASSIGNATION && ast.hasAnyEmptyChild()) return findEmptyLeaf(token, ast)
+        val rootToken = ast.token
+        if(rootToken.type == TokenType.ASSIGNATION && ast.hasAnyEmptyChild()) return findEmptyLeaf(token, ast)
         if(ast.right != null) {
             val comp = compareValueAndType(token, ast.right!!)
-            if (comp != 0) return AST(ast.token, ast.left, add(token, ast.right!!))
+            if (comp != 0) return AST(rootToken, ast.left, add(token, ast.right!!))
         }
         if(ast.left != null) {
             val comp = compareValueAndType(token, ast.left!!)
-            if (comp != 0) return  AST(ast.token, add(token, ast.left!!), ast.right)
+            if (comp != 0) return  AST(rootToken, add(token, ast.left!!), ast.right)
         }
         return ast.addChildren(getLeaf(token))
     }
