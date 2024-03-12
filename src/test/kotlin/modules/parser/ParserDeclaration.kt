@@ -1,6 +1,8 @@
 package modules.parser
 
-import components.*
+import components.Position
+import components.Token
+import components.TokenType
 import components.ast.AST
 import components.ast.ASTInterface
 import kotlin.test.Test
@@ -23,8 +25,8 @@ class ParserDeclaration {
                 Token(position, "", TokenType.SEMICOLON),
                     AST(Token(position, "let", TokenType.KEYWORD),
                         AST(Token(position, ":", TokenType.ASSIGNATION),
-                            AST(Token(position, "x", TokenType.IDENTIFIER), null, null),
-                            AST(Token(position, "string", TokenType.TYPE), null, null)),
+                            AST(Token(position, "x", TokenType.IDENTIFIER)),
+                            AST(Token(position, "string", TokenType.TYPE))),
                     null),
                 null)
         println(parser.parse(tokens))
@@ -42,8 +44,8 @@ class ParserDeclaration {
         val astExpected: ASTInterface =
             AST(
                 Token(position, "+", TokenType.OPERATOR),
-                AST(Token(position, "8", TokenType.VALUE), null, null),
-                AST(Token(position, "3", TokenType.VALUE), null, null)
+                AST(Token(position, "8", TokenType.VALUE)),
+                AST(Token(position, "3", TokenType.VALUE))
             )
         println(parser.parse(tokens))
         assertEquals(astExpected.toString(), parser.parse(tokens).toString())
@@ -60,8 +62,8 @@ class ParserDeclaration {
         val astExpected: ASTInterface =
             AST(
                 Token(position, "+", TokenType.OPERATOR),
-                AST(Token(position, "8", TokenType.VALUE), null, null),
-                AST(Token(position, "3", TokenType.VALUE), null, null)
+                AST(Token(position, "8", TokenType.VALUE)),
+                AST(Token(position, "3", TokenType.VALUE))
             )
         println(parser.parse(tokens))
         assertEquals(astExpected.toString(), parser.parse(tokens).toString())
