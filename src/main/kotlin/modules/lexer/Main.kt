@@ -4,7 +4,7 @@ import components.Position
 import components.Token
 
 fun main(args: Array<String>) {
-    val lexer1: Lexer = Lexer(Position(1, 1,1, 1, 1, 1))
+    val lexer1 = Lexer(Position(1, 1,1, 1, 1, 1))
     val array1: List<Token> = lexer1.tokenize("let a: string = \"hola\";")
     for (i in array1) {
         println(i.type)

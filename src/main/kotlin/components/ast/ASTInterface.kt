@@ -10,4 +10,5 @@ interface ASTInterface {
     fun isLeaf() : Boolean
 
     fun addChildren(ast: ASTInterface): ASTInterface
+    fun hasAnyEmptyChild(): Boolean
 }
