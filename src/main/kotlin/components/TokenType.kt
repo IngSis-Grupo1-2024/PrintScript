@@ -2,14 +2,15 @@ package components
 
 enum class TokenType {
 
-    STRING_TYPE,
-    NUMBER_TYPE,
+    TYPE,
     SEMICOLON,
     ASSIGNATION,
     OPERATOR,
-    LET_KEYWORD,
+    KEYWORD,
     IDENTIFIER,
-    FUNCTION_KEYWORD,
-    PARENTHESIS,
-    COMMENT
+    COMMENT,
+    VALUE,
+    FUNCTION,
+    PARENTHESIS
+
 }
