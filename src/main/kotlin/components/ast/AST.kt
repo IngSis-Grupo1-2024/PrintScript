@@ -21,8 +21,12 @@ class AST(override val token: Token, override val left: ASTInterface?, override 
         else AST(token, left, right, additionalChildren + listOf(ast))
     }
 
+    override fun hasAnyEmptyChild(): Boolean {
+        return (left == null).xor(right == null)
+    }
+
     override fun toString(): String {
-        return "{\n\ttoken: $token,\n\tleft: $left,\n\tright: $right\n}"
+        return "{\n\ttoken: $token, \n\ttoken_value:${token.value},\n\tleft: $left,\n\tright: $right\n}}"
     }
 
 }

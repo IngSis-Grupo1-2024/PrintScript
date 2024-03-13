@@ -9,6 +9,8 @@ enum class TokenType {
     KEYWORD,
     IDENTIFIER,
     COMMENT,
-    VALUE
+    VALUE,
+    FUNCTION,
+    PARENTHESIS
 
 }
