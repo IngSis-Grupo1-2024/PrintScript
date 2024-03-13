@@ -1,5 +1,6 @@
 package modules.engine
 
+import CodeReader
 import components.Position
 import components.Token
 import components.TokenType
@@ -60,7 +61,7 @@ class EngineTest {
                         ),
                         right = AST(
                             Token(position, "8", TokenType.VALUE)
-                        ),
+                        )
                     )
                 )
             )
@@ -98,6 +99,55 @@ class EngineTest {
             )
         )
         assertEquals(astList[0].toString(), engine.parse()[0].toString())
+    }
+
+    @Test
+    fun testParserWithFile2AssignationLines() {
+        val engine = Engine(CodeReader.readFile("src/test/resources/twoAssignLines"))
+        val position = Position()
+        val astList = listOf(
+            AST(
+                Token(position, ";", TokenType.SEMICOLON),
+                AST(
+                    Token(position, "let", TokenType.KEYWORD),
+                    AST(
+                        Token(position, "=", TokenType.ASSIGNATION),
+                        left = AST(
+                            Token(position, ":", TokenType.ASSIGNATION),
+                            left = AST(Token(position, "x", TokenType.IDENTIFIER)),
+                            right = AST(Token(position, "number", TokenType.TYPE))
+                        ),
+                        right = AST(
+                            Token(position, "+", TokenType.OPERATOR),
+                            left = AST(
+                                Token(position, "8", TokenType.VALUE)
+                            ),
+                            right = AST(
+                                Token(position, "3", TokenType.VALUE)
+                            )
+                        ),
+                    )
+                )
+            ),
+            AST(
+                Token(position, ";", TokenType.SEMICOLON),
+                AST(
+                    Token(position, "let", TokenType.KEYWORD),
+                    AST(
+                        Token(position, "=", TokenType.ASSIGNATION),
+                        left = AST(
+                            Token(position, ":", TokenType.ASSIGNATION),
+                            left = AST(Token(position, "x", TokenType.IDENTIFIER)),
+                            right = AST(Token(position, "number", TokenType.TYPE))
+                        ),
+                        right = AST(
+                            Token(position, "8", TokenType.VALUE)
+                        ),
+                    )
+                )
+            )
+        )
+        assertEquals(astList.toString(), engine.parse().toString())
     }
 
 

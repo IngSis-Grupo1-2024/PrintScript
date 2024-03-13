@@ -1,0 +1,2 @@
+let x:number = 8 + 3;
+let x : number=8 ;
