@@ -1,6 +1,8 @@
 package modules.parser
 
-import components.*
+import components.Position
+import components.Token
+import components.TokenType
 import components.ast.AST
 import components.ast.ASTInterface
 import kotlin.test.Test

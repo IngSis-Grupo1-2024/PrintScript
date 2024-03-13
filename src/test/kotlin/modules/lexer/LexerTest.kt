@@ -14,6 +14,8 @@ class LexerTest {
         val lexer = Lexer(Position())
         val tokenList = lexer.tokenize("let a:number = 1;")
 
+
+
         assertEquals(7, tokenList.size)
         assertEquals(Position(1, 3,1,1,1,3), tokenList[0].position)
         assertEquals(Position(5, 5,1,1,5,5), tokenList[1].position)
@@ -108,6 +110,22 @@ class LexerTest {
 
     }
 
+
+    @Test
+    fun testNumberVariableTokenizePositionAndSizeWithMultipleSpaces(){
+        val lexer = Lexer(Position())
+        val tokenList = lexer.tokenize("let   a  : number   = 1   ;")
+
+        assertEquals(7, tokenList.size)
+        assertEquals(Position(1, 3,1,1,1,3), tokenList[0].position)
+        assertEquals(Position(5, 5,1,1,5,5), tokenList[1].position)
+        assertEquals(Position(6, 6,1,1,6,6), tokenList[2].position)
+        assertEquals(Position(7, 12,1,1,7,12), tokenList[3].position)
+        assertEquals(Position(14, 14,1,1,14,14), tokenList[4].position)
+        assertEquals(Position(16, 16,1,1,16,16), tokenList[5].position)
+        assertEquals(Position(17, 17,1,1,17,17), tokenList[6].position)
+
+    }
 
 
 

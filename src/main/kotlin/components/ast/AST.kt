@@ -26,9 +26,7 @@ class AST(override val token: Token, override val left: ASTInterface?, override 
     }
 
     override fun toString(): String {
-        return "{\n\ttoken: $token,\n\tleft: $left,\n\tright: $right\n"
+        return "{\n\ttoken: $token, \n\ttoken_value:${token.value},\n\tleft: $left,\n\tright: $right\n}}"
     }
-
-
 
 }
