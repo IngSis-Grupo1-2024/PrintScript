@@ -133,16 +133,19 @@ class Lexer(override val position: Position) : LexerInterface {
                         }
 
                         false -> {
-                            tokenList.add(
-                                Token(
-                                    currentPosition.copy(
-                                        endOffset = currentPosition.startOffset + currentString.length - 2,
-                                        endColumn = currentPosition.startColumn + currentString.length - 2
-                                    ),
-                                    currentString.deleteAt(currentString.length - 1).toString(),
-                                    TokenType.VALUE
+                            val tempString = currentString.deleteAt(currentString.length - 1)
+                            if (tempString.toString() != StringBuilder("").toString()) {
+                                tokenList.add(
+                                    Token(
+                                        currentPosition.copy(
+                                            endOffset = currentPosition.startOffset + currentString.length - 1,
+                                            endColumn = currentPosition.startColumn + currentString.length - 1
+                                        ),
+                                        tempString.toString(),
+                                        TokenType.VALUE
+                                    )
                                 )
-                            )
+                            }
 
                             currentPosition = currentPosition.copy(
                                 startOffset = currentPosition.endOffset,
