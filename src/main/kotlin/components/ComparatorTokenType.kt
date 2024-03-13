@@ -13,13 +13,20 @@ class ComparatorTokenType : Comparator<TokenType> {
             TokenType.SEMICOLON -> 1
             TokenType.KEYWORD -> checkSemicolon(o2)
             TokenType.ASSIGNATION -> checkSemicolonAndKey(o2)
-            TokenType.OPERATOR -> checkSemicolonAndKeyAndAssignation(o2)
+            TokenType.FUNCTION -> checkSemicolonAndKey(o2)
+            TokenType.PARENTHESIS -> checkSemicolonAndKeyAndAssign(o2)
+            TokenType.OPERATOR -> checkSemicolonAndKeyAndAssignAndParen(o2)
             in leafTypes -> checkLeaf(o2)
             else -> -1
         }
     }
 
-    private fun checkSemicolonAndKeyAndAssignation(o2: TokenType?): Int {
+    private fun checkSemicolonAndKeyAndAssignAndParen(o2: TokenType?): Int {
+        if(checkSemicolonAndKeyAndAssign(o2) == -1) return -1
+        return if (o2 == TokenType.PARENTHESIS) -1 else 1
+    }
+
+    private fun checkSemicolonAndKeyAndAssign(o2: TokenType?): Int {
         if(checkSemicolonAndKey(o2) == -1) return -1
         return if (o2 == TokenType.ASSIGNATION) -1 else 1
     }
