@@ -167,6 +167,30 @@ class ParserDeclaration {
             )
         assertEquals(astExpected.toString(), parser.parse(tokens).toString())
     }
+
+    @Test
+    fun `8 mul 3 + 2`() {
+        val parser = Parser()
+        val position = Position()
+        val tokens: List<Token> = listOf(
+            Token(position, "8", TokenType.VALUE),
+            Token(position, "*", TokenType.OPERATOR),
+            Token(position, "3", TokenType.VALUE),
+            Token(position, "+", TokenType.OPERATOR),
+            Token(position, "2", TokenType.VALUE),
+        )
+        val astExpected: ASTInterface =
+            AST(
+                Token(position, "+", TokenType.OPERATOR),
+                AST(Token(position, "*", TokenType.OPERATOR),
+                    AST(Token(position, "8", TokenType.VALUE)),
+                    AST(Token(position, "3", TokenType.VALUE))
+                ),
+                AST(
+                    Token(position, "2", TokenType.VALUE))
+            )
+        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
+    }
     @Test
     fun `let x number = 8 + 3 mul 2`() {
         val parser = Parser()

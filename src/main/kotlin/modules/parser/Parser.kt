@@ -7,6 +7,7 @@ import components.ast.ASTInterface
 class Parser : ParserInterface {
     private val typeComparator = ComparatorTokenType()
     private val valueComparator = ComparatorTokenValue()
+    private val twoChildToken = listOf(TokenType.ASSIGNATION, TokenType.OPERATOR)
     override fun parse(tokens: List<Token>): ASTInterface {
         var ast: ASTInterface = getLeaf(tokens[0])
         if(tokens.size > 1)
@@ -39,7 +40,7 @@ class Parser : ParserInterface {
 
     private fun compWChildren(token: Token, ast: ASTInterface) : ASTInterface {
         val rootToken = ast.token
-        if(rootToken.type == TokenType.ASSIGNATION && ast.hasAnyEmptyChild()) return findEmptyLeaf(token, ast)
+        if(rootToken.type in twoChildToken && ast.hasAnyEmptyChild()) return findEmptyLeaf(token, ast)
         if(ast.right != null) {
             val comp = compareValueAndType(token, ast.right!!)
             if (comp != 0) return AST(rootToken, ast.left, add(token, ast.right!!))
