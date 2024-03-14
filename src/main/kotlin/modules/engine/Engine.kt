@@ -42,7 +42,6 @@ class Engine (val codelines:String){
     //Splits the lines using the \n delimiter
     fun splitLines():List<String>{
         val codeLines: List<String> = codelines.split("\n")
-        println(codeLines)
         return codeLines
     }
 
