@@ -10,7 +10,7 @@ class Parser : ParserInterface {
     private val valueComparator = ComparatorTokenValue()
     private val twoChildToken = listOf(TokenType.ASSIGNATION, TokenType.OPERATOR)
     override fun parse(tokens: List<Token>): ASTInterface {
-        var ast: ASTInterface = getLeaf(tokens[0])
+        var ast: ASTInterface = getEmptyAST()
         if(tokens.size > 1)
             for (token in tokens.subList(1, tokens.size)) {
                 ast = add(token, ast)
@@ -18,14 +18,18 @@ class Parser : ParserInterface {
         return ast
     }
 
-    private fun getLeaf(token: Token): ASTInterface {
-        return AST(token)
+    private fun getEmptyAST(): ASTInterface {
+        return AST()
     }
+
+    private fun getLeaf(token: Token): ASTInterface = AST(token)
+
 
     // lo que podes hacer es chequear con los hijos
     // sabes que si hay un identifier, un type o un const (o value) esos si o si
     // tienen que ser hoja, por lo que si se encuentran con otro, lo mandas como hermano
     private fun add(token: Token, ast: ASTInterface): ASTInterface {
+        if(ast.isEmpty()) return ast.addChildren(getLeaf(token))
         val compareTokens = compareValueAndType(token, ast)
         return if (rootIsBigger(compareTokens)) compWChildren(token, ast)
         else if (compareTokens == 1) AST(token, ast)
@@ -35,29 +39,25 @@ class Parser : ParserInterface {
 
     private fun compareValueAndType(token: Token, ast: ASTInterface): Int {
         val compValue = valueComparator.compare(token, ast.token)
-        val compToken = typeComparator.compare(token.type, ast.token.type)
+        val compToken = typeComparator.compare(token.type, ast.token!!.type)
         return if(compToken != 0) compToken
         else compValue
     }
 
     private fun compWChildren(token: Token, ast: ASTInterface) : ASTInterface {
         val rootToken = ast.token
-        if(rootToken.type in twoChildToken && ast.hasAnyEmptyChild()) return findEmptyLeaf(token, ast)
-        if(ast.right != null) {
-            val comp = compareValueAndType(token, ast.right!!)
-            if (comp != 0) return AST(rootToken, ast.left, add(token, ast.right!!))
-        }
-        if(ast.left != null) {
-            val comp = compareValueAndType(token, ast.left!!)
-            if (comp != 0) return  AST(rootToken, add(token, ast.left!!), ast.right)
+        if(rootToken!!.type in twoChildToken && has1or0Child(ast)) return findEmptyLeaf(token, ast)
+        for(child in ast.children){
+            val comp = compareValueAndType(token, child)
+            if (comp != 0) return ast.removeChildren(child).addChildren(add(token, child))
         }
         return ast.addChildren(getLeaf(token))
     }
 
-    private fun findEmptyLeaf(token: Token, ast: ASTInterface) : ASTInterface {
-        return if(ast.left == null) AST(ast.token, getLeaf(token), ast.right)
-        else AST(ast.token, ast.left, getLeaf(token))
-    }
+    private fun has1or0Child(ast: ASTInterface): Boolean = ast.childrenAmount() == 1 || ast.isLeaf()
+
+    private fun findEmptyLeaf(token: Token, ast: ASTInterface) : ASTInterface =
+        ast.addChildren(getLeaf(token))
 
     private fun rootIsBigger(compareTokens: Int) = compareTokens == -1
 }
