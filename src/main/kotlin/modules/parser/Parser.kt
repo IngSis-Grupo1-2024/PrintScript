@@ -3,6 +3,7 @@ package modules.parser
 import components.*
 import components.ast.AST
 import components.ast.ASTInterface
+import kotlin.math.abs
 
 class Parser : ParserInterface {
     private val typeComparator = ComparatorTokenType()
@@ -28,6 +29,7 @@ class Parser : ParserInterface {
         val compareTokens = compareValueAndType(token, ast)
         return if (rootIsBigger(compareTokens)) compWChildren(token, ast)
         else if (compareTokens == 1) AST(token, ast)
+        else if (abs(compareTokens) == 2) ast
         else ast.addChildren(getLeaf(token))
     }
 
