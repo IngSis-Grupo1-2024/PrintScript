@@ -122,9 +122,35 @@ class LexerTest {
         assertEquals(Position(21, 21,1,1,21,21), tokenList[4].position)
         assertEquals(Position(23, 23,1,1,23,23), tokenList[5].position)
         assertEquals(Position(27, 27,1,1,27,27), tokenList[6].position)
-
     }
 
+    @Test
+    fun testNumberVariableTokenizeValueWithMultipleSpaces(){
+        val lexer = Lexer(Position())
+        val tokenList = lexer.tokenize("let   a  : number   = 1   ;")
+
+        assertEquals("let", tokenList[0].value)
+        assertEquals("a", tokenList[1].value)
+        assertEquals(":", tokenList[2].value)
+        assertEquals("number", tokenList[3].value)
+        assertEquals("=", tokenList[4].value)
+        assertEquals("1", tokenList[5].value)
+        assertEquals(";", tokenList[6].value)
+    }
+
+    @Test
+    fun testNumberVariableTokenizeTypeWithMultipleSpaces(){
+        val lexer = Lexer(Position())
+        val tokenList = lexer.tokenize("let   a  : number   = 1   ;")
+
+        assertEquals(TokenType.KEYWORD, tokenList[0].type)
+        assertEquals(TokenType.IDENTIFIER, tokenList[1].type)
+        assertEquals(TokenType.ASSIGNATION, tokenList[2].type)//Is it weird that it is assignation?
+        assertEquals(TokenType.TYPE, tokenList[3].type)
+        assertEquals(TokenType.ASSIGNATION, tokenList[4].type) //There are two different assignations token types
+        assertEquals(TokenType.VALUE, tokenList[5].type)
+        assertEquals(TokenType.SEMICOLON, tokenList[6].type)
+    }
 
 
 
