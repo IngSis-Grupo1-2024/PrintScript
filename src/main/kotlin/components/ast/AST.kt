@@ -28,4 +28,13 @@ class AST(override val token: Token?, override val children: List<ASTInterface>)
         return "{\n\ttoken: $token, \n\ttoken_value:${token?.value},\n\tchildren: $children\n}}"
     }
 
+    override fun removeChildren(ast: ASTInterface): ASTInterface {
+        val newChildren = mutableListOf<ASTInterface>()
+        for (child in children) {
+            if (child != ast) {
+                newChildren.add(child)
+            }
+        }
+        return AST(token, newChildren)
+    }
 }

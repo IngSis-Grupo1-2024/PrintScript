@@ -10,4 +10,5 @@ interface ASTInterface {
     fun isEmpty() : Boolean
     fun addChildren(ast: ASTInterface): ASTInterface
     fun childrenAmount(): Int
+    fun removeChildren(ast: ASTInterface): ASTInterface
 }
