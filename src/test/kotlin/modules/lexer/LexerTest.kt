@@ -14,8 +14,6 @@ class LexerTest {
         val lexer = Lexer(Position())
         val tokenList = lexer.tokenize("let a:number = 1;")
 
-
-
         assertEquals(7, tokenList.size)
         assertEquals(Position(1, 3,1,1,1,3), tokenList[0].position)
         assertEquals(Position(5, 5,1,1,5,5), tokenList[1].position)
@@ -118,12 +116,12 @@ class LexerTest {
 
         assertEquals(7, tokenList.size)
         assertEquals(Position(1, 3,1,1,1,3), tokenList[0].position)
-        assertEquals(Position(5, 5,1,1,5,5), tokenList[1].position)
-        assertEquals(Position(6, 6,1,1,6,6), tokenList[2].position)
-        assertEquals(Position(7, 12,1,1,7,12), tokenList[3].position)
-        assertEquals(Position(14, 14,1,1,14,14), tokenList[4].position)
-        assertEquals(Position(16, 16,1,1,16,16), tokenList[5].position)
-        assertEquals(Position(17, 17,1,1,17,17), tokenList[6].position)
+        assertEquals(Position(7, 7,1,1,7,7), tokenList[1].position)
+        assertEquals(Position(10, 10,1,1,10,10), tokenList[2].position)
+        assertEquals(Position(12, 17,1,1,12,17), tokenList[3].position)
+        assertEquals(Position(21, 21,1,1,21,21), tokenList[4].position)
+        assertEquals(Position(23, 23,1,1,23,23), tokenList[5].position)
+        assertEquals(Position(27, 27,1,1,27,27), tokenList[6].position)
 
     }
 
