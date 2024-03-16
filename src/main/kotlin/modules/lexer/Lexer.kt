@@ -80,8 +80,6 @@ class Lexer(override val position: Position) : LexerInterface {
                                     TokenType.SEMICOLON
                                 )
                             )
-
-                            currentPosition = moveToNewLine(currentPosition)
                         }
                     }
                 }
@@ -108,7 +106,7 @@ class Lexer(override val position: Position) : LexerInterface {
                                     Token(
                                         currentPosition,
                                         ":",
-                                        TokenType.ASSIGNATION
+                                        TokenType.DECLARATION
                                     )
                                 )
                             } else {
@@ -119,7 +117,7 @@ class Lexer(override val position: Position) : LexerInterface {
                                             startColumn = currentPosition.startColumn + currentString.length
                                         ),
                                         ":",
-                                        TokenType.ASSIGNATION
+                                        TokenType.DECLARATION
                                     )
                                 )
                             }
@@ -178,6 +176,10 @@ class Lexer(override val position: Position) : LexerInterface {
                         }
                     }
                 }
+                '\n' -> {
+                    currentPosition = moveToNewLine(currentPosition)
+                    currentString.clear()
+                }
 
                 else -> {
                     when (currentString.toString()) {
@@ -197,8 +199,8 @@ class Lexer(override val position: Position) : LexerInterface {
     private fun moveToNewLine(currentPosition: Position): Position {
         var currentPosition1 = currentPosition
         currentPosition1 = Position(
-            currentPosition1.startOffset,
-            currentPosition1.endOffset,
+            currentPosition1.startOffset + 1,
+            currentPosition1.endOffset + 1,
             currentPosition1.startLine + 1,
             currentPosition1.endLine + 1,
             1,
