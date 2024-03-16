@@ -7,5 +7,6 @@ plugins {
 }
 
 dependencies {
+    api(project(":utils"))
     api(project(":components"))
 }
