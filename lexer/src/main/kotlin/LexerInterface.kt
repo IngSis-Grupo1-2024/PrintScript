@@ -7,7 +7,4 @@ interface LexerInterface {
 
     fun tokenize(input: String): List<Token>
 
-    fun tokenize(input: String, line: Int, column: Int): List<Token>
-
-    fun tokenize(input: String, line: Int, column: Int, offset: Int): List<Token>
 }
