@@ -4,7 +4,8 @@ enum class TokenType {
 
     TYPE,
     SEMICOLON,
-    ASSIGNATION,
+    ASSIGNATION, // for the =
+    DECLARATION, // for the :
     OPERATOR,
     KEYWORD,
     IDENTIFIER,
