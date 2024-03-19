@@ -25,7 +25,7 @@ class AST(override val token: Token?, override val children: List<ASTInterface>)
     }
 
     override fun toString(): String {
-        return "{\n\ttoken: $token, \n\ttoken_value:${token?.value},\n\tchildren: $children\n}}"
+        return "{\n\ttoken: $token,\n\tchildren: $children\n}}"
     }
 
     override fun removeChildren(ast: ASTInterface): ASTInterface {
