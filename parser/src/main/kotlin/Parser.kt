@@ -34,14 +34,12 @@ class Parser : ParserInterface {
         else if (abs(compareTokens) == 2) ast
         else ast.addChildren(getLeaf(token))
     }
-
     private fun compareValueAndType(token: Token, ast: ASTInterface): Int {
         val compValue = valueComparator.compare(token, ast.token)
         val compToken = typeComparator.compare(token.type, ast.token!!.type)
         return if(compToken != 0) compToken
         else compValue
     }
-
     private fun compWChildren(token: Token, ast: ASTInterface) : ASTInterface {
         val rootToken = ast.token
         if(rootToken!!.type in twoChildToken && has1or0Child(ast)) return findEmptyLeaf(token, ast)
@@ -51,11 +49,43 @@ class Parser : ParserInterface {
         }
         return ast.addChildren(getLeaf(token))
     }
-
     private fun has1or0Child(ast: ASTInterface): Boolean = ast.childrenAmount() == 1 || ast.isLeaf()
-
     private fun findEmptyLeaf(token: Token, ast: ASTInterface) : ASTInterface =
         ast.addChildren(getLeaf(token))
-
     private fun rootIsBigger(compareTokens: Int) = compareTokens == -1
+    private fun isDeclaration(tokens: List<Token>): Boolean {
+        // this would be the declaration structure:
+        // let x: string;
+        return tokens[1].type == TokenType.IDENTIFIER // x
+                && tokens[2].type == TokenType.DECLARATION // :
+                && tokens[3].type == TokenType.TYPE // string
+                && tokens[4].type == TokenType.SEMICOLON
+    }
+
+    private fun isAssignation(tokens: List<Token>): Boolean {
+        // there are 2 options for assignation:
+        // declaration + assignation OR just declaration
+        return (tokens[1].type == TokenType.IDENTIFIER // x
+                && tokens[2].type == TokenType.DECLARATION // :
+                && tokens[3].type == TokenType.TYPE // string
+                && tokens[4].type == TokenType.ASSIGNATION // =
+                && tokens[5].type == TokenType.VALUE // "hello"
+                && tokens[tokens.size - 1].type == TokenType.SEMICOLON)
+                ||
+                (tokens[0].type == TokenType.IDENTIFIER
+                 && tokens[1].type == TokenType.ASSIGNATION
+                 && tokens[2].type == TokenType.VALUE
+                 && tokens[tokens.size - 1].type == TokenType.SEMICOLON)
+    }
+
+    private fun isCallingMethod(tokens: List<Token>): Boolean {
+        // this would be the calling function structure that comes from lexer:
+        // print("hello")
+        // sum(a + b)
+        return tokens[0].type == TokenType.KEYWORD // println or sum
+                && tokens[1].type == TokenType.PARENTHESIS // (
+                && tokens[tokens.size - 2].type == TokenType.PARENTHESIS // )
+                && tokens[tokens.size - 1].type == TokenType.SEMICOLON
+    }
+
 }

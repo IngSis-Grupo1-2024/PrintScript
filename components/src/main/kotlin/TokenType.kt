@@ -8,7 +8,7 @@ enum class TokenType {
     DECLARATION, // for the :
     OPERATOR,
     KEYWORD,
-    IDENTIFIER,
+    IDENTIFIER, // in 'let x', x would be the identifiers
     COMMENT,
     VALUE,
     FUNCTION,
