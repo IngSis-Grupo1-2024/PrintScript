@@ -1,6 +1,6 @@
 package components
 
-class Token (private val position: Position, private val value: String, private val type: TokenType) {
+class Token (val position: Position, val value: String, val type: TokenType) {
 
     override fun toString(): String =  "type: $type, value: $value"
 

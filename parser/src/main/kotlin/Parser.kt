@@ -88,26 +88,19 @@ class Parser : ParserInterface {
     }
 
     private fun compWChildren(token: Token, ast: ASTInterface) : ASTInterface {
-        var tokEqChildren = false
-        var tokGreaterChildren = false
         for(child in ast.getChildren()){
             val comp = compareValueAndType(token, child.getToken())
-//            a chequear para que se mantenga el orden
             when (comp) {
-                -1 -> return ast.removeChildren(child).addChildren(add(token, child))
-                0 -> tokEqChildren = true
-                else -> tokGreaterChildren = true
+                -1 -> return ast.replace(child, add(token, child))
+                1 -> return removeLastChild(ast, token)
             }
         }
-        if(tokGreaterChildren) return removeLastChild(ast, token)
-        else if (tokEqChildren) return ast.addChildren(getLeaf(token))
-        //ver que pasaria si tokEqChildren && tokGreaterChildren
         return ast.addChildren(getLeaf(token))
     }
 
     private fun removeLastChild(ast: ASTInterface, token: Token): ASTInterface {
         val lastChild = ast.getChildren().last()
-        return ast.removeChildren(lastChild).addChildren(add(token, lastChild))
+        return ast.replace(lastChild, add(token, lastChild))
     }
 
     private fun rootIsBigger(compareTokens: Int) = compareTokens == -1

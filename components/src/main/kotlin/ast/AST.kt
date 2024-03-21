@@ -29,12 +29,13 @@ class AST(private val token: Token?, private val children: List<ASTInterface>) :
 
     override fun toString(): String = "{\n\ttoken: $token,\n\tchildren: $children\n}}"
 
-    override fun removeChildren(ast: ASTInterface): ASTInterface {
+    override fun replace(ast: ASTInterface, other: ASTInterface): ASTInterface {
         val newChildren = mutableListOf<ASTInterface>()
         for (child in children) {
-            if (child != ast) {
-                newChildren.add(child)
+            if (child == ast) {
+                newChildren.add(other)
             }
+            else newChildren.add(child)
         }
         return AST(token, newChildren)
     }
