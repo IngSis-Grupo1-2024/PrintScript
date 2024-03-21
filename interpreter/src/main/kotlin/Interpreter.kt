@@ -9,7 +9,6 @@ import components.ast.ASTInterface
 class Interpreter {
 
     fun interpret(ast: ASTInterface) {
-
     }
 
     fun addVariableToMap(ast: ASTInterface): Map<String, Variable> {
@@ -25,8 +24,9 @@ class Interpreter {
             TokenType.ASSIGNATION -> {
                 if (!checkIfAssignationAndDeclaration(ast.children[0].token!!.type)) {
                     val variableName = ast.children[0].token!!.value
-                    val variableValue = ast.children[1].token!!.value
-                    variableMap[variableName] = Variable(TokenType.STRING, variableValue)
+                    val variableType = searchForVariableType(variableName, variableMap)
+                    val variableValue = recursiveSearch(ast.children[1],variableType)
+                    variableMap[variableName] = Variable(variableType, variableValue)
                 } else {
                     val variableName = ast.children[0].children[0].token!!.value
                     val variableType = ast.children[0].children[1].token!!.type
@@ -51,6 +51,11 @@ class Interpreter {
             TokenType.PARENTHESIS -> TODO()
         }
         return variableMap
+    }
+
+    private fun searchForVariableType(variableName: String, variableMap: HashMap<String, Variable>): TokenType {
+        return variableMap[variableName]!!.type
+
     }
 
 
