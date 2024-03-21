@@ -11,9 +11,8 @@ class Parser : ParserInterface {
     override fun parse(tokens: List<Token>): ASTInterface {
         var ast: ASTInterface = getEmptyAST()
         if(tokens.size > 1)
-            for (token in tokens.subList(1, tokens.size)) {
+            for (token in tokens.subList(1, tokens.size))
                 ast = add(token, ast)
-            }
         return ast
     }
 
@@ -43,9 +42,8 @@ class Parser : ParserInterface {
     }
 
     private fun findAssignIndex(tokens: List<Token>): Int {
-        for(i in 0..tokens.size){
-            if(tokens[i].type == TokenType.ASSIGNATION) return i
-        }
+        for(i in 0..tokens.size)
+            if(tokens[i].getType() == TokenType.ASSIGNATION) return i
         return 0
     }
 
@@ -73,18 +71,18 @@ class Parser : ParserInterface {
     // sabes que si hay un identifier, un type o un const (o value) esos si o si
     // tienen que ser hoja, por lo que si se encuentran con otro, lo mandas como hermano
     private fun add(token: Token, ast: ASTInterface): ASTInterface {
-        if(token.type in doesntMatterTypes) return ast
+        if(token.getType() in doesntMatterTypes) return ast
         if(ast.isEmpty()) return ast.addChildren(getLeaf(token))
-        val compareTokens = compareValueAndType(token, ast)
+        val compareTokens = compareValueAndType(token, ast.getToken())
         return if (rootIsBigger(compareTokens)) compWChildren(token, ast)
         else if (compareTokens == 1) AST(token, ast)
         else if (abs(compareTokens) == 2) ast
         else ast.addChildren(getLeaf(token))
     }
 
-    private fun compareValueAndType(token: Token, ast: ASTInterface): Int {
-        val compValue = valueComparator.compare(token, ast.token)
-        val compToken = typeComparator.compare(token.type, ast.token!!.type)
+    private fun compareValueAndType(token: Token, root: Token): Int {
+        val compValue = valueComparator.compare(token, root)
+        val compToken = typeComparator.compare(token.getType(), root.getType())
         return if(compToken != 0) compToken
         else compValue
     }
@@ -92,8 +90,8 @@ class Parser : ParserInterface {
     private fun compWChildren(token: Token, ast: ASTInterface) : ASTInterface {
         var tokEqChildren = false
         var tokGreaterChildren = false
-        for(child in ast.children){
-            val comp = compareValueAndType(token, child)
+        for(child in ast.getChildren()){
+            val comp = compareValueAndType(token, child.getToken())
 //            a chequear para que se mantenga el orden
             when (comp) {
                 -1 -> return ast.removeChildren(child).addChildren(add(token, child))
@@ -108,8 +106,7 @@ class Parser : ParserInterface {
     }
 
     private fun removeLastChild(ast: ASTInterface, token: Token): ASTInterface {
-        val children = ast.children
-        val lastChild = children.last()
+        val lastChild = ast.getChildren().last()
         return ast.removeChildren(lastChild).addChildren(add(token, lastChild))
     }
 

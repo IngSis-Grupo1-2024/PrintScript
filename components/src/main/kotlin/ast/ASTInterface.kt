@@ -3,9 +3,9 @@ package components.ast
 import components.Token
 
 interface ASTInterface {
-    val token: Token?
-    val children: List<ASTInterface>
 
+    fun getToken(): Token
+    fun getChildren(): List<ASTInterface>
     fun isLeaf() : Boolean
     fun isEmpty() : Boolean
     fun addChildren(ast: ASTInterface): ASTInterface

@@ -2,31 +2,32 @@ package components.ast
 
 import components.Token
 
-class AST(override val token: Token?, override val children: List<ASTInterface>) : ASTInterface {
+class AST(private val token: Token?, private val children: List<ASTInterface>) : ASTInterface {
 
     constructor(): this(null, emptyList())
     constructor(token: Token, children: ASTInterface) : this(token, listOf(children))
     constructor(token: Token): this(token, emptyList())
 
-    override fun isLeaf(): Boolean {
-        return children.isEmpty()
+    override fun getToken(): Token {
+        if(token == null) throw NullPointerException("Token is null")
+        else return token
     }
-    override fun isEmpty(): Boolean {
-        return token == null && isLeaf()
-    }
+
+    override fun getChildren(): List<ASTInterface> = this.children
+
+    override fun isLeaf(): Boolean = this.children.isEmpty()
+
+    override fun isEmpty(): Boolean = this.token == null && isLeaf()
+
     override fun addChildren(ast: ASTInterface): ASTInterface {
         return if(isEmpty()) ast
-        else if (isLeaf()) AST(token!!, ast)
-        else AST(token!!, children + listOf(ast))
+        else if (isLeaf()) AST(getToken(), ast)
+        else AST(getToken(), this.children + listOf(ast))
     }
 
-    override fun childrenAmount(): Int {
-        return children.size
-    }
+    override fun childrenAmount(): Int = this.children.size
 
-    override fun toString(): String {
-        return "{\n\ttoken: $token,\n\tchildren: $children\n}}"
-    }
+    override fun toString(): String = "{\n\ttoken: $token,\n\tchildren: $children\n}}"
 
     override fun removeChildren(ast: ASTInterface): ASTInterface {
         val newChildren = mutableListOf<ASTInterface>()
