@@ -8,3 +8,7 @@
 /dataSources.local.xml
 # GitHub Copilot persisted chat sessions
 /copilot/chatSessions
+
+gradle.xml
+misc.xml
+kotlinc.xml
