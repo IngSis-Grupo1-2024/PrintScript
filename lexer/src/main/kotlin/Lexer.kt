@@ -8,7 +8,7 @@ class Lexer(override val position: Position) : LexerInterface {
         "let" to TokenType.KEYWORD,
         "number" to TokenType.TYPE,
         "string" to TokenType.TYPE,
-        "println" to TokenType.KEYWORD
+        "println" to TokenType.FUNCTION
     )
 
     private val operators = listOf('+', '-', '/', '*', '(', ')')
@@ -18,6 +18,9 @@ class Lexer(override val position: Position) : LexerInterface {
         var isInsideString = false
         val currentString = StringBuilder()
         var isBeforeEqual = true
+        var isString = false
+//        val dictionary = mutableMapOf<String, Boolean>() This can be used to remove the isString variable and when new types like lists are added.
+
 
         var currentPosition = position.copy()
 
@@ -28,6 +31,7 @@ class Lexer(override val position: Position) : LexerInterface {
             when (char) {
                 '"' -> {
                     isInsideString = !isInsideString
+                    isString = true
                     if (!isInsideString) {
                         currentPosition = changeEndOffsetAndColumn(currentPosition, 2)
                     }
@@ -57,6 +61,11 @@ class Lexer(override val position: Position) : LexerInterface {
                         false -> {
                             val tempString = currentString.deleteAt(currentString.length - 1)
                             if (tempString.toString() != StringBuilder("").toString()) {
+                                var tokenValue = TokenType.INTEGER
+                                if(isString){
+                                    tokenValue = TokenType.STRING
+                                    isString = false
+                                }
                                 tokenList.add(
                                     Token(
                                         currentPosition.copy(
@@ -64,7 +73,7 @@ class Lexer(override val position: Position) : LexerInterface {
                                             endColumn = currentPosition.startColumn + currentString.length - 1
                                         ),
                                         tempString.toString(),
-                                        TokenType.VALUE
+                                        tokenValue
                                     )
                                 )
                             }
@@ -159,13 +168,19 @@ class Lexer(override val position: Position) : LexerInterface {
                                         )
                                     )
                                 } else {
-                                    tokenList.add(
-                                        Token(
-                                            changeEndOffsetAndColumn(currentPosition, -1),
-                                            value = currentString.deleteAt(currentString.length - 1).toString(),
-                                            type = TokenType.VALUE
+                                    //This has to be changed because in case it is a list is different, there can be a switch or pattern matching then
+                                    var tokenValue = TokenType.INTEGER
+                                    if(isString){
+                                        tokenValue = TokenType.STRING
+                                        isString = false
+                                    }
+                                        tokenList.add(
+                                            Token(
+                                                changeEndOffsetAndColumn(currentPosition, -1),
+                                                value = currentString.deleteAt(currentString.length - 1).toString(),
+                                                type = tokenValue
+                                            )
                                         )
-                                    )
                                 }
                             }
                             currentPosition = previousEndToNewStart(currentPosition, 1)
