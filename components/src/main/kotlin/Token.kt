@@ -6,4 +6,6 @@ class Token (private val position: Position, private val value: String, private 
 
     fun getType(): TokenType = type
     fun getValue(): String = value
+
+    fun getPosition(): Position = position
 }

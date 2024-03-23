@@ -8,29 +8,26 @@ import components.ast.ASTInterface
 
 class Interpreter {
 
-    fun interpret(ast: ASTInterface) {
-    }
-
     fun addVariableToMap(ast: ASTInterface): Map<String, Variable> {
-        val root = ast.token!!.type
+        val root = ast.getToken().getType()
         val variableMap = HashMap<String, Variable>()
         when (root) {
             TokenType.DECLARATION -> {
-                val variableName = ast.children[0].token!!.value
-                val variableType = ast.children[1].token!!.type
-                variableMap[variableName] = Variable(variableType, null)
+                val variableName = ast.getChildren()[0].getToken().getValue()
+                val variableType = ast.getChildren()[1].getToken().getType()
+                variableMap[variableName] = Variable(variableType)
             }
 
             TokenType.ASSIGNATION -> {
-                if (!checkIfAssignationAndDeclaration(ast.children[0].token!!.type)) {
-                    val variableName = ast.children[0].token!!.value
+                if (!checkIfAssignationAndDeclaration(ast.getChildren()[0].getToken().getType())) {
+                    val variableName = ast.getChildren()[0].getToken().getValue()
                     val variableType = searchForVariableType(variableName, variableMap)
-                    val variableValue = recursiveSearch(ast.children[1],variableType)
+                    val variableValue = recursiveSearch(ast.getChildren()[1],variableType)
                     variableMap[variableName] = Variable(variableType, variableValue)
                 } else {
-                    val variableName = ast.children[0].children[0].token!!.value
-                    val variableType = ast.children[0].children[1].token!!.type
-                    val variableValue = recursiveSearch(ast.children[1], variableType)
+                    val variableName = ast.getChildren()[0].getChildren()[0].getToken().getValue()
+                    val variableType = ast.getChildren()[0].getChildren()[1].getToken().getType()
+                    val variableValue = recursiveSearch(ast.getChildren()[1], variableType)
                     variableMap[variableName] = Variable(variableType, variableValue)
                 }
             }
@@ -39,33 +36,24 @@ class Interpreter {
                 printLine(ast, variableMap)
             }
 
-            TokenType.TYPE -> TODO()
-            TokenType.SEMICOLON -> TODO()
-            TokenType.OPERATOR -> TODO()
-            TokenType.KEYWORD -> TODO()
-            TokenType.IDENTIFIER -> TODO()
-            TokenType.COMMENT -> TODO()
-            TokenType.VALUE -> TODO()
-            TokenType.INTEGER -> TODO()
-            TokenType.STRING -> TODO()
-            TokenType.PARENTHESIS -> TODO()
+            else -> {}
         }
         return variableMap
     }
 
     private fun searchForVariableType(variableName: String, variableMap: HashMap<String, Variable>): TokenType {
-        return variableMap[variableName]!!.type
+        return variableMap[variableName]!!.getType()
 
     }
 
 
     fun printLine(ast: ASTInterface, variableMap: Map<String, Variable>) {
         //If the first child has more than 1 children we loop
-        if (ast.children[0].children.size > 1) {
+        if (ast.getChildren()[0].getChildren().size > 1) {
                 val types = ArrayList<TokenType>()
                 val values = ArrayList<String>()
                 //We get all the types and values of the ast in order. Left, Centre, Right
-                stackTypesAndValues(ast.children[0], types, values, variableMap)
+                stackTypesAndValues(ast.getChildren()[0], types, values, variableMap)
                 if (types.contains(TokenType.STRING)) {
                     //If we have at least one string in the AST, we concatenate the items
                     println(calculateStringResult(values))
@@ -76,7 +64,7 @@ class Interpreter {
         }
         //If the first child does not have children, we print the value of the first chilg
         else {
-            println(getVariableOrValue(ast.children[0].token!!, variableMap))
+            println(getVariableOrValue(ast.getChildren()[0].getToken(), variableMap))
         }
     }
 
@@ -114,13 +102,13 @@ class Interpreter {
     }
 
     private fun recursiveSearch(ast: ASTInterface, tokenType: TokenType): String {
-        return when (val root = ast.token!!.type) {
-            TokenType.STRING  -> ast.token!!.value
-            TokenType.INTEGER -> ast.token!!.value //Esto se podría encargar de mirarlo el SCA, en caso de que no vengan operators o string o ints
+        return when (val root = ast.getToken().getType()) {
+            TokenType.STRING  -> ast.getToken().getValue()
+            TokenType.INTEGER -> ast.getToken().getValue() //Esto se podría encargar de mirarlo el SCA, en caso de que no vengan operators o string o ints
             TokenType.OPERATOR -> {
-                val leftOperand = recursiveSearch(ast.children[0], tokenType)
-                val rightOperand = recursiveSearch(ast.children[1], tokenType)
-                when (ast.token!!.value) {
+                val leftOperand = recursiveSearch(ast.getChildren()[0], tokenType)
+                val rightOperand = recursiveSearch(ast.getChildren()[1], tokenType)
+                when (ast.getToken().getValue()) {
                     "+" -> if (tokenType == TokenType.STRING) {
                         leftOperand + rightOperand
                     } else (leftOperand.toInt() + rightOperand.toInt()).toString()
@@ -128,7 +116,7 @@ class Interpreter {
                     "-" -> (leftOperand.toInt() - rightOperand.toInt()).toString()
                     "*" -> (leftOperand.toInt() * rightOperand.toInt()).toString()
                     "/" -> (leftOperand.toInt() / rightOperand.toInt()).toString()
-                    else -> throw IllegalArgumentException("Unknown operator: ${ast.token!!.value}")
+                    else -> throw IllegalArgumentException("Unknown operator: ${ast.getToken().getValue()}")
                 }
             }
 
@@ -144,12 +132,12 @@ class Interpreter {
         values: ArrayList<String>,
         variableMap: Map<String, Variable>
     ) {
-        if (ast.children.isEmpty()) {
+        if (ast.isLeaf()) {
             addToTypeAndValueList(tokenTypes, ast, variableMap, values)
         } else {
-                stackTypesAndValues(ast.children[0], tokenTypes, values, variableMap)
+                stackTypesAndValues(ast.getChildren()[0], tokenTypes, values, variableMap)
                 addToTypeAndValueList(tokenTypes, ast, variableMap, values)
-                stackTypesAndValues(ast.children[1], tokenTypes, values, variableMap)
+                stackTypesAndValues(ast.getChildren()[1], tokenTypes, values, variableMap)
         }
     }
 
@@ -159,27 +147,27 @@ class Interpreter {
         variableMap: Map<String, Variable>,
         values: ArrayList<String>
     ) {
-        tokenTypes.add(getVariableOrValueType(ast.token!!, variableMap))
-        values.add(getVariableOrValue(ast.token!!, variableMap))
+        tokenTypes.add(getVariableOrValueType(ast.getToken(), variableMap))
+        values.add(getVariableOrValue(ast.getToken(), variableMap))
     }
 
 
     private fun checkIfIsIdentifier(itemToken: Token): Boolean {
-        return itemToken.type == TokenType.IDENTIFIER
+        return itemToken.getType() == TokenType.IDENTIFIER
     }
 
     private fun getVariableOrValueType(itemToken: Token, variableMap: Map<String, Variable>): TokenType {
         if (checkIfIsIdentifier(itemToken)) {
-            return (variableMap[itemToken.value]!!.type)
+            return (variableMap[itemToken.getValue()]!!.getType())
         }
-        return itemToken.type
+        return itemToken.getType()
     }
 
     private fun getVariableOrValue(itemToken: Token, variableMap: Map<String, Variable>): String {
         if (checkIfIsIdentifier(itemToken)) {
-            return variableMap[itemToken.value]!!.value!!
+            return variableMap[itemToken.getValue()]!!.getValue()
         }
-        return itemToken.value
+        return itemToken.getValue()
     }
 
 

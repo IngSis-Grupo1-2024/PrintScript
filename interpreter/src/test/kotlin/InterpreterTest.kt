@@ -20,7 +20,7 @@ class InterpreterTest {
         )
         val variableMap = interpreter.addVariableToMap(ast)
         assertEquals(1, variableMap.size)
-        assertEquals(Variable(TokenType.INTEGER, null), variableMap["a"])
+        assertEquals(Variable(TokenType.INTEGER), variableMap["a"])
     }
 
     @Test
@@ -35,7 +35,7 @@ class InterpreterTest {
         )
         val variableMap = interpreter.addVariableToMap(ast)
         assertEquals(1, variableMap.size)
-        assertEquals(Variable(TokenType.STRING, null), variableMap["a"])
+        assertEquals(Variable(TokenType.STRING), variableMap["a"])
     }
 
     @Test
