@@ -6,13 +6,57 @@ import kotlin.math.abs
 class Parser : ParserInterface {
     private val typeComparator = ComparatorTokenType()
     private val valueComparator = ComparatorTokenValue()
-    private val twoChildToken = listOf(TokenType.ASSIGNATION, TokenType.OPERATOR)
+    private val doesntMatterTypes = listOf(TokenType.PARENTHESIS, TokenType.KEYWORD)
+
     override fun parse(tokens: List<Token>): ASTInterface {
         var ast: ASTInterface = getEmptyAST()
         if(tokens.size > 1)
-            for (token in tokens.subList(1, tokens.size)) {
+            for (token in tokens.subList(1, tokens.size))
                 ast = add(token, ast)
-            }
+        return ast
+    }
+
+    fun transformDeclaration(tokens: List<Token>): ASTInterface {
+        val decl = tokens[2]
+        val identifier = tokens[1]
+        val value = tokens[3]
+        return AST(decl, listOf(getLeaf(identifier), getLeaf(value)))
+    }
+
+    fun transformAssignation(tokens: List<Token>): ASTInterface {
+        val assignIndex : Int = findAssignIndex(tokens)
+        val ident : ASTInterface = transformIdent(tokens.subList(0, assignIndex))
+        val assign = tokens[assignIndex]
+        val value = transformValue(tokens.subList(assignIndex+1, tokens.size-1))
+        return AST(assign, listOf(ident, value))
+    }
+    fun transformFunction(tokens: List<Token>): ASTInterface {
+        val function = tokens[0]
+        val value = transformValue(tokens.subList(1, tokens.size-1))
+        return AST(function, listOf(value))
+    }
+
+    private fun transformIdent(tokens: List<Token>): ASTInterface {
+        if(tokens.size == 1) return getLeaf(tokens[0])
+        return transformDeclaration(tokens)
+    }
+
+    private fun findAssignIndex(tokens: List<Token>): Int {
+        for(i in 0..tokens.size)
+            if(tokens[i].getType() == TokenType.ASSIGNATION) return i
+        return 0
+    }
+
+    private fun transformValue(tokens: List<Token>): ASTInterface {
+        if(tokens.size == 1) return getLeaf(tokens[0])
+        return getTree(tokens)
+    }
+
+    private fun getTree(tokens: List<Token>): ASTInterface {
+        var ast = getEmptyAST()
+        for (token in tokens) {
+            ast = add(token, ast)
+        }
         return ast
     }
 
@@ -27,31 +71,38 @@ class Parser : ParserInterface {
     // sabes que si hay un identifier, un type o un const (o value) esos si o si
     // tienen que ser hoja, por lo que si se encuentran con otro, lo mandas como hermano
     private fun add(token: Token, ast: ASTInterface): ASTInterface {
+        if(token.getType() in doesntMatterTypes) return ast
         if(ast.isEmpty()) return ast.addChildren(getLeaf(token))
-        val compareTokens = compareValueAndType(token, ast)
+        val compareTokens = compareValueAndType(token, ast.getToken())
         return if (rootIsBigger(compareTokens)) compWChildren(token, ast)
         else if (compareTokens == 1) AST(token, ast)
         else if (abs(compareTokens) == 2) ast
         else ast.addChildren(getLeaf(token))
     }
-    private fun compareValueAndType(token: Token, ast: ASTInterface): Int {
-        val compValue = valueComparator.compare(token, ast.token)
-        val compToken = typeComparator.compare(token.type, ast.token!!.type)
+
+    private fun compareValueAndType(token: Token, root: Token): Int {
+        val compValue = valueComparator.compare(token, root)
+        val compToken = typeComparator.compare(token.getType(), root.getType())
         return if(compToken != 0) compToken
         else compValue
     }
+
     private fun compWChildren(token: Token, ast: ASTInterface) : ASTInterface {
-        val rootToken = ast.token
-        if(rootToken!!.type in twoChildToken && has1or0Child(ast)) return findEmptyLeaf(token, ast)
-        for(child in ast.children){
-            val comp = compareValueAndType(token, child)
-            if (comp != 0) return ast.removeChildren(child).addChildren(add(token, child))
+        for(child in ast.getChildren()){
+            val comp = compareValueAndType(token, child.getToken())
+            when (comp) {
+                -1 -> return ast.replace(child, add(token, child))
+                1 -> return removeLastChild(ast, token)
+            }
         }
         return ast.addChildren(getLeaf(token))
     }
-    private fun has1or0Child(ast: ASTInterface): Boolean = ast.childrenAmount() == 1 || ast.isLeaf()
-    private fun findEmptyLeaf(token: Token, ast: ASTInterface) : ASTInterface =
-        ast.addChildren(getLeaf(token))
+
+    private fun removeLastChild(ast: ASTInterface, token: Token): ASTInterface {
+        val lastChild = ast.getChildren().last()
+        return ast.replace(lastChild, add(token, lastChild))
+    }
+
     private fun rootIsBigger(compareTokens: Int) = compareTokens == -1
     private fun isDeclaration(tokens: List<Token>): Boolean {
         // this would be the declaration structure:

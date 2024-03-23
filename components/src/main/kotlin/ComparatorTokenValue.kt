@@ -7,9 +7,9 @@ class ComparatorTokenValue : Comparator<Token> {
     // it returns 1 if o1 > o2
     // it returns -1 if o1 < o2
     override fun compare(o1: Token?, o2: Token?): Int {
-        return when(o1!!.type){
-            TokenType.ASSIGNATION -> compareAssignation(o1.value, o2!!.value)
-            TokenType.OPERATOR -> compareOperator(o1.value, o2!!.value)
+        return when(o1!!.getType()){
+            TokenType.ASSIGNATION -> compareAssignation(o1.getValue(), o2!!.getValue())
+            TokenType.OPERATOR -> compareOperator(o1.getValue(), o2!!.getValue())
             else -> 0
         }
     }

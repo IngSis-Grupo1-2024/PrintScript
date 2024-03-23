@@ -16,16 +16,11 @@ class ComparatorTokenType : Comparator<TokenType> {
             TokenType.SEMICOLON -> 2
             TokenType.KEYWORD -> -2
             in rootTypes -> 1
-            TokenType.PARENTHESIS -> checkRoot(o2)
-            TokenType.OPERATOR -> checkRootOrParen(o2)
+            TokenType.PARENTHESIS -> -2
+            TokenType.OPERATOR -> checkRoot(o2)
             in leafTypes -> checkLeaf(o2)
             else -> -1
         }
-    }
-
-    private fun checkRootOrParen(o2: TokenType?): Int {
-        if(checkRoot(o2) == -1) return -1
-        return if (o2 == TokenType.PARENTHESIS) -1 else 1
     }
 
     private fun checkRoot(o2: TokenType?): Int {
