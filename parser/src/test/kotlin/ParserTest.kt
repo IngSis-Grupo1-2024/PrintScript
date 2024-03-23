@@ -171,4 +171,83 @@ class ParserTest {
 
         assertEquals(astExpected.toString(), parser.parse(tokens).toString())
     }
+
+    @Test
+    fun testIsDeclarationShouldReturnTrue() {
+        val parser = Parser()
+        val position = Position()
+        val tokens: List<Token> = listOf(
+            Token(position, "let", TokenType.KEYWORD),
+            Token(position, "x", TokenType.IDENTIFIER),
+            Token(position, ":", TokenType.DECLARATION),
+            Token(position, "string", TokenType.TYPE),
+            Token(position, ";", TokenType.SEMICOLON),
+        )
+        assertEquals(true, parser.isDeclaration(tokens))
+    }
+
+    @Test
+    fun testIsAssignationShouldReturnTrue() {
+        val parser = Parser()
+        val position = Position()
+        val tokens: List<Token> = listOf(
+            Token(position, "let", TokenType.KEYWORD),
+            Token(position, "x", TokenType.IDENTIFIER),
+            Token(position, ":", TokenType.DECLARATION),
+            Token(position, "string", TokenType.TYPE),
+            Token(position, "=", TokenType.ASSIGNATION),
+            Token(position, "'hello'", TokenType.STRING),
+            Token(position, ";", TokenType.SEMICOLON),
+        )
+        assertEquals(true, parser.isAssignation(tokens))
+    }
+
+    @Test
+    fun testIsAssignationShouldReturnFalse() {
+        val parser = Parser()
+        val position = Position()
+        val tokens: List<Token> = listOf(
+            Token(position, "let", TokenType.KEYWORD),
+            Token(position, "x", TokenType.IDENTIFIER),
+            Token(position, "=", TokenType.ASSIGNATION),
+            Token(position, "'hello'", TokenType.VALUE),
+            Token(position, "+", TokenType.OPERATOR),
+            Token(position, ";", TokenType.SEMICOLON),
+        )
+        assertEquals(false, parser.isAssignation(tokens))
+    }
+
+    @Test
+    fun testIsAssignationWithSemicolonAfterDeclarationShouldReturnFalse() {
+        val parser = Parser()
+        val position = Position()
+        val tokens: List<Token> = listOf(
+            Token(position, "let", TokenType.KEYWORD),
+            Token(position, "x", TokenType.IDENTIFIER),
+            Token(position, ":", TokenType.DECLARATION),
+            Token(position, "string", TokenType.TYPE),
+            Token(position, "=", TokenType.ASSIGNATION),
+            Token(position, ";", TokenType.SEMICOLON),
+            Token(position, "'hello'", TokenType.VALUE),
+            Token(position, "+", TokenType.OPERATOR),
+            Token(position, "bye", TokenType.VALUE),
+            Token(position, ";", TokenType.SEMICOLON),
+        )
+        assertEquals(false, parser.isAssignation(tokens))
+    }
+
+    @Test
+    fun isCallingPrintlnMethodShouldReturnTrue(){
+        val parser = Parser()
+        val position = Position()
+        val tokens: List<Token> = listOf(
+            Token(position, "println", TokenType.KEYWORD),
+            Token(position, "(", TokenType.PARENTHESIS),
+            Token(position, "'hello'", TokenType.STRING),
+            Token(position, ")", TokenType.PARENTHESIS),
+            Token(position, ";", TokenType.SEMICOLON),
+        )
+        assertEquals(true, parser.isCallingMethod(tokens))
+    }
+
 }
