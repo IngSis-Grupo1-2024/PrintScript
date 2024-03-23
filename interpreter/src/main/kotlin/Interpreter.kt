@@ -14,7 +14,7 @@ class Interpreter {
         val variableMap = HashMap<String, Variable>()
         when (root) {
             TokenType.DECLARATION -> {
-                interpret(variableMap, getVariableName(ast), getVariableType(ast), null.toString())
+                interpret(variableMap, getVariableName(ast), getVariableType(ast))
             }
 
             TokenType.ASSIGNATION -> {
@@ -57,6 +57,14 @@ class Interpreter {
         variableValue: String
     ) {
         variableMap[variableName] = Variable(variableType, variableValue)
+    }
+
+    private fun interpret(
+        variableMap: HashMap<String, Variable>,
+        variableName: String,
+        variableType: TokenType,
+    ) {
+        variableMap[variableName] = Variable(variableType)
     }
 
     private fun searchForVariableType(variableName: String, variableMap: HashMap<String, Variable>): TokenType {
