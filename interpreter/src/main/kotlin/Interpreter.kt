@@ -9,7 +9,7 @@ import components.ast.ASTInterface
 class Interpreter {
 
 
-    fun interpret(ast: ASTInterface) : Map<String, Variable> {
+    fun interpret                         (ast: ASTInterface) : Map<String, Variable> {
         val root = ast.getToken().getType()
         val variableMap = HashMap<String, Variable>()
         when (root) {
