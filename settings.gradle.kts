@@ -8,4 +8,4 @@
  */
 
 rootProject.name = "PrintScript"
-include("app", "parser", "lexer", "interpreter", "engine", "components")
+include("app", "parser", "lexer", "interpreter", "engine", "components", "utils")

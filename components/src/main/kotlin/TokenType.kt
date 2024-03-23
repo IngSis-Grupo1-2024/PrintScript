@@ -12,6 +12,8 @@ enum class TokenType {
     COMMENT,
     VALUE,
     FUNCTION,
-    PARENTHESIS
+    PARENTHESIS,
+    STRING,
+    INTEGER
 
 }

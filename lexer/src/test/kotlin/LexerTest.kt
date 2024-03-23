@@ -12,7 +12,7 @@ class LexerTest {
     @Test
     fun testNumberVariableTokenizePositionAndSize(){
         val lexer = Lexer(Position())
-        val tokenList = lexer.tokenize("let a:number = 1;")
+        val tokenList = lexer.tokenize("let a:number = 12;")
 
         assertEquals(7, tokenList.size)
         assertEquals(Position(1, 3,1,1,1,3), tokenList[0].position)
@@ -42,14 +42,14 @@ class LexerTest {
     @Test
     fun testNumberVariableTokenizeTokenType(){
         val lexer = Lexer(Position())
-        val tokenList = lexer.tokenize("let a:number = 12;")
+        val tokenList = lexer.tokenize("let a:number = \"12\";")
 
         assertEquals(TokenType.KEYWORD, tokenList[0].type)
         assertEquals(TokenType.IDENTIFIER, tokenList[1].type)
         assertEquals(TokenType.DECLARATION, tokenList[2].type)
         assertEquals(TokenType.TYPE, tokenList[3].type)
         assertEquals(TokenType.ASSIGNATION, tokenList[4].type) //There are two different assignations token types
-        assertEquals(TokenType.VALUE, tokenList[5].type)
+        assertEquals(TokenType.STRING, tokenList[5].type)
         assertEquals(TokenType.SEMICOLON, tokenList[6].type)
     }
 
