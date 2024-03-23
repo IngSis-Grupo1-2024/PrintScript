@@ -8,30 +8,25 @@ import components.ast.ASTInterface
 
 class Interpreter {
 
-    fun interpret(ast: ASTInterface) {
-    }
-
-    fun addVariableToMap(ast: ASTInterface): Map<String, Variable> {
+    fun interpret(ast: ASTInterface) : Map<String, Variable> {
         val root = ast.token!!.type
         val variableMap = HashMap<String, Variable>()
         when (root) {
             TokenType.DECLARATION -> {
-                val variableName = ast.children[0].token!!.value
-                val variableType = ast.children[1].token!!.type
-                variableMap[variableName] = Variable(variableType, null)
+                interpret(variableMap, getVariableName(ast), getVariableType(ast), null.toString())
             }
 
             TokenType.ASSIGNATION -> {
                 if (!checkIfAssignationAndDeclaration(ast.children[0].token!!.type)) {
-                    val variableName = ast.children[0].token!!.value
+                    val variableName = getVariableName(ast)
                     val variableType = searchForVariableType(variableName, variableMap)
                     val variableValue = recursiveSearch(ast.children[1],variableType)
-                    variableMap[variableName] = Variable(variableType, variableValue)
+                    interpret(variableMap, variableName, searchForVariableType(variableName, variableMap), variableValue)
                 } else {
-                    val variableName = ast.children[0].children[0].token!!.value
-                    val variableType = ast.children[0].children[1].token!!.type
+                    val variableName = getVariableName(ast.children[0])
+                    val variableType = getVariableType(ast.children[0])
                     val variableValue = recursiveSearch(ast.children[1], variableType)
-                    variableMap[variableName] = Variable(variableType, variableValue)
+                    interpret(variableMap, variableName, variableType, variableValue)
                 }
             }
 
@@ -53,6 +48,25 @@ class Interpreter {
         return variableMap
     }
 
+    private fun getVariableType(ast: ASTInterface): TokenType {
+        val variableType = ast.children[1].token!!.type
+        return variableType
+    }
+
+    private fun getVariableName(ast: ASTInterface): String {
+        val variableName = ast.children[0].token!!.value
+        return variableName
+    }
+
+    private fun interpret(
+        variableMap: HashMap<String, Variable>,
+        variableName: String,
+        variableType: TokenType,
+        variableValue: String
+    ) {
+        variableMap[variableName] = Variable(variableType, variableValue)
+    }
+
     private fun searchForVariableType(variableName: String, variableMap: HashMap<String, Variable>): TokenType {
         return variableMap[variableName]!!.type
 
@@ -60,7 +74,7 @@ class Interpreter {
 
 
     fun printLine(ast: ASTInterface, variableMap: Map<String, Variable>) {
-        //If the first child has more than 1 children we loop
+        //If the first child has more than 1 child we loop
         if (ast.children[0].children.size > 1) {
                 val types = ArrayList<TokenType>()
                 val values = ArrayList<String>()
@@ -74,7 +88,7 @@ class Interpreter {
                     println(calculateMathResult(values))
                 }
         }
-        //If the first child does not have children, we print the value of the first chilg
+        //If the first child does not have children, we print the value of the first child
         else {
             println(getVariableOrValue(ast.children[0].token!!, variableMap))
         }
