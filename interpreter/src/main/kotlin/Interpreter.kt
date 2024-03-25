@@ -6,7 +6,7 @@ import components.TokenType
 import components.ast.ASTInterface
 
 
-class Interpreter {
+class           Interpreter {
 
 
     fun interpret(ast: ASTInterface) : Map<String, Variable> {
