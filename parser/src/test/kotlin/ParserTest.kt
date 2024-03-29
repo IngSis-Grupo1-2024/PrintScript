@@ -20,7 +20,7 @@ class ParserTest {
             Token(position, "let", TokenType.KEYWORD),
             Token(position, "x", TokenType.IDENTIFIER),
             Token(position, ":", TokenType.DECLARATION),
-            Token(position, "string", TokenType.TYPE),
+            Token(position, "string", TokenType.STRING),
             Token(position, "", TokenType.SEMICOLON),
         )
         val astExpected: ASTInterface =
@@ -28,7 +28,7 @@ class ParserTest {
                 Token(position, ":", TokenType.DECLARATION),
                 listOf(
                     AST(Token(position, "x", TokenType.IDENTIFIER)),
-                    AST(Token(position, "string", TokenType.TYPE))
+                    AST(Token(position, "string", TokenType.STRING))
                 )
             )
         assertEquals(astExpected.toString(), parser.parse(tokens).toString())
@@ -102,7 +102,7 @@ class ParserTest {
             Token(position, "let", TokenType.KEYWORD),
             Token(position, "x", TokenType.IDENTIFIER),
             Token(position, ":", TokenType.DECLARATION),
-            Token(position, "number", TokenType.TYPE),
+            Token(position, "number", TokenType.INTEGER),
             Token(position, "=", TokenType.ASSIGNATION),
             Token(position, "8", TokenType.VALUE),
             Token(position, ";", TokenType.SEMICOLON)
@@ -115,7 +115,7 @@ class ParserTest {
                         Token(position, ":", TokenType.DECLARATION),
                         listOf(
                             AST(Token(position, "x", TokenType.IDENTIFIER)),
-                            AST(Token(position, "number", TokenType.TYPE))
+                            AST(Token(position, "number", TokenType.INTEGER))
                         )
                     ),
                     AST(Token(position, "8", TokenType.VALUE))
@@ -216,7 +216,7 @@ class ParserTest {
             Token(position, "let", TokenType.KEYWORD),
             Token(position, "x", TokenType.IDENTIFIER),
             Token(position, ":", TokenType.ASSIGNATION),
-            Token(position, "number", TokenType.TYPE),
+            Token(position, "number", TokenType.INTEGER),
             Token(position, "=", TokenType.ASSIGNATION),
             Token(position, "8", TokenType.VALUE),
             Token(position, "+", TokenType.OPERATOR),
@@ -233,7 +233,7 @@ class ParserTest {
                         Token(position, ":", TokenType.DECLARATION),
                         listOf(
                             AST(Token(position, "x", TokenType.IDENTIFIER)),
-                            AST(Token(position, "number", TokenType.TYPE))
+                            AST(Token(position, "number", TokenType.INTEGER))
                         )
                     ),
 

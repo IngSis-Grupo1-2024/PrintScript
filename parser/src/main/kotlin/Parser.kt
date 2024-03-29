@@ -173,8 +173,9 @@ class Parser : ParserInterface {
         // sum(a + b)
         val tokenTypes = tokens.map { it.getType() }
         if (tokenTypes.subList(0, FUNCIONTYPES.size) == FUNCIONTYPES) {
-            if (tokenTypes.last() != TokenType.PARENTHESIS) throw Exception(
-                tokens.last().getPosition().startLine.toString() + ":error: ')' expected " + tokens.last().getPosition()
+            if (tokenTypes.last() != TokenType.PARENTHESIS) throw ParserError(
+                tokens.last().getPosition().startLine.toString() + ":error: ')' expected " + tokens.last().getPosition(),
+                tokens.last()
             )
             return checkValue(tokens)
         }
@@ -186,7 +187,7 @@ class Parser : ParserInterface {
             listOf(TokenType.INTEGER, TokenType.STRING, TokenType.DECLARATION, TokenType.ASSIGNATION, TokenType.SEMICOLON, TokenType.KEYWORD)
         tokens
             .filter { it.getType() in invalidValueTypes }
-            .forEach { throw InvalidKeyException("Invalid value type ${it.getPosition()}") }
+            .forEach { throw ParserError("Invalid value type ${it.getPosition()}", it)}
         return true
     }
 
