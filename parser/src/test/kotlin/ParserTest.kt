@@ -3,7 +3,7 @@ package modules.parser
 class ParserTest {
 //    @Test
 //    fun `declaration of x as string`() {
-//        val parser = Parser()
+//        val parser = org.austral.ingsis.Parser.Parser()
 //        val position = Position()
 //        val tokens: List<Token> = listOf(
 //            Token(position, "let", TokenType.KEYWORD),
@@ -21,7 +21,7 @@ class ParserTest {
 //    }
 //    @Test
 //    fun `8 plus 3`() {
-//        val parser = Parser()
+//        val parser = org.austral.ingsis.Parser.Parser()
 //        val position = Position()
 //        val tokens: List<Token> = listOf(
 //            Token(position, "8", TokenType.VALUE),
@@ -39,7 +39,7 @@ class ParserTest {
 //    }
 //    @Test
 //    fun `x = 8 plus 3`() {
-//        val parser = Parser()
+//        val parser = org.austral.ingsis.Parser.Parser()
 //        val position = Position()
 //        val tokens: List<Token> = listOf(
 //            Token(position, "x", TokenType.IDENTIFIER),
@@ -64,7 +64,7 @@ class ParserTest {
 //
 //    @Test
 //    fun `let x number = 8`() {
-//        val parser = Parser()
+//        val parser = org.austral.ingsis.Parser.Parser()
 //        val position = Position()
 //        val tokens: List<Token> = listOf(
 //            Token(position, "x", TokenType.IDENTIFIER),
@@ -86,7 +86,7 @@ class ParserTest {
 //
 //    @Test
 //    fun `8 + 3 mul 2`() {
-//        val parser = Parser()
+//        val parser = org.austral.ingsis.Parser.Parser()
 //        val position = Position()
 //        val tokens: List<Token> = listOf(
 //            Token(position, "8", TokenType.VALUE),
@@ -110,7 +110,7 @@ class ParserTest {
 //
 //    @Test
 //    fun `8 mul 3 + 2`() {
-//        val parser = Parser()
+//        val parser = org.austral.ingsis.Parser.Parser()
 //        val position = Position()
 //        val tokens: List<Token> = listOf(
 //            Token(position, "8", TokenType.VALUE),
@@ -133,7 +133,7 @@ class ParserTest {
 //    }
 //    @Test
 //    fun `let x number = 8 + 3 mul 2`() {
-//        val parser = Parser()
+//        val parser = org.austral.ingsis.Parser.Parser()
 //        val position = Position()
 //        val tokens: List<Token> = listOf(
 //            Token(position, "let", TokenType.KEYWORD),
@@ -164,7 +164,7 @@ class ParserTest {
 //
 //    @Test
 //    fun testIsDeclarationShouldReturnTrue() {
-//        val parser = Parser()
+//        val parser = org.austral.ingsis.Parser.Parser()
 //        val position = Position()
 //        val tokens: List<Token> = listOf(
 //            Token(position, "let", TokenType.KEYWORD),
@@ -178,7 +178,7 @@ class ParserTest {
 //
 //    @Test
 //    fun testIsAssignationShouldReturnTrue() {
-//        val parser = Parser()
+//        val parser = org.austral.ingsis.Parser.Parser()
 //        val position = Position()
 //        val tokens: List<Token> = listOf(
 //            Token(position, "let", TokenType.KEYWORD),
@@ -194,7 +194,7 @@ class ParserTest {
 //
 //    @Test
 //    fun testIsAssignationShouldReturnFalse() {
-//        val parser = Parser()
+//        val parser = org.austral.ingsis.Parser.Parser()
 //        val position = Position()
 //        val tokens: List<Token> = listOf(
 //            Token(position, "let", TokenType.KEYWORD),
@@ -209,7 +209,7 @@ class ParserTest {
 //
 //    @Test
 //    fun testIsAssignationWithSemicolonAfterDeclarationShouldReturnFalse() {
-//        val parser = Parser()
+//        val parser = org.austral.ingsis.Parser.Parser()
 //        val position = Position()
 //        val tokens: List<Token> = listOf(
 //            Token(position, "let", TokenType.KEYWORD),
@@ -228,7 +228,7 @@ class ParserTest {
 //
 //    @Test
 //    fun isCallingPrintlnMethodShouldReturnTrue(){
-//        val parser = Parser()
+//        val parser = org.austral.ingsis.Parser.Parser()
 //        val position = Position()
 //        val tokens: List<Token> = listOf(
 //            Token(position, "println", TokenType.KEYWORD),

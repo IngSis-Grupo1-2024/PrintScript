@@ -1,4 +1,9 @@
-import components.*
+package ingsis.parser
+
+import components.ComparatorTokenType
+import components.ComparatorTokenValue
+import components.Token
+import components.TokenType
 import components.ast.AST
 import components.ast.ASTInterface
 import kotlin.math.abs

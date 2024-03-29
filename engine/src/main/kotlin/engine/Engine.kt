@@ -1,6 +1,8 @@
 import components.Position
 import components.Token
 import components.ast.ASTInterface
+import ingsis.parser.Parser
+import ingsis.lexer.Lexer
 
 
 //This may be an unnecessary class it can only be a
