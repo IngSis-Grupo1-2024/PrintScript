@@ -14,7 +14,7 @@ interface ASTInterface {
 
     fun addChildren(ast: ASTInterface): ASTInterface
 
-    fun childrenAmount(): Int
+    fun getChildrenAmount(): Int
 
     fun replace(ast: ASTInterface, other: ASTInterface): ASTInterface
 }

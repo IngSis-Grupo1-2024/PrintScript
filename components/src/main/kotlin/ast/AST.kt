@@ -25,7 +25,7 @@ class AST(private val token: Token?, private val children: List<ASTInterface>) :
         else AST(getToken(), this.children + listOf(ast))
     }
 
-    override fun childrenAmount(): Int = this.children.size
+    override fun getChildrenAmount(): Int = this.children.size
 
     override fun toString(): String = "{\n\ttoken: $token,\n\tchildren: $children\n}}"
 

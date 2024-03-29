@@ -2,7 +2,6 @@ import components.*
 import components.ast.AST
 import components.ast.ASTInterface
 import error.ParserError
-import java.security.InvalidKeyException
 import kotlin.math.abs
 
 class Parser : ParserInterface {
@@ -11,6 +10,7 @@ class Parser : ParserInterface {
     private val DOESNTMATTERTYPES = listOf(TokenType.PARENTHESIS, TokenType.KEYWORD)
     private val VALUETYPES = listOf(TokenType.INTEGER, TokenType.STRING)
     private val FUNCIONTYPES = listOf(TokenType.FUNCTION, TokenType.PARENTHESIS)
+    private val twoChildrenType = listOf(TokenType.OPERATOR, TokenType.ASSIGNATION, TokenType.DECLARATION)
 
     override fun parse(tokens: List<Token>): ASTInterface {
         if (tokens.last().getType() != TokenType.SEMICOLON)
@@ -81,6 +81,8 @@ class Parser : ParserInterface {
         if (token.getType() in DOESNTMATTERTYPES) return ast
         if (ast.isEmpty()) return ast.addChildren(getLeaf(token))
         val compareTokens = compareValueAndType(token, ast.getToken())
+        if (ast.getChildrenAmount() == 1 && ast.getToken().getType() in twoChildrenType && rootIsBigger(compareTokens))
+            return ast.addChildren(getLeaf(token))
         return if (rootIsBigger(compareTokens)) compWChildren(token, ast)
         else if (compareTokens == 1) AST(token, ast)
         else if (abs(compareTokens) == 2) ast
@@ -99,7 +101,7 @@ class Parser : ParserInterface {
             val comp = compareValueAndType(token, child.getToken())
             when (comp) {
                 // child's root bigger than token
-                -1 -> return ast.replace(child, add(token, child))
+                -1 -> return removeLastChild(ast, token)
                 // token bigger than child's root
                 1 -> return removeLastChild(ast, token)
             }
