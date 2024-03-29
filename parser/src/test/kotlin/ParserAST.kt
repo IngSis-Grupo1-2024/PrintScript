@@ -6,28 +6,87 @@ import components.Token
 import components.TokenType
 import components.ast.AST
 import components.ast.ASTInterface
+import error.ParserError
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class ParserAST {
     @Test
-    fun `declaration to AST`(){
+    fun `test 001 - declaration to AST`(){
         val parser = Parser()
         val position = Position()
         val tokens: List<Token> = listOf(
             Token(position, "let", TokenType.KEYWORD),
             Token(position, "x", TokenType.IDENTIFIER),
-            Token(position, ":", TokenType.ASSIGNATION),
-            Token(position, "string", TokenType.TYPE),
+            Token(position, ":", TokenType.DECLARATION),
+            Token(position, "string", TokenType.STRING),
             Token(position, "", TokenType.SEMICOLON)
         )
         val astExpected: ASTInterface =
-            AST(Token(position, ":", TokenType.ASSIGNATION),
+            AST(Token(position, ":", TokenType.DECLARATION),
                 listOf(
                     AST(Token(position, "x", TokenType.IDENTIFIER)),
-                    AST(Token(position, "string", TokenType.TYPE))
+                    AST(Token(position, "string", TokenType.STRING))
                 ))
-        assertEquals(astExpected.toString(), parser.transformDeclaration(tokens).toString())
+        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
+    }
+
+    @Test
+    fun `test 002 - declaration without keyword`() {
+        val parser = Parser()
+        val position = Position()
+        val tokens: List<Token> = listOf(
+            Token(position, "x", TokenType.IDENTIFIER),
+            Token(position, ":", TokenType.DECLARATION),
+            Token(position, "string", TokenType.STRING),
+            Token(position, "", TokenType.SEMICOLON)
+        )
+        Assertions.assertThrows(ParserError::class.java) {
+            parser.parse(tokens)
+        }
+    }
+    @Test
+    fun `test 003 - declaration without identifier`() {
+        val parser = Parser()
+        val position = Position()
+        val tokens: List<Token> = listOf(
+            Token(position, "let", TokenType.KEYWORD),
+            Token(position, ":", TokenType.DECLARATION),
+            Token(position, "string", TokenType.STRING),
+            Token(position, "", TokenType.SEMICOLON)
+        )
+        Assertions.assertThrows(ParserError::class.java) {
+            parser.parse(tokens)
+        }
+    }
+    @Test
+    fun `test 004 - declaration without declaration`() {
+        val parser = Parser()
+        val position = Position()
+        val tokens: List<Token> = listOf(
+            Token(position, "let", TokenType.KEYWORD),
+            Token(position, "x", TokenType.IDENTIFIER),
+            Token(position, "string", TokenType.STRING),
+            Token(position, "", TokenType.SEMICOLON)
+        )
+        Assertions.assertThrows(ParserError::class.java) {
+            parser.parse(tokens)
+        }
+    }
+    @Test
+    fun `test 004 - declaration without type`() {
+        val parser = Parser()
+        val position = Position()
+        val tokens: List<Token> = listOf(
+            Token(position, "let", TokenType.KEYWORD),
+            Token(position, "x", TokenType.IDENTIFIER),
+            Token(position, ":", TokenType.DECLARATION),
+            Token(position, "", TokenType.SEMICOLON)
+        )
+        Assertions.assertThrows(ParserError::class.java) {
+            parser.parse(tokens)
+        }
     }
     @Test
     fun `assignation to AST`(){
@@ -45,7 +104,7 @@ class ParserAST {
                     AST(Token(position, "x", TokenType.IDENTIFIER)),
                     AST(Token(position, "8", TokenType.VALUE))
                 ))
-        assertEquals(astExpected.toString(), parser.transformAssignation(tokens).toString())
+        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
     }
 
     @Test
@@ -70,7 +129,7 @@ class ParserAST {
                             AST(Token(position, "3", TokenType.VALUE)))
                         ))
                 )
-        assertEquals(astExpected.toString(), parser.transformAssignation(tokens).toString())
+        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
     }
 
     @Test
@@ -101,7 +160,7 @@ class ParserAST {
                                 ))
                         ))
                 ))
-        assertEquals(astExpected.toString(), parser.transformAssignation(tokens).toString())
+        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
     }
 
     @Test
@@ -134,7 +193,7 @@ class ParserAST {
                                 ))
                         ))
                 ))
-        assertEquals(astExpected.toString(), parser.transformAssignation(tokens).toString())
+        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
     }
 
     @Test
@@ -145,7 +204,7 @@ class ParserAST {
             Token(position, "let", TokenType.KEYWORD),
             Token(position, "x", TokenType.IDENTIFIER),
             Token(position, ":", TokenType.DECLARATION),
-            Token(position, "number", TokenType.TYPE),
+            Token(position, "number", TokenType.INTEGER),
             Token(position, "=", TokenType.ASSIGNATION),
             Token(position, "8", TokenType.VALUE),
             Token(position, "", TokenType.SEMICOLON)
@@ -156,13 +215,13 @@ class ParserAST {
                 AST(Token(position, ":", TokenType.DECLARATION),
                     listOf(
                         AST(Token(position, "x", TokenType.IDENTIFIER)),
-                        AST(Token(position, "number", TokenType.TYPE))
+                        AST(Token(position, "number", TokenType.INTEGER))
                         )
                     ),
                 AST(Token(position, "8", TokenType.VALUE))
             )
         )
-        assertEquals(astExpected.toString(), parser.transformAssignation(tokens).toString())
+        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
     }
 
     @Test
@@ -189,6 +248,6 @@ class ParserAST {
                 )
             )
         )
-        assertEquals(astExpected.toString(), parser.transformFunction(tokens).toString())
+        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
     }
 }
