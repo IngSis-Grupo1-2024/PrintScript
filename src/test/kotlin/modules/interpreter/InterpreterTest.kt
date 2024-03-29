@@ -14,12 +14,16 @@ class InterpreterTest {
         val interpreter = Interpreter()
         val position = Position()
         val ast: ASTInterface =
-            AST(Token(position, ":", TokenType.ASSIGNATION),
-                            AST(Token(position, "x", TokenType.IDENTIFIER)),
-                            AST(Token(position, "string", TokenType.TYPE))
+            AST(
+                Token(position, ":", TokenType.ASSIGNATION),
+                AST(Token(position, "x", TokenType.IDENTIFIER)),
+                AST(Token(position, "string", TokenType.TYPE)),
             )
         val typeMapExpected = HashMap<String, String>()
         typeMapExpected.put("x", "string")
-        assertEquals(typeMapExpected, interpreter.interpret(ast, ValueAndTypeMaps(HashMap<String, String>(), HashMap<String, String>())).typeMap)
+        assertEquals(
+            typeMapExpected,
+            interpreter.interpret(ast, ValueAndTypeMaps(HashMap<String, String>(), HashMap<String, String>())).typeMap,
+        )
     }
 }

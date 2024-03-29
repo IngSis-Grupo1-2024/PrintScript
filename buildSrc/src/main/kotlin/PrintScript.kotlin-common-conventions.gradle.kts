@@ -7,7 +7,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm")
 }
 
-repositories{
+repositories {
     mavenCentral()
 }
 
@@ -45,7 +45,6 @@ tasks.test {
     useJUnitPlatform()
 }
 
-
 val ktlintCheck by tasks.registering(JavaExec::class) {
     group = LifecycleBasePlugin.VERIFICATION_GROUP
     description = "Check Kotlin code style"
@@ -77,4 +76,3 @@ tasks.register<JavaExec>("ktlintFormat") {
         "!**/build/**",
     )
 }
-

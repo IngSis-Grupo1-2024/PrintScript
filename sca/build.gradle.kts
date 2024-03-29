@@ -7,7 +7,5 @@ plugins {
 }
 
 dependencies {
-    api(project(":utils"))
     api(project(":components"))
-    api(project(":sca"))
 }

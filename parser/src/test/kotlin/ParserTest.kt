@@ -79,7 +79,7 @@ class ParserTest {
 //                listOf(AST(Token(position, "x", TokenType.IDENTIFIER)),
 //                        AST(Token(position, "8", TokenType.VALUE))
 //                ))
-////        println(parser.parse(tokens))
+// //        println(parser.parse(tokens))
 //        println(astExpected)
 //        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
 //    }
@@ -239,5 +239,4 @@ class ParserTest {
 //        )
 //        assertEquals(true, parser.isCallingMethod(tokens))
 //    }
-
 }

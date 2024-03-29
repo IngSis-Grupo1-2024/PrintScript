@@ -1,7 +1,6 @@
 package components
 
 enum class TokenType {
-
     TYPE,
     SEMICOLON,
     ASSIGNATION, // for the =
@@ -14,6 +13,5 @@ enum class TokenType {
     FUNCTION,
     PARENTHESIS,
     STRING,
-    INTEGER
-
+    INTEGER,
 }

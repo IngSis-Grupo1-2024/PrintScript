@@ -3,13 +3,13 @@ import components.Token
 import components.TokenType
 
 class Lexer(override val position: Position) : LexerInterface {
-
-    private val essentialStr = mapOf(
-        "let" to TokenType.KEYWORD,
-        "number" to TokenType.TYPE,
-        "string" to TokenType.TYPE,
-        "println" to TokenType.FUNCTION
-    )
+    private val essentialStr =
+        mapOf(
+            "let" to TokenType.KEYWORD,
+            "number" to TokenType.TYPE,
+            "string" to TokenType.TYPE,
+            "println" to TokenType.FUNCTION,
+        )
 
     private val operators = listOf('+', '-', '/', '*', '(', ')')
 
@@ -21,11 +21,9 @@ class Lexer(override val position: Position) : LexerInterface {
         var isString = false
 //        val dictionary = mutableMapOf<String, Boolean>() This can be used to remove the isString variable and when new types like lists are added.
 
-
         var currentPosition = position.copy()
 
         for (char in input) {
-
             currentString.append(char)
 
             when (char) {
@@ -62,7 +60,7 @@ class Lexer(override val position: Position) : LexerInterface {
                             val tempString = currentString.deleteAt(currentString.length - 1)
                             if (tempString.toString() != StringBuilder("").toString()) {
                                 var tokenValue = TokenType.INTEGER
-                                if(isString){
+                                if (isString) {
                                     tokenValue = TokenType.STRING
                                     isString = false
                                 }
@@ -70,11 +68,11 @@ class Lexer(override val position: Position) : LexerInterface {
                                     Token(
                                         currentPosition.copy(
                                             endOffset = currentPosition.startOffset + currentString.length - 1,
-                                            endColumn = currentPosition.startColumn + currentString.length - 1
+                                            endColumn = currentPosition.startColumn + currentString.length - 1,
                                         ),
                                         tempString.toString(),
-                                        tokenValue
-                                    )
+                                        tokenValue,
+                                    ),
                                 )
                             }
 
@@ -84,8 +82,8 @@ class Lexer(override val position: Position) : LexerInterface {
                                 Token(
                                     currentPosition,
                                     ";",
-                                    TokenType.SEMICOLON
-                                )
+                                    TokenType.SEMICOLON,
+                                ),
                             )
                         }
                     }
@@ -104,8 +102,8 @@ class Lexer(override val position: Position) : LexerInterface {
                                     Token(
                                         changeEndOffsetAndColumn(currentPosition, -1),
                                         currentString.toString(),
-                                        TokenType.IDENTIFIER
-                                    )
+                                        TokenType.IDENTIFIER,
+                                    ),
                                 )
                             }
                             if (currentString.toString() == ":") {
@@ -113,19 +111,19 @@ class Lexer(override val position: Position) : LexerInterface {
                                     Token(
                                         currentPosition,
                                         ":",
-                                        TokenType.DECLARATION
-                                    )
+                                        TokenType.DECLARATION,
+                                    ),
                                 )
                             } else {
                                 tokenList.add(
                                     Token(
                                         currentPosition.copy(
                                             startOffset = currentPosition.startOffset + currentString.length,
-                                            startColumn = currentPosition.startColumn + currentString.length
+                                            startColumn = currentPosition.startColumn + currentString.length,
                                         ),
                                         ":",
-                                        TokenType.DECLARATION
-                                    )
+                                        TokenType.DECLARATION,
+                                    ),
                                 )
                             }
                             currentPosition = previousEndToNewStart(currentPosition, 1)
@@ -164,23 +162,23 @@ class Lexer(override val position: Position) : LexerInterface {
                                         Token(
                                             changeEndOffsetAndColumn(currentPosition, -1),
                                             value = currentString.deleteAt(currentString.length - 1).toString(),
-                                            type = TokenType.IDENTIFIER
-                                        )
+                                            type = TokenType.IDENTIFIER,
+                                        ),
                                     )
                                 } else {
-                                    //This has to be changed because in case it is a list is different, there can be a switch or pattern matching then
+                                    // This has to be changed because in case it is a list is different, there can be a switch or pattern matching then
                                     var tokenValue = TokenType.INTEGER
-                                    if(isString){
+                                    if (isString) {
                                         tokenValue = TokenType.STRING
                                         isString = false
                                     }
-                                        tokenList.add(
-                                            Token(
-                                                changeEndOffsetAndColumn(currentPosition, -1),
-                                                value = currentString.deleteAt(currentString.length - 1).toString(),
-                                                type = tokenValue
-                                            )
-                                        )
+                                    tokenList.add(
+                                        Token(
+                                            changeEndOffsetAndColumn(currentPosition, -1),
+                                            value = currentString.deleteAt(currentString.length - 1).toString(),
+                                            type = tokenValue,
+                                        ),
+                                    )
                                 }
                             }
                             currentPosition = previousEndToNewStart(currentPosition, 1)
@@ -211,41 +209,46 @@ class Lexer(override val position: Position) : LexerInterface {
 
     private fun moveToNewLine(currentPosition: Position): Position {
         var currentPosition1 = currentPosition
-        currentPosition1 = Position(
-            currentPosition1.startOffset + 1,
-            currentPosition1.endOffset + 1,
-            currentPosition1.startLine + 1,
-            currentPosition1.endLine + 1,
-            1,
-            1
-        )
+        currentPosition1 =
+            Position(
+                currentPosition1.startOffset + 1,
+                currentPosition1.endOffset + 1,
+                currentPosition1.startLine + 1,
+                currentPosition1.endLine + 1,
+                1,
+                1,
+            )
         return currentPosition1
     }
 
-    private fun changeEndOffsetAndColumn(currentPosition: Position, value: Int) = currentPosition.copy(
+    private fun changeEndOffsetAndColumn(
+        currentPosition: Position,
+        value: Int,
+    ) = currentPosition.copy(
         endOffset = currentPosition.endOffset + value,
-        endColumn = currentPosition.endColumn + value
+        endColumn = currentPosition.endColumn + value,
     )
 
-    private fun previousEndToNewStart(currentPosition: Position, value: Int) = currentPosition.copy(
+    private fun previousEndToNewStart(
+        currentPosition: Position,
+        value: Int,
+    ) = currentPosition.copy(
         startOffset = currentPosition.endOffset + value,
-        startColumn = currentPosition.endColumn + value
+        startColumn = currentPosition.endColumn + value,
     )
 
     private fun addToken(
         tokenList: ArrayList<Token>,
         currentPosition: Position,
-        currentString: StringBuilder
+        currentString: StringBuilder,
     ): ArrayList<Token> {
         tokenList.add(
             Token(
                 currentPosition.copy(endOffset = currentPosition.endOffset),
                 currentString.toString(),
-                essentialStr.get(currentString.toString())!!
-            )
+                essentialStr.get(currentString.toString())!!,
+            ),
         )
         return tokenList
     }
-
-
 }
