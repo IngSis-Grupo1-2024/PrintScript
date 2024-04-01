@@ -10,7 +10,6 @@ import error.ParserError
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
-
 class ParserTest {
     @Test
     fun `test 001 - declaration of x as string`() {
@@ -20,7 +19,7 @@ class ParserTest {
             Token(position, "let", TokenType.KEYWORD),
             Token(position, "x", TokenType.IDENTIFIER),
             Token(position, ":", TokenType.DECLARATION),
-            Token(position, "string", TokenType.STRING),
+            Token(position, "string", TokenType.TYPE),
             Token(position, "", TokenType.SEMICOLON),
         )
         val astExpected: ASTInterface =
@@ -28,7 +27,7 @@ class ParserTest {
                 Token(position, ":", TokenType.DECLARATION),
                 listOf(
                     AST(Token(position, "x", TokenType.IDENTIFIER)),
-                    AST(Token(position, "string", TokenType.STRING))
+                    AST(Token(position, "string", TokenType.TYPE))
                 )
             )
         assertEquals(astExpected.toString(), parser.parse(tokens).toString())
@@ -41,9 +40,9 @@ class ParserTest {
         val tokens: List<Token> = listOf(
             Token(position, "x", TokenType.IDENTIFIER),
             Token(position, "=", TokenType.ASSIGNATION),
-            Token(position, "8", TokenType.VALUE),
+            Token(position, "8", TokenType.INTEGER),
             Token(position, "+", TokenType.OPERATOR),
-            Token(position, "3", TokenType.VALUE),
+            Token(position, "3", TokenType.INTEGER),
             Token(position, ";", TokenType.SEMICOLON)
         )
         val astExpected: ASTInterface =
@@ -54,8 +53,8 @@ class ParserTest {
                     AST(
                         Token(position, "+", TokenType.OPERATOR),
                         listOf(
-                            AST(Token(position, "8", TokenType.VALUE)),
-                            AST(Token(position, "3", TokenType.VALUE))
+                            AST(Token(position, "8", TokenType.INTEGER)),
+                            AST(Token(position, "3", TokenType.INTEGER))
                         )
                     )
                 )
@@ -71,9 +70,9 @@ class ParserTest {
         val tokens: List<Token> = listOf(
             Token(position, "x", TokenType.IDENTIFIER),
             Token(position, "=", TokenType.ASSIGNATION),
-            Token(position, "8", TokenType.VALUE),
+            Token(position, "8", TokenType.INTEGER),
             Token(position, "+", TokenType.OPERATOR),
-            Token(position, "3", TokenType.VALUE),
+            Token(position, "3", TokenType.INTEGER),
             Token(position, ";", TokenType.SEMICOLON),
         )
         val astExpected: ASTInterface =
@@ -84,8 +83,8 @@ class ParserTest {
                     AST(
                         Token(position, "+", TokenType.OPERATOR),
                         listOf(
-                            AST(Token(position, "8", TokenType.VALUE)),
-                            AST(Token(position, "3", TokenType.VALUE))
+                            AST(Token(position, "8", TokenType.INTEGER)),
+                            AST(Token(position, "3", TokenType.INTEGER))
                         )
                     )
                 )
@@ -102,9 +101,9 @@ class ParserTest {
             Token(position, "let", TokenType.KEYWORD),
             Token(position, "x", TokenType.IDENTIFIER),
             Token(position, ":", TokenType.DECLARATION),
-            Token(position, "number", TokenType.INTEGER),
+            Token(position, "number", TokenType.TYPE),
             Token(position, "=", TokenType.ASSIGNATION),
-            Token(position, "8", TokenType.VALUE),
+            Token(position, "8", TokenType.INTEGER),
             Token(position, ";", TokenType.SEMICOLON)
         )
         val astExpected: ASTInterface =
@@ -115,10 +114,10 @@ class ParserTest {
                         Token(position, ":", TokenType.DECLARATION),
                         listOf(
                             AST(Token(position, "x", TokenType.IDENTIFIER)),
-                            AST(Token(position, "number", TokenType.INTEGER))
+                            AST(Token(position, "number", TokenType.TYPE))
                         )
                     ),
-                    AST(Token(position, "8", TokenType.VALUE))
+                    AST(Token(position, "8", TokenType.INTEGER))
                 )
             )
         assertEquals(astExpected.toString(), parser.parse(tokens).toString())
@@ -131,11 +130,11 @@ class ParserTest {
         val tokens: List<Token> = listOf(
             Token(position, "x", TokenType.IDENTIFIER),
             Token(position, "=", TokenType.ASSIGNATION),
-            Token(position, "8", TokenType.VALUE),
+            Token(position, "8", TokenType.INTEGER),
             Token(position, "+", TokenType.OPERATOR),
-            Token(position, "3", TokenType.VALUE),
+            Token(position, "3", TokenType.INTEGER),
             Token(position, "*", TokenType.OPERATOR),
-            Token(position, "2", TokenType.VALUE),
+            Token(position, "2", TokenType.INTEGER),
             Token(position, "x", TokenType.SEMICOLON)
         )
         val astExpected: ASTInterface =
@@ -150,13 +149,13 @@ class ParserTest {
                         Token(position, "+", TokenType.OPERATOR),
                         listOf(
                             AST(
-                                Token(position, "8", TokenType.VALUE)
+                                Token(position, "8", TokenType.INTEGER)
                             ),
                             AST(
                                 Token(position, "*", TokenType.OPERATOR),
                                 listOf(
-                                    AST(Token(position, "3", TokenType.VALUE)),
-                                    AST(Token(position, "2", TokenType.VALUE))
+                                    AST(Token(position, "3", TokenType.INTEGER)),
+                                    AST(Token(position, "2", TokenType.INTEGER))
                                 )
                             )
                         )
@@ -173,11 +172,11 @@ class ParserTest {
         val tokens: List<Token> = listOf(
             Token(position, "x", TokenType.IDENTIFIER),
             Token(position, "=", TokenType.ASSIGNATION),
-            Token(position, "8", TokenType.VALUE),
+            Token(position, "8", TokenType.INTEGER),
             Token(position, "*", TokenType.OPERATOR),
-            Token(position, "3", TokenType.VALUE),
+            Token(position, "3", TokenType.INTEGER),
             Token(position, "+", TokenType.OPERATOR),
-            Token(position, "2", TokenType.VALUE),
+            Token(position, "2", TokenType.INTEGER),
             Token(position, ";", TokenType.SEMICOLON),
         )
         val astExpected: ASTInterface =
@@ -194,12 +193,12 @@ class ParserTest {
                             AST(
                                 Token(position, "*", TokenType.OPERATOR),
                                 listOf(
-                                    AST(Token(position, "8", TokenType.VALUE)),
-                                    AST(Token(position, "3", TokenType.VALUE))
+                                    AST(Token(position, "8", TokenType.INTEGER)),
+                                    AST(Token(position, "3", TokenType.INTEGER))
                                 )
                             ),
                             AST(
-                                Token(position, "2", TokenType.VALUE)
+                                Token(position, "2", TokenType.INTEGER)
                             ),
                         )
                     )
@@ -216,13 +215,13 @@ class ParserTest {
             Token(position, "let", TokenType.KEYWORD),
             Token(position, "x", TokenType.IDENTIFIER),
             Token(position, ":", TokenType.DECLARATION),
-            Token(position, "number", TokenType.INTEGER),
+            Token(position, "number", TokenType.TYPE),
             Token(position, "=", TokenType.ASSIGNATION),
-            Token(position, "8", TokenType.VALUE),
+            Token(position, "8", TokenType.INTEGER),
             Token(position, "+", TokenType.OPERATOR),
-            Token(position, "3", TokenType.VALUE),
+            Token(position, "3", TokenType.INTEGER),
             Token(position, "*", TokenType.OPERATOR),
-            Token(position, "2", TokenType.VALUE),
+            Token(position, "2", TokenType.INTEGER),
             Token(position, "", TokenType.SEMICOLON)
         )
         val astExpected: ASTInterface =
@@ -233,7 +232,7 @@ class ParserTest {
                         Token(position, ":", TokenType.DECLARATION),
                         listOf(
                             AST(Token(position, "x", TokenType.IDENTIFIER)),
-                            AST(Token(position, "number", TokenType.INTEGER))
+                            AST(Token(position, "number", TokenType.TYPE))
                         )
                     ),
 
@@ -241,13 +240,13 @@ class ParserTest {
                         Token(position, "+", TokenType.OPERATOR),
                         listOf(
                             AST(
-                                Token(position, "8", TokenType.VALUE)
+                                Token(position, "8", TokenType.INTEGER)
                             ),
                             AST(
                                 Token(position, "*", TokenType.OPERATOR),
                                 listOf(
-                                    AST(Token(position, "3", TokenType.VALUE)),
-                                    AST(Token(position, "2", TokenType.VALUE))
+                                    AST(Token(position, "3", TokenType.INTEGER)),
+                                    AST(Token(position, "2", TokenType.INTEGER))
                                 )
                             ),
                         )
@@ -270,9 +269,9 @@ class ParserTest {
             Token(position, "string", TokenType.TYPE),
             Token(position, "=", TokenType.ASSIGNATION),
             Token(position, ";", TokenType.SEMICOLON),
-            Token(position, "'hello'", TokenType.VALUE),
+            Token(position, "'hello'", TokenType.STRING),
             Token(position, "+", TokenType.OPERATOR),
-            Token(position, "bye", TokenType.VALUE),
+            Token(position, "bye", TokenType.STRING),
             Token(position, ";", TokenType.SEMICOLON)
         )
         assertThrows(ParserError::class.java) {
@@ -318,15 +317,15 @@ class ParserTest {
             Token(position, "let", TokenType.KEYWORD),
             Token(position, "x", TokenType.IDENTIFIER),
             Token(position, ":", TokenType.DECLARATION),
-            Token(position, "number", TokenType.INTEGER),
+            Token(position, "number", TokenType.TYPE),
             Token(position, "=", TokenType.ASSIGNATION),
-            Token(position, "3", TokenType.VALUE),
+            Token(position, "3", TokenType.INTEGER),
             Token(position, "/", TokenType.OPERATOR),
-            Token(position, "2", TokenType.VALUE),
+            Token(position, "2", TokenType.INTEGER),
             Token(position, "+", TokenType.OPERATOR),
-            Token(position, "3", TokenType.VALUE),
+            Token(position, "3", TokenType.INTEGER),
             Token(position, "*", TokenType.OPERATOR),
-            Token(position, "2", TokenType.VALUE),
+            Token(position, "2", TokenType.INTEGER),
             Token(position, "", TokenType.SEMICOLON)
         )
         val astExpected: ASTInterface =
@@ -337,7 +336,7 @@ class ParserTest {
                         Token(position, ":", TokenType.DECLARATION),
                         listOf(
                             AST(Token(position, "x", TokenType.IDENTIFIER)),
-                            AST(Token(position, "number", TokenType.INTEGER))
+                            AST(Token(position, "number", TokenType.TYPE))
                         )
                     ),
 
@@ -347,15 +346,15 @@ class ParserTest {
                             AST(
                                 Token(position, "/", TokenType.OPERATOR),
                                 listOf(
-                                    AST(Token(position, "3", TokenType.VALUE)),
-                                    AST(Token(position, "2", TokenType.VALUE))
+                                    AST(Token(position, "3", TokenType.INTEGER)),
+                                    AST(Token(position, "2", TokenType.INTEGER))
                                 )
                             ),
                             AST(
                                 Token(position, "*", TokenType.OPERATOR),
                                 listOf(
-                                    AST(Token(position, "3", TokenType.VALUE)),
-                                    AST(Token(position, "2", TokenType.VALUE))
+                                    AST(Token(position, "3", TokenType.INTEGER)),
+                                    AST(Token(position, "2", TokenType.INTEGER))
                                 )
                             ),
                         )
@@ -374,23 +373,23 @@ class ParserTest {
             Token(position, "let", TokenType.KEYWORD),
             Token(position, "x", TokenType.IDENTIFIER),
             Token(position, ":", TokenType.DECLARATION),
-            Token(position, "number", TokenType.INTEGER),
+            Token(position, "number", TokenType.TYPE),
             Token(position, "=", TokenType.ASSIGNATION),
-            Token(position, "3", TokenType.VALUE),
+            Token(position, "3", TokenType.INTEGER),
             Token(position, "/", TokenType.OPERATOR),
-            Token(position, "2", TokenType.VALUE),
+            Token(position, "2", TokenType.INTEGER),
             Token(position, "+", TokenType.OPERATOR),
-            Token(position, "3", TokenType.VALUE),
+            Token(position, "3", TokenType.INTEGER),
             Token(position, "*", TokenType.OPERATOR),
-            Token(position, "2", TokenType.VALUE),
+            Token(position, "2", TokenType.INTEGER),
             Token(position, "-", TokenType.OPERATOR),
-            Token(position, "3", TokenType.VALUE),
+            Token(position, "3", TokenType.INTEGER),
             Token(position, "/", TokenType.OPERATOR),
-            Token(position, "2", TokenType.VALUE),
+            Token(position, "2", TokenType.INTEGER),
             Token(position, "+", TokenType.OPERATOR),
-            Token(position, "3", TokenType.VALUE),
+            Token(position, "3", TokenType.INTEGER),
             Token(position, "*", TokenType.OPERATOR),
-            Token(position, "2", TokenType.VALUE),
+            Token(position, "2", TokenType.INTEGER),
             Token(position, "", TokenType.SEMICOLON)
         )
         val astExpected: ASTInterface =
@@ -401,48 +400,165 @@ class ParserTest {
                         Token(position, ":", TokenType.DECLARATION),
                         listOf(
                             AST(Token(position, "x", TokenType.IDENTIFIER)),
-                            AST(Token(position, "number", TokenType.INTEGER))
+                            AST(Token(position, "number", TokenType.TYPE))
                         )
                     ),
                     AST(
-                        Token(position, "-", TokenType.OPERATOR),
+                        Token(position, "+", TokenType.OPERATOR),
                         listOf(
                             AST(
-                                Token(position, "+", TokenType.OPERATOR),
+                                Token(position, "/", TokenType.OPERATOR),
                                 listOf(
-                                    AST(
-                                        Token(position, "/", TokenType.OPERATOR),
-                                        listOf(
-                                            AST(Token(position, "3", TokenType.VALUE)),
-                                            AST(Token(position, "2", TokenType.VALUE))
-                                        )
-                                    ),
-                                    AST(
-                                        Token(position, "*", TokenType.OPERATOR),
-                                        listOf(
-                                            AST(Token(position, "3", TokenType.VALUE)),
-                                            AST(Token(position, "2", TokenType.VALUE))
-                                        )
-                                    ),
+                                    AST(Token(position, "3", TokenType.INTEGER)),
+                                    AST(Token(position, "2", TokenType.INTEGER))
                                 )
                             ),
                             AST(
-                                Token(position, "+", TokenType.OPERATOR),
-                                listOf(
-                                    AST(
-                                        Token(position, "/", TokenType.OPERATOR),
-                                        listOf(
-                                            AST(Token(position, "3", TokenType.VALUE)),
-                                            AST(Token(position, "2", TokenType.VALUE))
-                                        )
-                                    ),
+                                Token(position, "-", TokenType.OPERATOR), listOf(
                                     AST(
                                         Token(position, "*", TokenType.OPERATOR),
                                         listOf(
-                                            AST(Token(position, "3", TokenType.VALUE)),
-                                            AST(Token(position, "2", TokenType.VALUE))
+                                            AST(Token(position, "3", TokenType.INTEGER)),
+                                            AST(Token(position, "2", TokenType.INTEGER))
                                         )
                                     ),
+                                    AST(
+                                        Token(position, "+", TokenType.OPERATOR),
+                                        listOf(
+                                            AST(
+                                                Token(position, "/", TokenType.OPERATOR),
+                                                listOf(
+                                                    AST(Token(position, "3", TokenType.INTEGER)),
+                                                    AST(Token(position, "2", TokenType.INTEGER))
+                                                )
+                                            ),
+                                            AST(
+                                                Token(position, "*", TokenType.OPERATOR),
+                                                listOf(
+                                                    AST(Token(position, "3", TokenType.INTEGER)),
+                                                    AST(Token(position, "2", TokenType.INTEGER))
+                                                )
+                                            ),
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
+    }
+
+    @Test
+    fun `test 013 - an assignation with parenthesis`() {
+        val parser = Parser()
+        val position = Position()
+        val tokens: List<Token> = listOf(
+            Token(position, "let", TokenType.KEYWORD),
+            Token(position, "x", TokenType.IDENTIFIER),
+            Token(position, ":", TokenType.DECLARATION),
+            Token(position, "number", TokenType.TYPE),
+            Token(position, "=", TokenType.ASSIGNATION),
+            Token(position, "3", TokenType.INTEGER),
+            Token(position, "/", TokenType.OPERATOR),
+            Token(position, "(", TokenType.PARENTHESIS),
+            Token(position, "2", TokenType.INTEGER),
+            Token(position, "+", TokenType.OPERATOR),
+            Token(position, "3", TokenType.INTEGER),
+            Token(position, ")", TokenType.PARENTHESIS),
+            Token(position, "", TokenType.SEMICOLON)
+        )
+        val astExpected: ASTInterface =
+            AST(
+                Token(position, "=", TokenType.ASSIGNATION),
+                listOf(
+                    AST(
+                        Token(position, ":", TokenType.DECLARATION),
+                        listOf(
+                            AST(Token(position, "x", TokenType.IDENTIFIER)),
+                            AST(Token(position, "number", TokenType.TYPE))
+                        )
+                    ),
+
+                    AST(
+                        Token(position, "/", TokenType.OPERATOR),
+                        listOf(
+                            AST(Token(position, "3", TokenType.INTEGER)),
+                            AST(
+                                Token(position, "+", TokenType.OPERATOR),
+                                listOf(
+                                    AST(Token(position, "2", TokenType.INTEGER)),
+                                    AST(Token(position, "3", TokenType.INTEGER))
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+
+        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
+    }
+    @Test
+    fun `test 014 - an assignation with multiple parenthesis`() {
+        val parser = Parser()
+        val position = Position()
+        val tokens: List<Token> = listOf(
+            Token(position, "let", TokenType.KEYWORD),
+            Token(position, "x", TokenType.IDENTIFIER),
+            Token(position, ":", TokenType.DECLARATION),
+            Token(position, "number", TokenType.TYPE),
+            Token(position, "=", TokenType.ASSIGNATION),
+            Token(position, "3", TokenType.INTEGER),
+            Token(position, "/", TokenType.OPERATOR),
+            Token(position, "(", TokenType.PARENTHESIS),
+            Token(position, "2", TokenType.INTEGER),
+            Token(position, "+", TokenType.OPERATOR),
+            Token(position, "(", TokenType.PARENTHESIS),
+            Token(position, "3", TokenType.INTEGER),
+            Token(position, "/", TokenType.OPERATOR),
+            Token(position, "(", TokenType.PARENTHESIS),
+            Token(position, "2", TokenType.INTEGER),
+            Token(position, "+", TokenType.OPERATOR),
+            Token(position, "3", TokenType.INTEGER),
+            Token(position, ")", TokenType.PARENTHESIS),
+            Token(position, ")", TokenType.PARENTHESIS),
+            Token(position, ")", TokenType.PARENTHESIS),
+            Token(position, "", TokenType.SEMICOLON)
+        )
+        val astExpected: ASTInterface =
+            AST(
+                Token(position, "=", TokenType.ASSIGNATION),
+                listOf(
+                    AST(
+                        Token(position, ":", TokenType.DECLARATION),
+                        listOf(
+                            AST(Token(position, "x", TokenType.IDENTIFIER)),
+                            AST(Token(position, "number", TokenType.TYPE))
+                        )
+                    ),
+
+                    AST(
+                        Token(position, "/", TokenType.OPERATOR),
+                        listOf(
+                            AST(Token(position, "3", TokenType.INTEGER)),
+                            AST(
+                                Token(position, "+", TokenType.OPERATOR),
+                                listOf(
+                                    AST(Token(position, "2", TokenType.INTEGER)),
+                                    AST(
+                                        Token(position, "/", TokenType.OPERATOR),
+                                        listOf(
+                                            AST(Token(position, "3", TokenType.INTEGER)),
+                                            AST(
+                                                Token(position, "+", TokenType.OPERATOR),
+                                                listOf(
+                                                    AST(Token(position, "2", TokenType.INTEGER)),
+                                                    AST(Token(position, "3", TokenType.INTEGER))
+                                                )
+                                            )
+                                        )
+                                    )
                                 )
                             )
                         )
@@ -453,4 +569,120 @@ class ParserTest {
         assertEquals(astExpected.toString(), parser.parse(tokens).toString())
     }
 
+    @Test
+    fun `test 015 - a print function with identifier`() {
+        val parser = Parser()
+        val position = Position()
+        val tokens: List<Token> = listOf(
+            Token(position, "println", TokenType.FUNCTION),
+            Token(position, "(", TokenType.PARENTHESIS),
+            Token(position, "c", TokenType.IDENTIFIER),
+            Token(position, ")", TokenType.PARENTHESIS),
+            Token(position, "", TokenType.SEMICOLON)
+        )
+        val astExpected = AST(
+            Token(position, "println", TokenType.FUNCTION),
+            listOf(
+                AST(Token(position, "c", TokenType.IDENTIFIER)),
+            )
+        )
+        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
+    }
+
+    @Test
+    fun `test 016 - a print function with identifier + value`() {
+        val parser = Parser()
+        val position = Position()
+        val tokens: List<Token> = listOf(
+            Token(position, "println", TokenType.FUNCTION),
+            Token(position, "(", TokenType.PARENTHESIS),
+            Token(position, "8", TokenType.INTEGER),
+            Token(position, "+", TokenType.OPERATOR),
+            Token(position, "c", TokenType.IDENTIFIER),
+            Token(position, ")", TokenType.PARENTHESIS),
+            Token(position, "", TokenType.SEMICOLON)
+        )
+        val astExpected = AST(
+            Token(position, "println", TokenType.FUNCTION),
+            listOf(
+                AST(Token(position, "+", TokenType.OPERATOR),
+                    listOf(
+                        AST(Token(position, "8", TokenType.INTEGER)),
+                        AST(Token(position, "c", TokenType.IDENTIFIER)),
+                    )
+                )
+            )
+        )
+        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
+    }
+    @Test
+    fun `test 017 - a print function with multiple parenthesis`() {
+        val parser = Parser()
+        val position = Position()
+        val tokens: List<Token> = listOf(
+            Token(position, "println", TokenType.FUNCTION),
+            Token(position, "(", TokenType.PARENTHESIS),
+            Token(position, "8", TokenType.INTEGER),
+            Token(position, "+", TokenType.OPERATOR),
+            Token(position, "(", TokenType.PARENTHESIS),
+            Token(position, "c", TokenType.IDENTIFIER),
+            Token(position, "*", TokenType.OPERATOR),
+            Token(position, "3", TokenType.INTEGER),
+            Token(position, ")", TokenType.PARENTHESIS),
+            Token(position, ")", TokenType.PARENTHESIS),
+            Token(position, "", TokenType.SEMICOLON)
+        )
+        val astExpected = AST(
+            Token(position, "println", TokenType.FUNCTION),
+            listOf(
+                AST(Token(position, "+", TokenType.OPERATOR),
+                    listOf(
+                        AST(Token(position, "8", TokenType.INTEGER)),
+                        AST(Token(position, "*", TokenType.OPERATOR),
+                            listOf(
+                                AST(Token(position, "c", TokenType.IDENTIFIER)),
+                                AST(Token(position, "3", TokenType.INTEGER)),
+                            )
+                        )
+                    )
+            )
+        ))
+        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
+    }
+    @Test
+    fun `test 018 - a print function with one parenthesis missing`() {
+        val parser = Parser()
+        val position = Position()
+        val tokens: List<Token> = listOf(
+            Token(position, "println", TokenType.FUNCTION),
+            Token(position, "(", TokenType.PARENTHESIS),
+            Token(position, "8", TokenType.INTEGER),
+            Token(position, "+", TokenType.OPERATOR),
+            Token(position, "(", TokenType.PARENTHESIS),
+            Token(position, "c", TokenType.IDENTIFIER),
+            Token(position, "*", TokenType.OPERATOR),
+            Token(position, "3", TokenType.INTEGER),
+            Token(position, ")", TokenType.PARENTHESIS),
+            Token(position, "", TokenType.SEMICOLON)
+        )
+        assertThrows(ParserError::class.java) {
+            parser.parse(tokens)
+        }
+    }
+    @Test
+    fun `test 019 - assignation without INTEGER`() {
+        val parser = Parser()
+        val position = Position()
+        val tokens: List<Token> = listOf(
+            Token(position, "let", TokenType.KEYWORD),
+            Token(position, "x", TokenType.IDENTIFIER),
+            Token(position, ":", TokenType.DECLARATION),
+            Token(position, "string", TokenType.STRING),
+            Token(position, "=", TokenType.ASSIGNATION),
+            Token(position, "", TokenType.SEMICOLON),
+        )
+        assertThrows(ParserError::class.java) {
+            parser.parse(tokens)
+        }
+    }
 }

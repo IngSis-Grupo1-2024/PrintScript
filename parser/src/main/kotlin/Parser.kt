@@ -8,7 +8,7 @@ class Parser : ParserInterface {
     private val typeComparator = ComparatorTokenType()
     private val valueComparator = ComparatorTokenValue()
     private val DOESNTMATTERTYPES = listOf(TokenType.PARENTHESIS, TokenType.KEYWORD)
-    private val VALUETYPES = listOf(TokenType.INTEGER, TokenType.STRING)
+    private val VALUETYPES = listOf(TokenType.INTEGER, TokenType.STRING, TokenType.IDENTIFIER)
     private val FUNCIONTYPES = listOf(TokenType.FUNCTION, TokenType.PARENTHESIS)
     private val twoChildrenType = listOf(TokenType.OPERATOR, TokenType.ASSIGNATION, TokenType.DECLARATION)
 
@@ -16,9 +16,9 @@ class Parser : ParserInterface {
         if (tokens.last().getType() != TokenType.SEMICOLON)
             throw ParserError("error: ';' expected  " + tokens.last().getPosition(), tokens.last())
         val tokWSemicolon = tokens.subList(0, tokens.size - 1)
-        if (checkDeclaration(tokWSemicolon)) return transformDeclaration(tokens)
-        else if (isAssignation(tokWSemicolon)) return transformAssignation(tokens)
-        else if (isCallingMethod(tokWSemicolon)) return transformFunction(tokens)
+        if (checkDeclaration(tokWSemicolon)) return transformDeclaration(tokWSemicolon)
+        else if (isAssignation(tokWSemicolon)) return transformAssignation(tokWSemicolon)
+        else if (isCallingMethod(tokWSemicolon)) return transformFunction(tokWSemicolon)
         throw ParserError("PrintScript couldn't parse that code " + tokens[0].getPosition(), tokens[0])
     }
 
@@ -39,7 +39,7 @@ class Parser : ParserInterface {
 
     private fun transformFunction(tokens: List<Token>): ASTInterface {
         val function = tokens[0]
-        val value = transformValue(tokens.subList(1, tokens.size))
+        val value = transformValue(tokens.subList(2, tokens.size-1))
         return AST(function, listOf(value))
     }
 
@@ -60,11 +60,49 @@ class Parser : ParserInterface {
     }
 
     private fun getTree(tokens: List<Token>): ASTInterface {
-        var ast = getEmptyAST()
-        for (token in tokens) {
-            ast = add(token, ast)
+        return getTreeWithAst(tokens, getEmptyAST())
+    }
+
+    private fun getTreeWithAst(tokens: List<Token>, ast: ASTInterface): ASTInterface {
+        var tree = ast
+        for (i in tokens.indices) {
+            if (tree.isEmpty()){
+                tree = tree.addChildren(getLeaf(tokens[i]))
+                continue
+            }
+            if(tokens[i].getType() == TokenType.PARENTHESIS) {
+                tree = resolveParenthesis(tree, tokens, i)
+                val endIndex = searchEndParenthesisIndex(tokens, i)
+                return getTreeWithAst(tokens.subList(endIndex+1, tokens.size), tree)
+            }
+            tree = add(tokens[i], tree)
         }
-        return ast
+        return tree
+    }
+
+    private fun resolveParenthesis(originalAST: ASTInterface, tokens: List<Token>, startParenthesis: Int): ASTInterface {
+        val endParenthesis = searchEndParenthesisIndex(tokens, startParenthesis)
+        val ast = getTree(tokens.subList(startParenthesis+1, endParenthesis))
+        return addInLastChild(originalAST, ast)
+    }
+
+    private fun addInLastChild(originalAST: ASTInterface, ast: ASTInterface): ASTInterface {
+        if(originalAST.getChildrenAmount() < 2 && originalAST.getToken().getType() in twoChildrenType)
+            return originalAST.addChildren(ast)
+        return addInLastChild(originalAST.getChildren().last(), ast)
+    }
+
+    private fun searchEndParenthesisIndex(tokens: List<Token>, i: Int): Int {
+        var qtyStartParenthesis = 0
+        for(j in i+1..<tokens.size){
+            if(tokens[j].getType() == TokenType.PARENTHESIS && tokens[j].getValue() == ")"){
+                if(qtyStartParenthesis == 0) return j
+                else qtyStartParenthesis--
+            }
+            else if(tokens[j].getType() == TokenType.PARENTHESIS && tokens[j].getValue() == "(")
+                qtyStartParenthesis++
+        }
+        throw ParserError("error: expected ')'", tokens[tokens.size-1])
     }
 
     private fun getEmptyAST(): ASTInterface {
@@ -79,21 +117,19 @@ class Parser : ParserInterface {
     // tienen que ser hoja, por lo que si se encuentran con otro, lo mandas como hermano
     private fun add(token: Token, ast: ASTInterface): ASTInterface {
         if (token.getType() in DOESNTMATTERTYPES) return ast
-        if (ast.isEmpty()) return ast.addChildren(getLeaf(token))
         val compareTokens = compareValueAndType(token, ast.getToken())
-        if (ast.getChildrenAmount() == 1 && ast.getToken().getType() in twoChildrenType && rootIsBigger(compareTokens))
+        if (ast.getChildrenAmount() < 2 && ast.getToken().getType() in twoChildrenType && rootIsBigger(compareTokens))
             return ast.addChildren(getLeaf(token))
         return if (rootIsBigger(compareTokens)) compWChildren(token, ast)
         else if (compareTokens == 1) AST(token, ast)
         else if (abs(compareTokens) == 2) ast
-        else ast.addChildren(getLeaf(token))
+        else removeLastChild(ast, token)
     }
 
     private fun compareValueAndType(token: Token, root: Token): Int {
-        val compValue = valueComparator.compare(token, root)
         val compToken = typeComparator.compare(token.getType(), root.getType())
         return if (compToken != 0) compToken
-        else compValue
+        else valueComparator.compare(token, root)
     }
 
     private fun compWChildren(token: Token, ast: ASTInterface): ASTInterface {
@@ -106,7 +142,8 @@ class Parser : ParserInterface {
                 1 -> return removeLastChild(ast, token)
             }
         }
-        return ast.addChildren(getLeaf(token))
+        return if(ast.getChildrenAmount() < 2 && ast.getToken().getType() in twoChildrenType) ast.addChildren(getLeaf(token))
+        else removeLastChild(ast, token)
     }
 
     private fun removeLastChild(ast: ASTInterface, token: Token): ASTInterface {
@@ -119,8 +156,7 @@ class Parser : ParserInterface {
     // this would check if tokens apply to the declaration structure:
     // let x: string;
     private fun checkDeclaration(tokens: List<Token>): Boolean {
-        val declarationTypes = getDeclarationTypesAndValueType(tokens)
-        if(declarationTypes.isEmpty()) return false
+        val declarationTypes = listOf(TokenType.KEYWORD, TokenType.IDENTIFIER, TokenType.DECLARATION, TokenType.TYPE)
 
         val tokenTypes = tokens.map { it.getType() }
         val declarationTypesPresent = declarationTypes.intersect(tokenTypes.toSet())
@@ -133,25 +169,25 @@ class Parser : ParserInterface {
         return tokenTypes == declarationTypes
     }
 
-    private fun getDeclarationTypesAndValueType(tokens: List<Token>): List<TokenType> {
-        val declarationTypes =
-            mutableListOf(TokenType.KEYWORD, TokenType.IDENTIFIER, TokenType.DECLARATION)
-
-        if (tokens.size == declarationTypes.size + 1) {
-            for (value in VALUETYPES)
-                if (tokens[tokens.size - 1].getType() == value) {
-                    declarationTypes.add(value)
-                    return declarationTypes
-                }
-        }
-        val tokenTypes = tokens.map { it.getType() }
-        if (tokenTypes == declarationTypes) throw ParserError(
-            "error: expected variable type. " +
-                    "Remember to declare a variable, it's expected to do it by 'let <name of the variable>: <type of the variable>'",
-            tokens.last()
-        )
-        return emptyList()
-    }
+//    private fun getDeclarationTypesAndValueType(tokens: List<Token>): List<TokenType> {
+//        val declarationTypes =
+//            mutableListOf(TokenType.KEYWORD, TokenType.IDENTIFIER, TokenType.DECLARATION)
+//
+//        if (tokens.size == declarationTypes.size + 1) {
+//            for (value in VALUETYPES)
+//                if (tokens[tokens.size - 1].getType() == value) {
+//                    declarationTypes.add(value)
+//                    return declarationTypes
+//                }
+//        }
+//        val tokenTypes = tokens.map { it.getType() }
+//        if (tokenTypes == declarationTypes) throw ParserError(
+//            "error: expected variable type. " +
+//                    "Remember to declare a variable, it's expected to do it by 'let <name of the variable>: <type of the variable>'",
+//            tokens.last()
+//        )
+//        return emptyList()
+//    }
 
     private fun isAssignation(tokens: List<Token>): Boolean {
         // there are 2 options for assignation:
@@ -160,7 +196,7 @@ class Parser : ParserInterface {
         val assignIndex = findAssignIndex(tokens)
         if (assignIndex == -1) return false
         if (checkDeclaration(tokens.subList(0, assignIndex)) || checkIdentifier(tokens.subList(0, assignIndex)))
-            return checkValue(tokens.subList(assignIndex+1, tokens.size))
+            return checkValue(tokens, assignIndex+1, tokens.size)
         return false
     }
 
@@ -179,18 +215,34 @@ class Parser : ParserInterface {
                 tokens.last().getPosition().startLine.toString() + ":error: ')' expected " + tokens.last().getPosition(),
                 tokens.last()
             )
-            return checkValue(tokens)
+            return checkValue(tokens, FUNCIONTYPES.size, tokens.size-1)
         }
         return false
     }
 
-    private fun checkValue(tokens: List<Token>): Boolean {
-        val invalidValueTypes =
-            listOf(TokenType.INTEGER, TokenType.STRING, TokenType.DECLARATION, TokenType.ASSIGNATION, TokenType.SEMICOLON, TokenType.KEYWORD)
-        tokens
-            .filter { it.getType() in invalidValueTypes }
-            .forEach { throw ParserError("Invalid value type ${it.getPosition()}", it)}
-        return true
+    private fun checkValue(tokens: List<Token>, startIndex: Int, endIndex: Int): Boolean {
+        try{
+            val tokenList = tokens.subList(startIndex, endIndex)
+            val invalidValueTypes =
+                listOf(TokenType.TYPE, TokenType.DECLARATION, TokenType.ASSIGNATION, TokenType.SEMICOLON, TokenType.KEYWORD)
+
+            tokenList
+                .filter { it.getType() in invalidValueTypes }
+                .forEach { throw ParserError("Invalid value type ${it.getPosition()}", it)}
+            return checkQtyOperatorsAndValues(tokenList)
+        }
+        catch (e: NoSuchElementException){
+            throw ParserError("error: expected value", tokens.last())
+        }
+    }
+
+    private fun checkQtyOperatorsAndValues(tokens: List<Token>): Boolean {
+        val numberOfOpp: Int = tokens.filter { it.getType() == TokenType.OPERATOR }.size
+        val numberOfValue: Int = tokens.filter { it.getType() in VALUETYPES }.size
+
+        if (numberOfValue == numberOfOpp + 1) return true
+        if (numberOfOpp == 0) throw ParserError("error: expected value", tokens.last())
+        throw ParserError("error: wrong number of values and operators", tokens.last())
     }
 
 }
