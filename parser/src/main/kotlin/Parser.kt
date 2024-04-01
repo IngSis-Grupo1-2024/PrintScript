@@ -169,26 +169,6 @@ class Parser : ParserInterface {
         return tokenTypes == declarationTypes
     }
 
-//    private fun getDeclarationTypesAndValueType(tokens: List<Token>): List<TokenType> {
-//        val declarationTypes =
-//            mutableListOf(TokenType.KEYWORD, TokenType.IDENTIFIER, TokenType.DECLARATION)
-//
-//        if (tokens.size == declarationTypes.size + 1) {
-//            for (value in VALUETYPES)
-//                if (tokens[tokens.size - 1].getType() == value) {
-//                    declarationTypes.add(value)
-//                    return declarationTypes
-//                }
-//        }
-//        val tokenTypes = tokens.map { it.getType() }
-//        if (tokenTypes == declarationTypes) throw ParserError(
-//            "error: expected variable type. " +
-//                    "Remember to declare a variable, it's expected to do it by 'let <name of the variable>: <type of the variable>'",
-//            tokens.last()
-//        )
-//        return emptyList()
-//    }
-
     private fun isAssignation(tokens: List<Token>): Boolean {
         // there are 2 options for assignation:
         // declaration + assignation OR just declaration
