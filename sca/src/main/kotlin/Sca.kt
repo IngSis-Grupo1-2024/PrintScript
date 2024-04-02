@@ -1,5 +1,5 @@
-import components.Rule
 import components.ast.ASTInterface
+import scaRules.Rule
 
 class Sca(private val rules: ArrayList<Rule>) : ScaInterface {
     fun getRules(): ArrayList<Rule> {

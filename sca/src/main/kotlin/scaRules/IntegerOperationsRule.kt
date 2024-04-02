@@ -1,6 +1,5 @@
 package scaRules
 
-import components.Rule
 import components.TokenType
 import components.ast.ASTInterface
 

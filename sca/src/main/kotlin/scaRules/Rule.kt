@@ -1,4 +1,4 @@
-package components
+package scaRules
 
 import components.ast.ASTInterface
 

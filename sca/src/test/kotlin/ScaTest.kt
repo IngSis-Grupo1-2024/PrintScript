@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import scaRules.IntegerAndStringOperationsRule
 import scaRules.IntegerOperationsRule
+import scaRules.StringOperationsRule
+import scaRules.TypeValueRule
 
 class ScaTest {
     @Test
@@ -192,6 +194,193 @@ class ScaTest {
                 Token(position, "/", TokenType.OPERATOR),
                 listOf(AST(Token(position, "5", TokenType.INTEGER)), AST(Token(position, "hello", TokenType.STRING))),
             )
+        assertFalse(sca.analyze(ast))
+    }
+
+    @Test
+    fun testRuleTypeAndValueWithAnIntegerVariable() {
+        val sca = Sca(arrayListOf(TypeValueRule()))
+        val position = Position()
+        val leftAst =
+            AST(
+                Token(position, "let", TokenType.DECLARATION),
+                listOf(
+                    AST(Token(position, "a", TokenType.IDENTIFIER)),
+                    AST(Token(position, "number", TokenType.TYPE)),
+                ),
+            )
+        val rightAst =
+            AST(
+                Token(position, "3", TokenType.INTEGER),
+            )
+        val ast = AST(Token(position, "=", TokenType.ASSIGNATION), listOf(leftAst, rightAst))
+        assertTrue(sca.analyze(ast))
+    }
+
+    @Test
+    fun testRuleAndTypeWithAStrongVariable() {
+        val sca = Sca(arrayListOf(TypeValueRule()))
+        val position = Position()
+        val leftAst =
+            AST(
+                Token(position, "let", TokenType.DECLARATION),
+                listOf(
+                    AST(Token(position, "a", TokenType.IDENTIFIER)),
+                    AST(Token(position, "string", TokenType.TYPE)),
+                ),
+            )
+        val rightAst =
+            AST(
+                Token(position, "hello", TokenType.STRING),
+            )
+        val ast = AST(Token(position, "=", TokenType.ASSIGNATION), listOf(leftAst, rightAst))
+        assertTrue(sca.analyze(ast))
+    }
+
+    @Test
+    fun testRuleTypeAndValueWithTwoIntegers() {
+        val sca = Sca(arrayListOf(TypeValueRule()))
+        val position = Position()
+        val leftAst =
+            AST(
+                Token(position, "let", TokenType.DECLARATION),
+                listOf(
+                    AST(Token(position, "a", TokenType.IDENTIFIER)),
+                    AST(Token(position, "number", TokenType.TYPE)),
+                ),
+            )
+        val rightAst =
+            AST(
+                Token(position, "+", TokenType.OPERATOR),
+                listOf(AST(Token(position, "5", TokenType.INTEGER)), AST(Token(position, "3", TokenType.INTEGER))),
+            )
+        val ast = AST(Token(position, "=", TokenType.ASSIGNATION), listOf(leftAst, rightAst))
+        assertTrue(sca.analyze(ast))
+    }
+
+    @Test
+    fun testRuleTypeAndValueSumWithLeftIntegerAndRightStringVariables() {
+        val sca = Sca(arrayListOf(TypeValueRule()))
+        val position = Position()
+        val leftAst =
+            AST(
+                Token(position, "let", TokenType.DECLARATION),
+                listOf(
+                    AST(Token(position, "a", TokenType.IDENTIFIER)),
+                    AST(Token(position, "string", TokenType.TYPE)),
+                ),
+            )
+        val rightAst =
+            AST(
+                Token(position, "+", TokenType.OPERATOR),
+                listOf(AST(Token(position, "5", TokenType.INTEGER)), AST(Token(position, "hello", TokenType.STRING))),
+            )
+        val ast = AST(Token(position, "=", TokenType.ASSIGNATION), listOf(leftAst, rightAst))
+        assertTrue(sca.analyze(ast))
+    }
+
+    @Test
+    fun testRuleTypeAndValueSumWithRightIntegerAndLeftStringVariables() {
+        val sca = Sca(arrayListOf(TypeValueRule()))
+        val position = Position()
+        val leftAst =
+            AST(
+                Token(position, "let", TokenType.DECLARATION),
+                listOf(
+                    AST(Token(position, "a", TokenType.IDENTIFIER)),
+                    AST(Token(position, "string", TokenType.TYPE)),
+                ),
+            )
+        val rightAst =
+            AST(
+                Token(position, "+", TokenType.OPERATOR),
+                listOf(AST(Token(position, "hello", TokenType.STRING)), AST(Token(position, "3", TokenType.INTEGER))),
+            )
+        val ast = AST(Token(position, "=", TokenType.ASSIGNATION), listOf(leftAst, rightAst))
+        assertTrue(sca.analyze(ast))
+    }
+
+    @Test
+    fun testSumWithTwoStringVariables() {
+        val sca = Sca(arrayListOf(StringOperationsRule()))
+        val position = Position()
+        val leftAst =
+            AST(
+                Token(position, "let", TokenType.DECLARATION),
+                listOf(
+                    AST(Token(position, "a", TokenType.IDENTIFIER)),
+                    AST(Token(position, "string", TokenType.TYPE)),
+                ),
+            )
+        val rightAst =
+            AST(
+                Token(position, "+", TokenType.OPERATOR),
+                listOf(AST(Token(position, "hello", TokenType.STRING)), AST(Token(position, "world", TokenType.STRING))),
+            )
+        val ast = AST(Token(position, "=", TokenType.ASSIGNATION), listOf(leftAst, rightAst))
+        assertTrue(sca.analyze(ast))
+    }
+
+    @Test
+    fun testDivideTwoStringVariables() {
+        val sca = Sca(arrayListOf(StringOperationsRule()))
+        val position = Position()
+        val leftAst =
+            AST(
+                Token(position, "let", TokenType.DECLARATION),
+                listOf(
+                    AST(Token(position, "a", TokenType.IDENTIFIER)),
+                    AST(Token(position, "string", TokenType.TYPE)),
+                ),
+            )
+        val rightAst =
+            AST(
+                Token(position, "/", TokenType.OPERATOR),
+                listOf(AST(Token(position, "hello", TokenType.STRING)), AST(Token(position, "world", TokenType.STRING))),
+            )
+        val ast = AST(Token(position, "=", TokenType.ASSIGNATION), listOf(leftAst, rightAst))
+        assertFalse(sca.analyze(ast))
+    }
+
+    @Test
+    fun testMultiplyTwoStringVariables() {
+        val sca = Sca(arrayListOf(StringOperationsRule()))
+        val position = Position()
+        val leftAst =
+            AST(
+                Token(position, "let", TokenType.DECLARATION),
+                listOf(
+                    AST(Token(position, "a", TokenType.IDENTIFIER)),
+                    AST(Token(position, "string", TokenType.TYPE)),
+                ),
+            )
+        val rightAst =
+            AST(
+                Token(position, "*", TokenType.OPERATOR),
+                listOf(AST(Token(position, "hello", TokenType.STRING)), AST(Token(position, "world", TokenType.STRING))),
+            )
+        val ast = AST(Token(position, "=", TokenType.ASSIGNATION), listOf(leftAst, rightAst))
+        assertFalse(sca.analyze(ast))
+    }
+
+    @Test
+    fun testSubtractTwoStringVariables() {
+        val sca = Sca(arrayListOf(StringOperationsRule()))
+        val position = Position()
+        val leftAst =
+            AST(
+                Token(position, "let", TokenType.DECLARATION),
+                listOf(
+                    AST(Token(position, "a", TokenType.IDENTIFIER)),
+                    AST(Token(position, "string", TokenType.TYPE)),
+                ),
+            )
+        val rightAst =
+            AST(
+                Token(position, "-", TokenType.OPERATOR),
+                listOf(AST(Token(position, "hello", TokenType.STRING)), AST(Token(position, "world", TokenType.STRING))),
+            )
+        val ast = AST(Token(position, "=", TokenType.ASSIGNATION), listOf(leftAst, rightAst))
         assertFalse(sca.analyze(ast))
     }
 }
