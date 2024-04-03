@@ -26,6 +26,7 @@ class ParserAST {
         val astExpected: ASTInterface =
             AST(Token(position, ":", TokenType.DECLARATION),
                 listOf(
+                    AST(Token(position, "let", TokenType.KEYWORD)),
                     AST(Token(position, "x", TokenType.IDENTIFIER)),
                     AST(Token(position, "string", TokenType.TYPE))
                 ))
@@ -82,6 +83,19 @@ class ParserAST {
             Token(position, "let", TokenType.KEYWORD),
             Token(position, "x", TokenType.IDENTIFIER),
             Token(position, ":", TokenType.DECLARATION),
+            Token(position, "", TokenType.SEMICOLON)
+        )
+        Assertions.assertThrows(ParserError::class.java) {
+            parser.parse(tokens)
+        }
+    }
+    @Test
+    fun `test 004 - declaration without type and declaration`() {
+        val parser = Parser()
+        val position = Position()
+        val tokens: List<Token> = listOf(
+            Token(position, "let", TokenType.KEYWORD),
+            Token(position, "x", TokenType.IDENTIFIER),
             Token(position, "", TokenType.SEMICOLON)
         )
         Assertions.assertThrows(ParserError::class.java) {
@@ -214,6 +228,7 @@ class ParserAST {
             listOf(
                 AST(Token(position, ":", TokenType.DECLARATION),
                     listOf(
+                        AST(Token(position, "let", TokenType.KEYWORD)),
                         AST(Token(position, "x", TokenType.IDENTIFIER)),
                         AST(Token(position, "number", TokenType.TYPE))
                         )

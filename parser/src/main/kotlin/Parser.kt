@@ -25,8 +25,9 @@ class Parser : ParserInterface {
     private fun transformDeclaration(tokens: List<Token>): ASTInterface {
         val decl = tokens[2]
         val identifier = tokens[1]
+        val keyword = tokens[0]
         val value = tokens[3]
-        return AST(decl, listOf(getLeaf(identifier), getLeaf(value)))
+        return AST(decl, listOf(getLeaf(keyword), getLeaf(identifier), getLeaf(value)))
     }
 
     private fun transformAssignation(tokens: List<Token>): ASTInterface {
@@ -160,13 +161,23 @@ class Parser : ParserInterface {
 
         val tokenTypes = tokens.map { it.getType() }
         val declarationTypesPresent = declarationTypes.intersect(tokenTypes.toSet())
-        if (declarationTypesPresent.size > 2 && declarationTypesPresent == tokenTypes)
+        if(declarationTypes == tokenTypes) return true
+        else if (declarationTypesPresent.size > 2 && checkCollections(declarationTypesPresent, tokenTypes))
             throw ParserError(
                 "error: to declare a variable, it's expected to do it by 'let <name of the variable>: <type of the variable>'",
                 tokens[0]
             )
 
-        return tokenTypes == declarationTypes
+        return false
+    }
+
+    private fun checkCollections(declarationTypesPresent: Set<TokenType>, tokenTypes: List<TokenType>): Boolean {
+        if(tokenTypes.size != declarationTypesPresent.size ) return false
+        for((i, type) in declarationTypesPresent.withIndex()){
+            if(i>=tokenTypes.size) return false
+            if(tokenTypes[i] != type) return false
+        }
+        return true
     }
 
     private fun isAssignation(tokens: List<Token>): Boolean {
@@ -221,7 +232,7 @@ class Parser : ParserInterface {
         val numberOfValue: Int = tokens.filter { it.getType() in VALUETYPES }.size
 
         if (numberOfValue == numberOfOpp + 1) return true
-        if (numberOfOpp == 0) throw ParserError("error: expected value", tokens.last())
+        if (numberOfOpp == 0 && numberOfValue == 0) throw ParserError("error: expected value", tokens.last())
         throw ParserError("error: wrong number of values and operators", tokens.last())
     }
 

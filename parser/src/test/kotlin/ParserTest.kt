@@ -26,6 +26,7 @@ class ParserTest {
             AST(
                 Token(position, ":", TokenType.DECLARATION),
                 listOf(
+                    AST(Token(position, "let", TokenType.KEYWORD)),
                     AST(Token(position, "x", TokenType.IDENTIFIER)),
                     AST(Token(position, "string", TokenType.TYPE))
                 )
@@ -113,6 +114,7 @@ class ParserTest {
                     AST(
                         Token(position, ":", TokenType.DECLARATION),
                         listOf(
+                            AST(Token(position, "let", TokenType.KEYWORD)),
                             AST(Token(position, "x", TokenType.IDENTIFIER)),
                             AST(Token(position, "number", TokenType.TYPE))
                         )
@@ -231,6 +233,7 @@ class ParserTest {
                     AST(
                         Token(position, ":", TokenType.DECLARATION),
                         listOf(
+                            AST(Token(position, "let", TokenType.KEYWORD)),
                             AST(Token(position, "x", TokenType.IDENTIFIER)),
                             AST(Token(position, "number", TokenType.TYPE))
                         )
@@ -335,6 +338,7 @@ class ParserTest {
                     AST(
                         Token(position, ":", TokenType.DECLARATION),
                         listOf(
+                            AST(Token(position, "let", TokenType.KEYWORD)),
                             AST(Token(position, "x", TokenType.IDENTIFIER)),
                             AST(Token(position, "number", TokenType.TYPE))
                         )
@@ -399,6 +403,7 @@ class ParserTest {
                     AST(
                         Token(position, ":", TokenType.DECLARATION),
                         listOf(
+                            AST(Token(position, "let", TokenType.KEYWORD)),
                             AST(Token(position, "x", TokenType.IDENTIFIER)),
                             AST(Token(position, "number", TokenType.TYPE))
                         )
@@ -476,6 +481,7 @@ class ParserTest {
                     AST(
                         Token(position, ":", TokenType.DECLARATION),
                         listOf(
+                            AST(Token(position, "let", TokenType.KEYWORD)),
                             AST(Token(position, "x", TokenType.IDENTIFIER)),
                             AST(Token(position, "number", TokenType.TYPE))
                         )
@@ -533,6 +539,7 @@ class ParserTest {
                     AST(
                         Token(position, ":", TokenType.DECLARATION),
                         listOf(
+                            AST(Token(position, "let", TokenType.KEYWORD)),
                             AST(Token(position, "x", TokenType.IDENTIFIER)),
                             AST(Token(position, "number", TokenType.TYPE))
                         )
@@ -670,15 +677,50 @@ class ParserTest {
         }
     }
     @Test
-    fun `test 019 - assignation without INTEGER`() {
+    fun `test 019 - assignation without value`() {
         val parser = Parser()
         val position = Position()
         val tokens: List<Token> = listOf(
             Token(position, "let", TokenType.KEYWORD),
             Token(position, "x", TokenType.IDENTIFIER),
             Token(position, ":", TokenType.DECLARATION),
-            Token(position, "string", TokenType.STRING),
+            Token(position, "string", TokenType.TYPE),
             Token(position, "=", TokenType.ASSIGNATION),
+            Token(position, "", TokenType.SEMICOLON),
+        )
+        assertThrows(ParserError::class.java) {
+            parser.parse(tokens)
+        }
+    }
+    @Test
+    fun `test 020 - assignation with an operation without operators`() {
+        val parser = Parser()
+        val position = Position()
+        val tokens: List<Token> = listOf(
+            Token(position, "let", TokenType.KEYWORD),
+            Token(position, "x", TokenType.IDENTIFIER),
+            Token(position, ":", TokenType.DECLARATION),
+            Token(position, "string", TokenType.TYPE),
+            Token(position, "=", TokenType.ASSIGNATION),
+            Token(position, "c", TokenType.IDENTIFIER),
+            Token(position, "3", TokenType.STRING),
+            Token(position, "", TokenType.SEMICOLON),
+        )
+        assertThrows(ParserError::class.java) {
+            parser.parse(tokens)
+        }
+    }
+    @Test
+    fun `test 020 - code that PrintScript doesnt recognize`() {
+        val parser = Parser()
+        val position = Position()
+        val tokens: List<Token> = listOf(
+            Token(position, "sum", TokenType.TYPE),
+            Token(position, "(", TokenType.PARENTHESIS),
+            Token(position, "c", TokenType.IDENTIFIER),
+            Token(position, "+", TokenType.OPERATOR),
+            Token(position, "3", TokenType.STRING),
+            Token(position, ")", TokenType.PARENTHESIS),
             Token(position, "", TokenType.SEMICOLON),
         )
         assertThrows(ParserError::class.java) {
