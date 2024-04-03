@@ -17,4 +17,7 @@ interface ASTInterface {
     fun childrenAmount(): Int
 
     fun replace(ast: ASTInterface, other: ASTInterface): ASTInterface
+
+    fun copy(newToken: Token? = this.getToken(), children: List<ASTInterface> = this.getChildren()): AST
+
 }

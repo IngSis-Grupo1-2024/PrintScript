@@ -39,4 +39,10 @@ class AST(private val token: Token?, private val children: List<ASTInterface>) :
         }
         return AST(token, newChildren)
     }
+
+
+    override fun copy(newToken: Token?, children: List<ASTInterface>): AST {
+        return AST(newToken, children)
+    }
+
 }
