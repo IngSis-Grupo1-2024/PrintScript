@@ -1,3 +1,5 @@
+package ingsis.parser
+
 import components.Token
 import components.ast.ASTInterface
 

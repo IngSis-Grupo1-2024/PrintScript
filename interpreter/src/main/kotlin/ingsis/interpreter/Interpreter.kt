@@ -1,10 +1,9 @@
-package modules.interpreter
+package ingsis.interpreter
 
-import Variable
 import components.Token
 import components.TokenType
 import components.ast.ASTInterface
-
+import ingsis.utils.Variable
 
 class Interpreter {
 

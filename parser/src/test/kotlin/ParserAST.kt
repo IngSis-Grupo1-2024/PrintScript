@@ -1,6 +1,6 @@
 package modules.parser
 
-import Parser
+import ingsis.parser.Parser
 import components.Position
 import components.Token
 import components.TokenType

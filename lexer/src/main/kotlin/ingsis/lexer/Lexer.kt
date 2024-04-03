@@ -1,3 +1,5 @@
+package ingsis.lexer
+
 import components.Position
 import components.Token
 import components.TokenType

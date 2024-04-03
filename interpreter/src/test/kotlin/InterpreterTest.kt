@@ -2,7 +2,8 @@ import components.Position
 import components.Token
 import components.TokenType
 import components.ast.AST
-import modules.interpreter.Interpreter
+import ingsis.interpreter.Interpreter
+import ingsis.utils.Variable
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

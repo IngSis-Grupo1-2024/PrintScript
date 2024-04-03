@@ -1,3 +1,5 @@
+package ingsis.utils
+
 import components.TokenType
 
 
