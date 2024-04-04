@@ -1,8 +1,10 @@
-package modules.interpreter
+package ingsis.interpreter
 
 import components.Token
 import components.TokenType
 import components.ast.ASTInterface
+import ingsis.utils.Variable
+
 class Interpreter {
     fun interpret(ast: ASTInterface): Map<String, Variable> {
         val root = ast.getToken().getType()
@@ -36,13 +38,11 @@ class Interpreter {
     }
 
     private fun getVariableType(ast: ASTInterface): TokenType {
-        val variableType = ast.getChildren()[1].getToken().getType()
-        return variableType
+        return ast.getChildren()[1].getToken().getType()
     }
 
     private fun getVariableName(ast: ASTInterface): String {
-        val variableName = ast.getChildren()[0].getToken().getValue()
-        return variableName
+        return ast.getChildren()[0].getToken().getValue()
     }
 
     private fun addVariableToMap(
