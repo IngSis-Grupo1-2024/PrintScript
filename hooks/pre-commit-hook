@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# <https://github.com/pinterest/ktlint> pre-commit hook
+
+./gradlew ktlintCheck
