@@ -1,4 +1,3 @@
-
 import components.Position
 import components.Token
 import components.TokenType
@@ -14,10 +13,9 @@ class FormatterTest {
 
     @Test
     fun testRuleClassCreation(){
-        val rule = Rule(true, 1, "name")
+        val rule = Rule(true, 1)
         assertEquals(true, rule.on)
         assertEquals(1, rule.quantity)
-        assertEquals("name", rule.name)
     }
 
     @Test
@@ -29,9 +27,6 @@ class FormatterTest {
         children.add(AST(Token(Position(9, 14,1,1,9,14), "string", TokenType.STRING)))
         val input = AST(Token(Position(8, 8,1,1,8,8), ":", TokenType.DECLARATION), children)
         val output = formatter.format(input)
-
-
-        // let x  :string -> let x: string
 
 
         //This is an assert not equals, because the memory position of the two AST is different.

@@ -1,5 +1,5 @@
 package ingsis.formatter
-import com.google.gson.Gson
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import components.Position
 import components.TokenType
 import components.ast.AST
@@ -10,15 +10,12 @@ import java.io.File
 data class Rule(
     val on: Boolean,
     val quantity: Int,
-    val name: String,
 )
-
-
 
 class Formatter() {
 
     fun format(input:ASTInterface):ASTInterface{
-        val ruleMap = readJsonsAndStackMap(listOf("src/main/rules/rulesBeforeDeclaration.json", "src/main/rules/rulesAfterDeclaration.json"))
+        val ruleMap = readJsonsAndStackMap("src/main/rules/rules.json")
         var inputAux = input
 
         when(inputAux.getToken().getType()){
@@ -73,16 +70,20 @@ class Formatter() {
 
 
 
-    private fun readJsonsAndStackMap(jsonPaths: List<String>): Map<String, Rule> {
-        val gson = Gson()
-        val ruleMap = HashMap<String, Rule>()
-        for (jsonPath in jsonPaths) {
-            val jsonText = File(jsonPath).readText()
-            val rule = gson.fromJson(jsonText, Rule::class.java)
-            ruleMap[rule.name] = rule
-        }
-        return ruleMap
+     fun readJsonsAndStackMap(jsonPath: String): Map<String, Rule>{
+
+        val mapper = jacksonObjectMapper()
+
+        val jsonString = File(jsonPath).readText()
+
+        val rootObject = mapper.readTree(jsonString)
+        val afterDeclaration = mapper.treeToValue(rootObject["afterDeclaration"], Rule::class.java)
+        val beforeDeclaration = mapper.treeToValue(rootObject["beforeDeclaration"], Rule::class.java)
+
+        return mapOf("afterDeclaration" to afterDeclaration, "beforeDeclaration" to beforeDeclaration)
+
     }
+
 
 
     //If the result is negative that means it needs spaces, so it is going to shift right
@@ -102,7 +103,6 @@ class Formatter() {
     private fun ruleApplies(rule: Rule): Boolean {
         return rule.on
     }
-
 
 
 }
