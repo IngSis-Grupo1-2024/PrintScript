@@ -1,8 +1,6 @@
 package components
 
 class ComparatorTokenValue : Comparator<Token> {
-
-    // it is after the token types
     // it returns 0 if they are equals
     // for example in ASSIGNATION, you have to compare the values
     // it returns 1 if token > root

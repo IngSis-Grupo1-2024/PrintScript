@@ -3,10 +3,9 @@ package components.ast
 import components.Token
 
 class AST(private val token: Token?, private val children: List<ASTInterface>) : ASTInterface {
-
-    constructor(): this(null, emptyList())
+    constructor() : this(null, emptyList())
     constructor(token: Token, children: ASTInterface) : this(token, listOf(children))
-    constructor(token: Token): this(token, emptyList())
+    constructor(token: Token) : this(token, emptyList())
 
     override fun getToken(): Token {
         if(token == null) throw NullPointerException("Token is null")
@@ -34,8 +33,9 @@ class AST(private val token: Token?, private val children: List<ASTInterface>) :
         for (child in children) {
             if (child == ast) {
                 newChildren.add(other)
+            } else {
+                newChildren.add(child)
             }
-            else newChildren.add(child)
         }
         return AST(token, newChildren)
     }

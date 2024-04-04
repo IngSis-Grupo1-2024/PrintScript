@@ -13,7 +13,7 @@ fun main() {
 //        println()
 //    }
 
-    val lexer2 = Lexer(Position(1, 1, 1, 1,1,1))
+    val lexer2 = Lexer(Position(1, 1, 1, 1, 1, 1))
     val array2: List<Token> = lexer2.tokenize("let a: number = 3;")
     for (i in array2) {
         println(i.getType())

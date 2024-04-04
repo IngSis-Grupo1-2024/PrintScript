@@ -7,7 +7,9 @@ plugins {
 }
 
 dependencies {
-    api(project(":utils"))
     api(project(":components"))
     api(project(":sca"))
+    api(project(":lexer"))
+    api(project(":parser"))
+    api(project(":interpreter"))
 }
