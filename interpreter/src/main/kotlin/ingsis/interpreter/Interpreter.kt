@@ -49,7 +49,7 @@ class Interpreter {
         variableMap: HashMap<String, Variable>,
         variableName: String,
         variableType: TokenType,
-        variableValue: String
+        variableValue: String,
     ) {
         variableMap[variableName] = Variable(variableType, variableValue)
     }

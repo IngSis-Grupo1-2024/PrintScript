@@ -6,103 +6,109 @@ import components.ast.AST
 import components.ast.ASTInterface
 import java.io.File
 
-
-data class Rule(
+data class FormatterRule(
     val on: Boolean,
     val quantity: Int,
 )
 
 class Formatter() {
-
-    fun format(input:ASTInterface):ASTInterface{
+    fun format(input: ASTInterface): ASTInterface {
         val ruleMap = readJsonsAndStackMap("src/main/rules/rules.json")
         var inputAux = input
 
-        when(inputAux.getToken().getType()){
+        when (inputAux.getToken().getType()) {
             TokenType.DECLARATION -> {
                 val diffBeforeDeclaration = getBeforeDeclarationDiff(inputAux, inputAux.getChildren()[1], ruleMap, "beforeDeclaration")
-                if( diffBeforeDeclaration != 0 && ruleApplies(ruleMap["beforeDeclaration"]!!) ){
-                    inputAux = shift(inputAux, 1, diffBeforeDeclaration,true)
+                if (diffBeforeDeclaration != 0 && ruleApplies(ruleMap["beforeDeclaration"]!!)) {
+                    inputAux = shift(inputAux, 1, diffBeforeDeclaration, true)
                 }
                 val diffAfterDeclaration = getAfterDeclarationDiff(inputAux, inputAux.getChildren()[2], ruleMap, "afterDeclaration")
-                if ( diffAfterDeclaration != 0 && ruleApplies(ruleMap["afterDeclaration"]!!)){
-                    inputAux = shift(inputAux, 2, diffAfterDeclaration,false)
+                if (diffAfterDeclaration != 0 && ruleApplies(ruleMap["afterDeclaration"]!!)) {
+                    inputAux = shift(inputAux, 2, diffAfterDeclaration, false)
                 }
             }
             else -> {
                 return inputAux
             }
-
         }
         return inputAux
     }
 
-
-    //If the quantity is negative that means it's going to shift right
-    private fun shift(ast: ASTInterface, index: Int, quantity: Int, shiftToken:Boolean): ASTInterface {
+    // If the quantity is negative that means it's going to shift right
+    private fun shift(
+        ast: ASTInterface,
+        index: Int,
+        quantity: Int,
+        shiftToken: Boolean,
+    ): ASTInterface {
         var newToken = ast.getToken().copy()
-        if (shiftToken){
+        if (shiftToken) {
             newToken = ast.getToken().copy(position = shiftPosition(ast, quantity))
         }
 
-        val children = ast.getChildren().mapIndexed { i, child ->
-            if (i >= index) {
-                val newPosition = shiftPosition(child, quantity)
-                AST(child.getToken().copy(position = newPosition), child.getChildren())
-            } else {
-                child.copy()
+        val children =
+            ast.getChildren().mapIndexed { i, child ->
+                if (i >= index) {
+                    val newPosition = shiftPosition(child, quantity)
+                    AST(child.getToken().copy(position = newPosition), child.getChildren())
+                } else {
+                    child.copy()
+                }
             }
-        }
 
         return AST(newToken, children)
     }
 
-
-    //If the quantity is negative that means it's going to move the position to the right
-    private fun shiftPosition(ast: ASTInterface, quantity: Int): Position {
+    // If the quantity is negative that means it's going to move the position to the right
+    private fun shiftPosition(
+        ast: ASTInterface,
+        quantity: Int,
+    ): Position {
         return ast.getToken().getPosition().copy(
             startOffset = ast.getToken().getPosition().startOffset - quantity,
             endOffset = ast.getToken().getPosition().endOffset - quantity,
             startColumn = ast.getToken().getPosition().startColumn - quantity,
-            endColumn = ast.getToken().getPosition().endColumn - quantity
+            endColumn = ast.getToken().getPosition().endColumn - quantity,
         )
     }
 
-
-
-     fun readJsonsAndStackMap(jsonPath: String): Map<String, Rule>{
-
+    fun readJsonsAndStackMap(jsonPath: String): Map<String, FormatterRule> {
         val mapper = jacksonObjectMapper()
 
         val jsonString = File(jsonPath).readText()
 
         val rootObject = mapper.readTree(jsonString)
-        val afterDeclaration = mapper.treeToValue(rootObject["afterDeclaration"], Rule::class.java)
-        val beforeDeclaration = mapper.treeToValue(rootObject["beforeDeclaration"], Rule::class.java)
+        val afterDeclaration = mapper.treeToValue(rootObject["afterDeclaration"], FormatterRule::class.java)
+        val beforeDeclaration = mapper.treeToValue(rootObject["beforeDeclaration"], FormatterRule::class.java)
 
         return mapOf("afterDeclaration" to afterDeclaration, "beforeDeclaration" to beforeDeclaration)
-
     }
 
-
-
-    //If the result is negative that means it needs spaces, so it is going to shift right
-    private fun getBeforeDeclarationDiff(token1: ASTInterface, token2: ASTInterface, ruleMap:Map<String, Rule>, ruleName:String):Int {
+    // If the result is negative that means it needs spaces, so it is going to shift right
+    private fun getBeforeDeclarationDiff(
+        token1: ASTInterface,
+        token2: ASTInterface,
+        formatterRuleMap: Map<String, FormatterRule>,
+        ruleName: String,
+    ): Int {
         val identifierPos = token2.getToken().getPosition().endOffset
         val declarationPos = token1.getToken().getPosition().startOffset
-        return (declarationPos-(identifierPos+1)) - ruleMap[ruleName]!!.quantity
+        return (declarationPos - (identifierPos + 1)) - formatterRuleMap[ruleName]!!.quantity
     }
 
-    //If the result is negative that means it needs spaces, so it is going to shift right
-    private fun getAfterDeclarationDiff(token1: ASTInterface, token2: ASTInterface, ruleMap:Map<String, Rule>, ruleName:String):Int {
+    // If the result is negative that means it needs spaces, so it is going to shift right
+    private fun getAfterDeclarationDiff(
+        token1: ASTInterface,
+        token2: ASTInterface,
+        formatterRuleMap: Map<String, FormatterRule>,
+        ruleName: String,
+    ): Int {
         val declarationPos = token1.getToken().getPosition().endOffset
         val typePos = token2.getToken().getPosition().startOffset
-        return (typePos-(declarationPos+1)) - ruleMap[ruleName]!!.quantity
+        return (typePos - (declarationPos + 1)) - formatterRuleMap[ruleName]!!.quantity
     }
 
-    private fun ruleApplies(rule: Rule): Boolean {
-        return rule.on
+    private fun ruleApplies(formatterRule: FormatterRule): Boolean {
+        return formatterRule.on
     }
-
-
 }

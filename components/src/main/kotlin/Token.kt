@@ -9,8 +9,11 @@ class Token(private val position: Position, private val value: String, private v
 
     fun getPosition(): Position = position
 
-    fun copy(position: Position = this.position, value: String = this.value, type: TokenType = this.type): Token {
+    fun copy(
+        position: Position = this.position,
+        value: String = this.value,
+        type: TokenType = this.type,
+    ): Token {
         return Token(position, value, type)
     }
-
 }
