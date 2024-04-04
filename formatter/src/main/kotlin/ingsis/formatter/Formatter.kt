@@ -6,16 +6,14 @@ import components.ast.AST
 import components.ast.ASTInterface
 import java.io.File
 
-
-data class Rule(
+data class FormatterRule(
     val on: Boolean,
     val quantity: Int,
     val name: String,
 )
 
 
-
-class Formatter() {
+class Formatter {
 
     fun format(input:ASTInterface):ASTInterface{
         val ruleMap = readJsonsAndStackMap(listOf("src/main/rules/rulesBeforeDeclaration.json", "src/main/rules/rulesAfterDeclaration.json"))
@@ -73,12 +71,12 @@ class Formatter() {
 
 
 
-    private fun readJsonsAndStackMap(jsonPaths: List<String>): Map<String, Rule> {
+    private fun readJsonsAndStackMap(jsonPaths: List<String>): Map<String, FormatterRule> {
         val gson = Gson()
-        val ruleMap = HashMap<String, Rule>()
+        val ruleMap = HashMap<String, FormatterRule>()
         for (jsonPath in jsonPaths) {
             val jsonText = File(jsonPath).readText()
-            val rule = gson.fromJson(jsonText, Rule::class.java)
+            val rule = gson.fromJson(jsonText, FormatterRule::class.java)
             ruleMap[rule.name] = rule
         }
         return ruleMap
@@ -86,20 +84,20 @@ class Formatter() {
 
 
     //If the result is negative that means it needs spaces, so it is going to shift right
-    private fun getBeforeDeclarationDiff(token1: ASTInterface, token2: ASTInterface, ruleMap:Map<String, Rule>, ruleName:String):Int {
+    private fun getBeforeDeclarationDiff(token1: ASTInterface, token2: ASTInterface, ruleMap:Map<String, FormatterRule>, ruleName:String):Int {
         val identifierPos = token2.getToken().getPosition().endOffset
         val declarationPos = token1.getToken().getPosition().startOffset
         return (declarationPos-(identifierPos+1)) - ruleMap[ruleName]!!.quantity
     }
 
     //If the result is negative that means it needs spaces, so it is going to shift right
-    private fun getAfterDeclarationDiff(token1: ASTInterface, token2: ASTInterface, ruleMap:Map<String, Rule>, ruleName:String):Int {
+    private fun getAfterDeclarationDiff(token1: ASTInterface, token2: ASTInterface, ruleMap:Map<String, FormatterRule>, ruleName:String):Int {
         val declarationPos = token1.getToken().getPosition().endOffset
         val typePos = token2.getToken().getPosition().startOffset
         return (typePos-(declarationPos+1)) - ruleMap[ruleName]!!.quantity
     }
 
-    private fun ruleApplies(rule: Rule): Boolean {
+    private fun ruleApplies(rule: FormatterRule): Boolean {
         return rule.on
     }
 
