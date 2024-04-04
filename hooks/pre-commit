@@ -3,3 +3,5 @@
 # <https://github.com/pinterest/ktlint> pre-commit hook
 
 ./gradlew ktlintCheck
+./gradlew build
+./gradlew test

@@ -1,11 +1,25 @@
 import components.Position
-import components.Rule
 import components.Token
 import components.ast.ASTInterface
-import modules.interpreter.Interpreter
+import ingsis.interpreter.Interpreter
+import ingsis.lexer.Lexer
+import ingsis.parser.Parser
+import ingsis.utils.Variable
+import scaRules.Rule
+import java.io.File
 
-class Cli(private val codeLines: String, private val scaRules: ArrayList<Rule>) {
-    fun startCli() {
+class Cli(private val scaRules: ArrayList<Rule>) {
+    private fun readFile(fileName: String): String {
+        return File(fileName)
+            .inputStream()
+            .bufferedReader()
+            .use { it.readText() }
+    }
+
+    fun startCli(fileName: String) {
+        val codeLines = readFile(fileName)
+        val lines = splitLines(codeLines)
+
         val tokens = tokenizeWithLexer()
         val astList = parse(tokens)
         val variableMapList = interpret(astList)
@@ -15,9 +29,9 @@ class Cli(private val codeLines: String, private val scaRules: ArrayList<Rule>) 
         val tokenList = ArrayList<List<Token>>()
         val lexer = Lexer(Position())
 
-        for (line in splitLines()) {
-            tokenList.add(lexer.tokenize(line))
-        }
+//        for (line in splitLines()) {
+//            tokenList.add(lexer.tokenize(line))
+//        }
         return tokenList
     }
 
@@ -46,8 +60,7 @@ class Cli(private val codeLines: String, private val scaRules: ArrayList<Rule>) 
         return variableMapList
     }
 
-    private fun splitLines(): List<String> {
-        val codeLines: List<String> = codeLines.split("\n")
-        return codeLines
+    private fun splitLines(codeLines: String): List<String> {
+        return codeLines.split("\n")
     }
 }

@@ -6,7 +6,6 @@ import ingsis.interpreter.Interpreter
 import ingsis.utils.Variable
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import scaRules.Rule
 
 class InterpreterTest {
     @Test
@@ -239,7 +238,7 @@ class InterpreterTest {
     @Test
     fun testPrintFunctionWithTwoValuesAndAnOperator() {
         val interpreter = Interpreter()
-        val sca = Sca(ArrayList<Rule>())
+//        val sca = Sca(ArrayList<Rule>())
         val position = Position()
         val rightAst =
             AST(
@@ -294,7 +293,7 @@ class InterpreterTest {
     @Test
     fun testPrintFunctionWithFourIntegerAndTwoSums() {
         val interpreter = Interpreter()
-        val sca = Sca(ArrayList<Rule>())
+//        val sca = Sca(ArrayList<Rule>())
         val position = Position()
         val rightAst =
             AST(
