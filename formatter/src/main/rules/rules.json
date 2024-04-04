@@ -1,0 +1,11 @@
+{
+  "afterDeclaration": {
+    "on": true,
+    "quantity": 1
+  },
+  "beforeDeclaration": {
+    "on": true,
+    "quantity": 0
+  }
+
+}
