@@ -2,31 +2,32 @@ package components
 
 class ComparatorTokenValue : Comparator<Token> {
 
+    // it is after the token types
     // it returns 0 if they are equals
     // for example in ASSIGNATION, you have to compare the values
-    // it returns 1 if o1 > o2
-    // it returns -1 if o1 < o2
-    override fun compare(o1: Token?, o2: Token?): Int {
-        return when(o1!!.getType()){
-            TokenType.ASSIGNATION -> compareAssignation(o1.getValue(), o2!!.getValue())
-            TokenType.OPERATOR -> compareOperator(o1.getValue(), o2!!.getValue())
+    // it returns 1 if token > root
+    // it returns -1 if token < root
+    override fun compare(token: Token?, root: Token?): Int {
+        return when(token!!.getType()){
+            TokenType.ASSIGNATION -> compareAssignation(token.getValue(), root!!.getValue())
+            TokenType.OPERATOR -> compareOperator(token.getValue(), root!!.getValue())
             else -> 0
         }
     }
 
-    private fun compareOperator(value: String, value1: String): Int {
-        return when(value) {
-            value1 -> 0
-            "+" -> checkValue(value1, "-", 1)
-            "-" -> checkValue(value1, "+", 1)
-            "*" -> checkValue(value1, "/", -1)
-            "/" -> checkValue(value1, "*", -1)
+    private fun compareOperator(token: String, root: String): Int {
+        return when(token) {
+            root -> 0
+            "+" -> checkValue(root, "-", 1)
+            "-" -> checkValue(root, "+", 1)
+            "*" -> checkValue(root, "/", -1)
+            "/" -> checkValue(root,"*", -1)
             else -> -1
         }
     }
 
-    private fun checkValue(value1: String, s: String, ifNot: Int): Int {
-        return if (value1 == s) 0 else ifNot
+    private fun checkValue(root: String, s: String, ifNot: Int): Int {
+        return if (root == s) 0 else ifNot
     }
 
     private fun compareAssignation(value: String, value1: String): Int {
