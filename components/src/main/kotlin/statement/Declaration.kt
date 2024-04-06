@@ -18,7 +18,7 @@ class Declaration(
     fun getPosition(): Position = position
     override fun toString(): String {
         return "keyword: " + keyword +
-                "variable: " + variable +
-                "type: " + type
+                "\nvariable: " + variable +
+                "\ntype: " + type
     }
 }

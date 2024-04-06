@@ -3,8 +3,6 @@ package modules.parser
 import components.Position
 import components.Token
 import components.TokenType
-import components.ast.AST
-import components.ast.ASTInterface
 import components.statement.*
 import error.ParserError
 import ingsis.parser.Parser
@@ -33,6 +31,7 @@ class ParserAST {
                 Type("string", position),
                 position
             )
+        print(parser.parse(tokens).toString())
         assertEquals(astExpected.toString(), parser.parse(tokens).toString())
     }
 

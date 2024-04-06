@@ -25,7 +25,7 @@ class Parser(private val scanStatement: List<ScanStatement>) {
         }
         val tokWOSemicolon = tokens.subList(0, tokens.size - 1)
         for (scan in scanStatement){
-            if(scan.canHandle(tokens)) return scan.makeAST(tokWOSemicolon)
+            if(scan.canHandle(tokWOSemicolon)) return scan.makeAST(tokWOSemicolon)
         }
 //        if (checkDeclaration(tokWOSemicolon)) {
 //            return transformDeclaration(tokWOSemicolon)
