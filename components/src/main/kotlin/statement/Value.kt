@@ -1,5 +1,11 @@
 package components.statement
 
-interface Value<T> {
-    fun getValue(): T
+import components.Position
+import components.TokenType
+
+interface Value {
+
+    fun getValue(): String
+    fun getPosition(): Position
+    fun getType() : TokenType
 }

@@ -2,8 +2,14 @@ package components.statement
 
 import components.Position
 
-class Variable(val name: String, val position: Position) {
+class Variable(private val name: String, private val position: Position) {
     override fun toString(): String {
         return "\tname: $name"
     }
+
+    fun getName(): String = name
+
+    fun getPosition(): Position = position
+
+
 }
