@@ -6,10 +6,12 @@ import components.Token
 import components.TokenType
 import components.ast.AST
 import components.ast.ASTInterface
+import components.statement.Statement
 import error.ParserError
+import scan.ScanStatement
 import kotlin.math.abs
 
-class Parser : ParserInterface {
+class Parser(private val scanStatement: List<ScanStatement>) {
     private val typeComparator = ComparatorTokenType()
     private val valueComparator = ComparatorTokenValue()
     private val doesntMatterTypes = listOf(TokenType.PARENTHESIS, TokenType.KEYWORD)
@@ -17,18 +19,21 @@ class Parser : ParserInterface {
     private val functionTypes = listOf(TokenType.FUNCTION, TokenType.PARENTHESIS)
     private val twoChildrenType = listOf(TokenType.OPERATOR, TokenType.ASSIGNATION, TokenType.DECLARATION)
 
-    override fun parse(tokens: List<Token>): ASTInterface {
+    fun parse(tokens: List<Token>): Statement {
         if (tokens.last().getType() != TokenType.SEMICOLON) {
             throw ParserError("error: ';' expected  " + tokens.last().getPosition(), tokens.last())
         }
-        val tokWSemicolon = tokens.subList(0, tokens.size - 1)
-        if (checkDeclaration(tokWSemicolon)) {
-            return transformDeclaration(tokWSemicolon)
-        } else if (isAssignation(tokWSemicolon)) {
-            return transformAssignation(tokWSemicolon)
-        } else if (isCallingMethod(tokWSemicolon)) {
-            return transformFunction(tokWSemicolon)
+        val tokWOSemicolon = tokens.subList(0, tokens.size - 1)
+        for (scan in scanStatement){
+            if(scan.canHandle(tokens)) return scan.makeAST(tokWOSemicolon)
         }
+//        if (checkDeclaration(tokWOSemicolon)) {
+//            return transformDeclaration(tokWOSemicolon)
+//        } else if (isAssignation(tokWOSemicolon)) {
+//            return transformAssignation(tokWOSemicolon)
+//        } else if (isCallingMethod(tokWOSemicolon)) {
+//            return transformFunction(tokWOSemicolon)
+//        }
         throw ParserError("PrintScript couldn't parse that code " + tokens[0].getPosition(), tokens[0])
     }
 
@@ -210,30 +215,12 @@ class Parser : ParserInterface {
         val declarationTypes = listOf(TokenType.KEYWORD, TokenType.IDENTIFIER, TokenType.DECLARATION, TokenType.TYPE)
 
         val tokenTypes = tokens.map { it.getType() }
-        val declarationTypesPresent = declarationTypes.intersect(tokenTypes.toSet())
-        if (declarationTypes == tokenTypes) {
+        if (declarationTypes == tokenTypes)
             return true
-        } else if (declarationTypesPresent.size > 2 && checkCollections(declarationTypesPresent, tokenTypes)) {
-            throw ParserError(
-                "error: to declare a variable, it's expected to do it by 'let <name of the variable>: <type of the variable>'",
-                tokens[0],
-            )
-        }
-
         return false
     }
 
-    private fun checkCollections(
-        declarationTypesPresent: Set<TokenType>,
-        tokenTypes: List<TokenType>,
-    ): Boolean {
-        if (tokenTypes.size != declarationTypesPresent.size) return false
-        for ((i, type) in declarationTypesPresent.withIndex()) {
-            if (i >= tokenTypes.size) return false
-            if (tokenTypes[i] != type) return false
-        }
-        return true
-    }
+
 
     private fun isAssignation(tokens: List<Token>): Boolean {
         // there are 2 options for assignation:
