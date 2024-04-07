@@ -3,20 +3,20 @@ package modules.parser
 import components.Position
 import components.Token
 import components.TokenType
-import components.ast.AST
-import components.ast.ASTInterface
 import components.statement.*
 import error.ParserError
 import ingsis.parser.Parser
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import scan.ScanAssignation
 import scan.ScanDeclaration
+import scan.ScanFunction
 
 class ParserTest {
-    private val parser = Parser(listOf(ScanDeclaration(), ScanAssignation()))
+
+    private val parser = Parser(listOf(ScanDeclaration(), ScanAssignation(), ScanFunction()))
     private val position = Position()
+
     @Test
     fun `test 001 - declaration of x as string`() {
         val tokens: List<Token> =
@@ -47,7 +47,7 @@ class ParserTest {
                 Token(position, "string", TokenType.TYPE),
                 Token(position, "", TokenType.SEMICOLON),
             )
-        Assertions.assertThrows(ParserError::class.java) {
+        assertThrows(ParserError::class.java) {
             parser.parse(tokens)
         }
     }
@@ -61,7 +61,7 @@ class ParserTest {
                 Token(position, "string", TokenType.TYPE),
                 Token(position, "", TokenType.SEMICOLON),
             )
-        Assertions.assertThrows(ParserError::class.java) {
+        assertThrows(ParserError::class.java) {
             parser.parse(tokens)
         }
     }
@@ -75,7 +75,7 @@ class ParserTest {
                 Token(position, "string", TokenType.TYPE),
                 Token(position, "", TokenType.SEMICOLON),
             )
-        Assertions.assertThrows(ParserError::class.java) {
+        assertThrows(ParserError::class.java) {
             parser.parse(tokens)
         }
     }
@@ -89,7 +89,7 @@ class ParserTest {
                 Token(position, ":", TokenType.DECLARATION),
                 Token(position, "", TokenType.SEMICOLON),
             )
-        Assertions.assertThrows(ParserError::class.java) {
+        assertThrows(ParserError::class.java) {
             parser.parse(tokens)
         }
     }
@@ -102,7 +102,7 @@ class ParserTest {
                 Token(position, "x", TokenType.IDENTIFIER),
                 Token(position, "", TokenType.SEMICOLON),
             )
-        Assertions.assertThrows(ParserError::class.java) {
+        assertThrows(ParserError::class.java) {
             parser.parse(tokens)
         }
     }
@@ -472,111 +472,99 @@ class ParserTest {
         assertEquals(astExpected.toString(), parser.parse(tokens).toString())
     }
 
-//    @Test
-//    fun `test 019 - a print function with identifier`() {
-//        val tokens: List<Token> =
-//            listOf(
-//                Token(position, "println", TokenType.FUNCTION),
-//                Token(position, "(", TokenType.PARENTHESIS),
-//                Token(position, "c", TokenType.IDENTIFIER),
-//                Token(position, ")", TokenType.PARENTHESIS),
-//                Token(position, "", TokenType.SEMICOLON),
-//            )
-//        val astExpected =
-//            AST(
-//                Token(position, "println", TokenType.FUNCTION),
-//                listOf(
-//                    AST(Token(position, "c", TokenType.IDENTIFIER)),
-//                ),
-//            )
-//        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
-//    }
+    @Test
+    fun `test 019 - a print function with identifier`() {
+        val tokens: List<Token> =
+            listOf(
+                Token(position, "println", TokenType.FUNCTION),
+                Token(position, "(", TokenType.PARENTHESIS),
+                Token(position, "c", TokenType.IDENTIFIER),
+                Token(position, ")", TokenType.PARENTHESIS),
+                Token(position, "", TokenType.SEMICOLON),
+            )
+        val astExpected : Statement=
+            Function(
+                Token(position, "println", TokenType.FUNCTION),
+                SingleValue(Token(position, "c", TokenType.IDENTIFIER)),
+            )
+        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
+    }
 
-//    @Test
-//    fun `test 020 - a print function with identifier + value`() {
-//        val tokens: List<Token> =
-//            listOf(
-//                Token(position, "println", TokenType.FUNCTION),
-//                Token(position, "(", TokenType.PARENTHESIS),
-//                Token(position, "8", TokenType.INTEGER),
-//                Token(position, "+", TokenType.OPERATOR),
-//                Token(position, "c", TokenType.IDENTIFIER),
-//                Token(position, ")", TokenType.PARENTHESIS),
-//                Token(position, "", TokenType.SEMICOLON),
-//            )
-//        val astExpected =
-//            AST(
-//                Token(position, "println", TokenType.FUNCTION),
-//                listOf(
-//                    AST(
-//                        Token(position, "+", TokenType.OPERATOR),
-//                        listOf(
-//                            AST(Token(position, "8", TokenType.INTEGER)),
-//                            AST(Token(position, "c", TokenType.IDENTIFIER)),
-//                        ),
-//                    ),
-//                ),
-//            )
-//        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
-//    }
-//
-//    @Test
-//    fun `test 021 - a print function with multiple parenthesis`() {
-//        val tokens: List<Token> =
-//            listOf(
-//                Token(position, "println", TokenType.FUNCTION),
-//                Token(position, "(", TokenType.PARENTHESIS),
-//                Token(position, "8", TokenType.INTEGER),
-//                Token(position, "+", TokenType.OPERATOR),
-//                Token(position, "(", TokenType.PARENTHESIS),
-//                Token(position, "c", TokenType.IDENTIFIER),
-//                Token(position, "*", TokenType.OPERATOR),
-//                Token(position, "3", TokenType.INTEGER),
-//                Token(position, ")", TokenType.PARENTHESIS),
-//                Token(position, ")", TokenType.PARENTHESIS),
-//                Token(position, "", TokenType.SEMICOLON),
-//            )
-//        val astExpected =
-//            AST(
-//                Token(position, "println", TokenType.FUNCTION),
-//                listOf(
-//                    AST(
-//                        Token(position, "+", TokenType.OPERATOR),
-//                        listOf(
-//                            AST(Token(position, "8", TokenType.INTEGER)),
-//                            AST(
-//                                Token(position, "*", TokenType.OPERATOR),
-//                                listOf(
-//                                    AST(Token(position, "c", TokenType.IDENTIFIER)),
-//                                    AST(Token(position, "3", TokenType.INTEGER)),
-//                                ),
-//                            ),
-//                        ),
-//                    ),
-//                ),
-//            )
-//        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
-//    }
-//
-//    @Test
-//    fun `test 022 - a print function with one parenthesis missing`() {
-//        val tokens: List<Token> =
-//            listOf(
-//                Token(position, "println", TokenType.FUNCTION),
-//                Token(position, "(", TokenType.PARENTHESIS),
-//                Token(position, "8", TokenType.INTEGER),
-//                Token(position, "+", TokenType.OPERATOR),
-//                Token(position, "(", TokenType.PARENTHESIS),
-//                Token(position, "c", TokenType.IDENTIFIER),
-//                Token(position, "*", TokenType.OPERATOR),
-//                Token(position, "3", TokenType.INTEGER),
-//                Token(position, ")", TokenType.PARENTHESIS),
-//                Token(position, "", TokenType.SEMICOLON),
-//            )
-//        assertThrows(ParserError::class.java) {
-//            parser.parse(tokens)
-//        }
-//    }
+    @Test
+    fun `test 020 - a print function with identifier + value`() {
+        val tokens: List<Token> =
+            listOf(
+                Token(position, "println", TokenType.FUNCTION),
+                Token(position, "(", TokenType.PARENTHESIS),
+                Token(position, "8", TokenType.INTEGER),
+                Token(position, "+", TokenType.OPERATOR),
+                Token(position, "c", TokenType.IDENTIFIER),
+                Token(position, ")", TokenType.PARENTHESIS),
+                Token(position, "", TokenType.SEMICOLON),
+            )
+        val astExpected : Statement=
+            Function(
+                Token(position, "println", TokenType.FUNCTION),
+                Operator(
+                    Token(position, "+", TokenType.OPERATOR),
+                    SingleValue(Token(position, "8", TokenType.INTEGER)),
+                    SingleValue(Token(position, "c", TokenType.IDENTIFIER)),
+                )
+            )
+        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
+    }
+
+    @Test
+    fun `test 021 - a print function with multiple parenthesis`() {
+        val tokens: List<Token> =
+            listOf(
+                Token(position, "println", TokenType.FUNCTION),
+                Token(position, "(", TokenType.PARENTHESIS),
+                Token(position, "8", TokenType.INTEGER),
+                Token(position, "+", TokenType.OPERATOR),
+                Token(position, "(", TokenType.PARENTHESIS),
+                Token(position, "c", TokenType.IDENTIFIER),
+                Token(position, "*", TokenType.OPERATOR),
+                Token(position, "3", TokenType.INTEGER),
+                Token(position, ")", TokenType.PARENTHESIS),
+                Token(position, ")", TokenType.PARENTHESIS),
+                Token(position, "", TokenType.SEMICOLON),
+            )
+        val astExpected : Statement=
+            Function(
+                Token(position, "println", TokenType.FUNCTION),
+                Operator(
+                    Token(position, "+", TokenType.OPERATOR),
+                    SingleValue(Token(position, "8", TokenType.INTEGER)),
+                    Operator(
+                        Token(position, "*", TokenType.OPERATOR),
+                        SingleValue(Token(position, "c", TokenType.IDENTIFIER)),
+                        SingleValue(Token(position, "3", TokenType.INTEGER))
+                    )
+                )
+            )
+        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
+    }
+
+    @Test
+    fun `test 022 - a print function with one parenthesis missing`() {
+        val tokens: List<Token> =
+            listOf(
+                Token(position, "println", TokenType.FUNCTION),
+                Token(position, "(", TokenType.PARENTHESIS),
+                Token(position, "8", TokenType.INTEGER),
+                Token(position, "+", TokenType.OPERATOR),
+                Token(position, "(", TokenType.PARENTHESIS),
+                Token(position, "c", TokenType.IDENTIFIER),
+                Token(position, "*", TokenType.OPERATOR),
+                Token(position, "3", TokenType.INTEGER),
+                Token(position, ")", TokenType.PARENTHESIS),
+                Token(position, "", TokenType.SEMICOLON),
+            )
+        assertThrows(ParserError::class.java) {
+            parser.parse(tokens)
+        }
+    }
 
     @Test
     fun `test 023 - assignation without value`() {

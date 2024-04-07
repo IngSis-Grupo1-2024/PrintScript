@@ -2,11 +2,8 @@ package scan
 
 import components.Token
 import components.TokenType
-import components.ast.AST
-import components.ast.ASTInterface
 import components.statement.*
 import error.ParserError
-import javax.swing.plaf.basic.BasicGraphicsUtils
 
 class ScanAssignation : ScanStatement {
     private val scanDeclaration = ScanDeclaration()
@@ -64,11 +61,7 @@ class ScanAssignation : ScanStatement {
     }
 
     private fun checkIdentifier(tokens: List<Token>): Boolean {
-        return if (tokens.size != 1) {
-            false
-        } else {
-            tokens[0].getType() == TokenType.IDENTIFIER
-        }
+        return if (tokens.size != 1) false
+        else tokens[0].getType() == TokenType.IDENTIFIER
     }
-
 }

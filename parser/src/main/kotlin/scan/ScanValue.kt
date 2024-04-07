@@ -40,7 +40,6 @@ class ScanValue {
 
     private fun checkQtyOperatorsAndValues(numberOfOpp: Int, numberOfValue: Int, lastToken: Token): Boolean {
         if (numberOfValue == numberOfOpp + 1) return true
-        if (numberOfOpp == 0 && numberOfValue == 0) throw ParserError("error: expected value", lastToken)
         throw ParserError("error: wrong number of values and operators", lastToken)
     }
 
