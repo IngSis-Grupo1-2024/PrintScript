@@ -4,9 +4,8 @@ import components.Token
 import components.TokenType
 import components.ast.AST
 import components.ast.ASTInterface
-import components.statement.Assignation
-import components.statement.Statement
-import components.statement.Variable
+import components.statement.*
+import error.ParserError
 import javax.swing.plaf.basic.BasicGraphicsUtils
 
 class ScanAssignation : ScanStatement {
@@ -17,30 +16,36 @@ class ScanAssignation : ScanStatement {
         if (tokens.size < 3) return false
         val assignIndex = findAssignIndex(tokens)
         if (assignIndex == -1) return false
-        if (checkFirstPartOfAssignation(tokens, assignIndex))
+        if (checkFirstPartOfAssignation(tokens, assignIndex)){
+            if(emptyValue(tokens, assignIndex)) throw ParserError("error: expected value", tokens[assignIndex])
             return scanValue.canHandle(tokens.subList(assignIndex + 1, tokens.size))
+        }
         return false
+    }
+
+    private fun emptyValue(tokens: List<Token>, assignIndex: Int): Boolean {
+        val value = tokens.subList(assignIndex+1, tokens.size)
+        return value.isEmpty()
     }
 
     override fun makeAST(tokens: List<Token>): Statement {
         val assignIndex: Int = findAssignIndex(tokens)
         if (checkIfCompound(tokens, assignIndex)) return compoundAssignation(tokens, assignIndex)
-        return simpleAssignation(tokens)
+        return simpleAssignation(tokens, assignIndex)
     }
 
-    private fun simpleAssignation(tokens: List<Token>): Statement {
-        Assignation<>(getVariable(tokens[0]), scanValue.makeAST(tokens.subList(tokens.size - 1, tokens.size)))
-
+    private fun compoundAssignation(tokens: List<Token>, assignIndex: Int): Statement {
+        val decl : Declaration = scanDeclaration.makeAST(tokens.subList(0, assignIndex)) as Declaration
+        val value : Value = scanValue.makeValue(tokens.subList(assignIndex + 1, tokens.size))
+        return CompoundAssignation(tokens[assignIndex].getPosition(), decl, value)
     }
+
+    private fun simpleAssignation(tokens: List<Token>, assignIndex: Int): Statement =
+        Assignation(tokens[assignIndex].getPosition(), getVariable(tokens[0]), scanValue.makeValue(tokens.subList(assignIndex+1, tokens.size)))
 
 
     private fun checkIfCompound(tokens: List<Token>, assignIndex: Int) =
         tokens.subList(0, assignIndex).size != 1
-
-    private fun transformIdent(tokens: List<Token>): Statement {
-        if (tokens.size == 1) return getVariable(tokens[0])
-        return scanDeclaration.makeAST(tokens)
-    }
 
     private fun getVariable(token: Token): Variable =
         Variable(token.getValue(), token.getPosition())
