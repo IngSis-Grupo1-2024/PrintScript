@@ -12,6 +12,7 @@ build/
 .idea/kotlinc.xml
 .idea/vcs.xml
 .idea/uiDesigner.xml
+.idea/gradle.xml
 
 *.iws
 *.iml
@@ -50,4 +51,3 @@ bin/
 
 # Ignore Gradle build output directory
 build
-.idea/*
