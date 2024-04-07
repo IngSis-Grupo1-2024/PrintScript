@@ -13,7 +13,6 @@ import scan.ScanDeclaration
 import scan.ScanFunction
 
 class ParserTest {
-
     private val parser = Parser(listOf(ScanDeclaration(), ScanAssignation(), ScanFunction()))
     private val position = Position()
 
@@ -32,7 +31,7 @@ class ParserTest {
                 Keyword(Modifier.MUTABLE, "let", position),
                 Variable("x", position),
                 Type("string", position),
-                position
+                position,
             )
         print(parser.parse(tokens).toString())
         assertEquals(astExpected.toString(), parser.parse(tokens).toString())
@@ -119,9 +118,10 @@ class ParserTest {
         val astExpected: Statement =
             Assignation(
                 position,
-                Variable("x",position),
+                Variable("x", position),
                 SingleValue(
-                    Token(position, "8", TokenType.INTEGER)),
+                    Token(position, "8", TokenType.INTEGER),
+                ),
             )
         assertEquals(astExpected.toString(), parser.parse(tokens).toString())
     }
@@ -144,8 +144,8 @@ class ParserTest {
                 Operator(
                     Token(position, "+", TokenType.OPERATOR),
                     SingleValue(Token(position, "8", TokenType.INTEGER)),
-                    SingleValue(Token(position, "3", TokenType.INTEGER))
-                )
+                    SingleValue(Token(position, "3", TokenType.INTEGER)),
+                ),
             )
         assertEquals(astExpected.toString(), parser.parse(tokens).toString())
     }
@@ -169,10 +169,11 @@ class ParserTest {
                     Keyword(Modifier.MUTABLE, "let", position),
                     Variable("x", position),
                     Type("number", position),
-                    position
+                    position,
                 ),
                 SingleValue(
-                    Token(position, "8", TokenType.INTEGER)),
+                    Token(position, "8", TokenType.INTEGER),
+                ),
             )
         assertEquals(astExpected.toString(), parser.parse(tokens).toString())
     }
@@ -197,14 +198,14 @@ class ParserTest {
                 Operator(
                     Token(position, "+", TokenType.OPERATOR),
                     SingleValue(
-                        Token(position, "8", TokenType.INTEGER)
+                        Token(position, "8", TokenType.INTEGER),
                     ),
                     Operator(
                         Token(position, "*", TokenType.OPERATOR),
                         SingleValue(Token(position, "3", TokenType.INTEGER)),
                         SingleValue(Token(position, "2", TokenType.INTEGER)),
-                    )
-                )
+                    ),
+                ),
             )
         assertEquals(astExpected.toString(), parser.parse(tokens).toString())
     }
@@ -234,9 +235,9 @@ class ParserTest {
                         SingleValue(Token(position, "3", TokenType.INTEGER)),
                     ),
                     SingleValue(
-                        Token(position, "2", TokenType.INTEGER)
-                    )
-                )
+                        Token(position, "2", TokenType.INTEGER),
+                    ),
+                ),
             )
         assertEquals(astExpected.toString(), parser.parse(tokens).toString())
     }
@@ -264,7 +265,7 @@ class ParserTest {
                     Keyword(Modifier.MUTABLE, "let", position),
                     Variable("x", position),
                     Type("number", position),
-                    position
+                    position,
                 ),
                 Operator(
                     Token(position, "+", TokenType.OPERATOR),
@@ -274,9 +275,9 @@ class ParserTest {
                         SingleValue(Token(position, "3", TokenType.INTEGER)),
                     ),
                     SingleValue(
-                        Token(position, "2", TokenType.INTEGER)
-                    )
-                )
+                        Token(position, "2", TokenType.INTEGER),
+                    ),
+                ),
             )
 
         assertEquals(astExpected.toString(), parser.parse(tokens).toString())
@@ -355,7 +356,7 @@ class ParserTest {
                     Keyword(Modifier.MUTABLE, "let", position),
                     Variable("x", position),
                     Type("number", position),
-                    position
+                    position,
                 ),
                 Operator(
                     Token(position, "+", TokenType.OPERATOR),
@@ -368,8 +369,8 @@ class ParserTest {
                         Token(position, "*", TokenType.OPERATOR),
                         SingleValue(Token(position, "3", TokenType.INTEGER)),
                         SingleValue(Token(position, "2", TokenType.INTEGER)),
-                    )
-                )
+                    ),
+                ),
             )
         assertEquals(astExpected.toString(), parser.parse(tokens).toString())
     }
@@ -399,18 +400,20 @@ class ParserTest {
                     Keyword(Modifier.MUTABLE, "let", position),
                     Variable("x", position),
                     Type("number", position),
-                    position
+                    position,
                 ),
                 Operator(
                     Token(position, "/", TokenType.OPERATOR),
                     SingleValue(
-                        Token(position, "3", TokenType.INTEGER)),
+                        Token(position, "3", TokenType.INTEGER),
+                    ),
                     Operator(
                         Token(position, "+", TokenType.OPERATOR),
                         SingleValue(Token(position, "2", TokenType.INTEGER)),
-                        SingleValue(Token(position, "3", TokenType.INTEGER))
-                    )
-            ))
+                        SingleValue(Token(position, "3", TokenType.INTEGER)),
+                    ),
+                ),
+            )
 
         assertEquals(astExpected.toString(), parser.parse(tokens).toString())
     }
@@ -448,26 +451,30 @@ class ParserTest {
                     Keyword(Modifier.MUTABLE, "let", position),
                     Variable("x", position),
                     Type("number", position),
-                    position
+                    position,
                 ),
                 Operator(
                     Token(position, "/", TokenType.OPERATOR),
                     SingleValue(
-                        Token(position, "3", TokenType.INTEGER)),
+                        Token(position, "3", TokenType.INTEGER),
+                    ),
                     Operator(
                         Token(position, "+", TokenType.OPERATOR),
                         SingleValue(Token(position, "2", TokenType.INTEGER)),
                         Operator(
                             Token(position, "/", TokenType.OPERATOR),
                             SingleValue(
-                                Token(position, "3", TokenType.INTEGER)),
+                                Token(position, "3", TokenType.INTEGER),
+                            ),
                             Operator(
                                 Token(position, "+", TokenType.OPERATOR),
                                 SingleValue(Token(position, "2", TokenType.INTEGER)),
-                                SingleValue(Token(position, "3", TokenType.INTEGER))
-                            )
-                    )
-            )))
+                                SingleValue(Token(position, "3", TokenType.INTEGER)),
+                            ),
+                        ),
+                    ),
+                ),
+            )
 
         assertEquals(astExpected.toString(), parser.parse(tokens).toString())
     }
@@ -482,7 +489,7 @@ class ParserTest {
                 Token(position, ")", TokenType.PARENTHESIS),
                 Token(position, "", TokenType.SEMICOLON),
             )
-        val astExpected : Statement=
+        val astExpected: Statement =
             Function(
                 Token(position, "println", TokenType.FUNCTION),
                 SingleValue(Token(position, "c", TokenType.IDENTIFIER)),
@@ -502,14 +509,14 @@ class ParserTest {
                 Token(position, ")", TokenType.PARENTHESIS),
                 Token(position, "", TokenType.SEMICOLON),
             )
-        val astExpected : Statement=
+        val astExpected: Statement =
             Function(
                 Token(position, "println", TokenType.FUNCTION),
                 Operator(
                     Token(position, "+", TokenType.OPERATOR),
                     SingleValue(Token(position, "8", TokenType.INTEGER)),
                     SingleValue(Token(position, "c", TokenType.IDENTIFIER)),
-                )
+                ),
             )
         assertEquals(astExpected.toString(), parser.parse(tokens).toString())
     }
@@ -530,7 +537,7 @@ class ParserTest {
                 Token(position, ")", TokenType.PARENTHESIS),
                 Token(position, "", TokenType.SEMICOLON),
             )
-        val astExpected : Statement=
+        val astExpected: Statement =
             Function(
                 Token(position, "println", TokenType.FUNCTION),
                 Operator(
@@ -539,9 +546,9 @@ class ParserTest {
                     Operator(
                         Token(position, "*", TokenType.OPERATOR),
                         SingleValue(Token(position, "c", TokenType.IDENTIFIER)),
-                        SingleValue(Token(position, "3", TokenType.INTEGER))
-                    )
-                )
+                        SingleValue(Token(position, "3", TokenType.INTEGER)),
+                    ),
+                ),
             )
         assertEquals(astExpected.toString(), parser.parse(tokens).toString())
     }
@@ -639,16 +646,15 @@ class ParserTest {
                 Operator(
                     Token(position, "+", TokenType.OPERATOR),
                     SingleValue(
-                        Token(position, "8", TokenType.INTEGER)
+                        Token(position, "8", TokenType.INTEGER),
                     ),
                     Operator(
                         Token(position, "*", TokenType.OPERATOR),
                         SingleValue(Token(position, "3", TokenType.INTEGER)),
                         SingleValue(Token(position, "2", TokenType.INTEGER)),
-                    )
-                )
+                    ),
+                ),
             )
         assertEquals(astExpected.toString(), parser.parse(tokens).toString())
     }
-
 }

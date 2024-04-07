@@ -33,21 +33,22 @@ class ScanValue {
         return getOperator(tokens)
     }
 
-    private fun getOperator(tokens: List<Token>): Value =
-        getTreeWithAst(tokens, EmptyValue())
+    private fun getOperator(tokens: List<Token>): Value = getTreeWithAst(tokens, EmptyValue())
 
     private fun getSingleValue(token: Token): Value = SingleValue(token)
 
-    private fun checkQtyOperatorsAndValues(numberOfOpp: Int, numberOfValue: Int, lastToken: Token): Boolean {
+    private fun checkQtyOperatorsAndValues(
+        numberOfOpp: Int,
+        numberOfValue: Int,
+        lastToken: Token,
+    ): Boolean {
         if (numberOfValue == numberOfOpp + 1) return true
         throw ParserError("error: wrong number of values and operators", lastToken)
     }
 
-    private fun getNumberOfValue(tokens: List<Token>) =
-        tokens.filter { it.getType() in valueTypes }.size
+    private fun getNumberOfValue(tokens: List<Token>) = tokens.filter { it.getType() in valueTypes }.size
 
-    private fun getNumberOfOpp(tokens: List<Token>) =
-        tokens.filter { it.getType() == TokenType.OPERATOR }.size
+    private fun getNumberOfOpp(tokens: List<Token>) = tokens.filter { it.getType() == TokenType.OPERATOR }.size
 
     private fun getTreeWithAst(
         tokens: List<Token>,
@@ -102,11 +103,13 @@ class ScanValue {
         originalAST: Value,
         ast: Value,
     ): Value {
-        if(originalAST.isEmpty() || originalAST.isLeaf()) return originalAST.addChildren(ast)
-        if (originalAST.getChildrenAmount() < 2 && originalAST.getToken().getType() in twoChildrenType)
+        if (originalAST.isEmpty() || originalAST.isLeaf()) return originalAST.addChildren(ast)
+        if (originalAST.getChildrenAmount() < 2 && originalAST.getToken().getType() in twoChildrenType) {
             return originalAST.addChildren(ast)
-        if(originalAST is Operator)
+        }
+        if (originalAST is Operator) {
             return addInLastChild(originalAST.getLastOperator(), ast)
+        }
         return originalAST.addChildren(ast)
     }
 
@@ -124,15 +127,15 @@ class ScanValue {
             Operator(token, ast)
         } else if (abs(compareTokens) == 2) {
             ast
-        } else if (ast is Operator){
-            removeLastChild(ast, token)
-        }
-        else{
+        } else if (ast is Operator)
+            {
+                removeLastChild(ast, token)
+            } else {
             ast.addChildren(SingleValue(token))
         }
     }
-    private
-    fun compareValueAndType(
+
+    private fun compareValueAndType(
         token: Token,
         root: Token,
     ): Int {
@@ -151,8 +154,7 @@ class ScanValue {
         try {
             val lastChild = ast.getLastOperator()
             return ast.replace(lastChild, add(token, lastChild))
-        }
-        catch (e: NullPointerException){
+        } catch (e: NullPointerException) {
             return ast.addChildren(SingleValue(token)) as Operator
         }
     }
@@ -190,13 +192,21 @@ class ScanValue {
         }
         return if (ast.getChildrenAmount() < 2 && ast.getToken().getType() in twoChildrenType) {
             ast.addChildren(SingleValue(token))
-        } else if(ast is Operator){
-            removeLastChild(ast, token)
+        } else if (ast is Operator)
+            {
+                removeLastChild(ast, token)
+            } else {
+            ast.addChildren(SingleValue(token))
         }
-        else ast.addChildren(SingleValue(token))
     }
 
-    private fun getCompLeft(token: Token, ast: Operator): Int = compareValueAndType(token, ast.getLeftOperator().getToken())
-    private fun getCompRight(token: Token, ast: Operator): Int = compareValueAndType(token, ast.getRightOperator().getToken())
+    private fun getCompLeft(
+        token: Token,
+        ast: Operator,
+    ): Int = compareValueAndType(token, ast.getLeftOperator().getToken())
 
+    private fun getCompRight(
+        token: Token,
+        ast: Operator,
+    ): Int = compareValueAndType(token, ast.getRightOperator().getToken())
 }

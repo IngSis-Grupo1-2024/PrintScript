@@ -6,17 +6,17 @@ import components.statement.Statement
 import error.ParserError
 import scan.ScanStatement
 
-
 class Parser(private val scanStatement: List<ScanStatement>) {
-
     fun parse(tokens: List<Token>): Statement {
-        if (checkIfThereIsADelimiter(tokens))
+        if (checkIfThereIsADelimiter(tokens)) {
             throw ParserError("error: ';' expected  " + tokens.last().getPosition(), tokens.last())
+        }
 
         val tokWOSemicolon = tokens.subList(0, tokens.size - 1)
 
         scanStatement.forEach {
-            scan -> if(scan.canHandle(tokWOSemicolon)) return scan.makeAST(tokWOSemicolon)
+                scan ->
+            if (scan.canHandle(tokWOSemicolon)) return scan.makeAST(tokWOSemicolon)
         }
 
         throw ParserError("PrintScript couldn't parse that code " + tokens[0].getPosition(), tokens[0])

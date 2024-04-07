@@ -2,7 +2,7 @@ package components.statement
 
 import components.Token
 
-class EmptyValue : Value{
+class EmptyValue : Value {
     override fun isEmpty(): Boolean = true
 
     override fun getToken(): Token {
@@ -16,8 +16,8 @@ class EmptyValue : Value{
     }
 
     override fun addChildren(ast: Value): Value = ast
+
     override fun toString(): String {
         return "EmptyValue()"
     }
-
 }

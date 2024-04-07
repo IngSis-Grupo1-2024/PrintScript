@@ -2,8 +2,7 @@ package components.statement
 
 import components.Position
 
-class Assignation(private val position: Position, private val variable: Variable, private val value:Value) : Statement {
-
+class Assignation(private val position: Position, private val variable: Variable, private val value: Value) : Statement {
     val statementType = StatementType.ASSIGNATION
 
     fun getVariable(): Variable = variable
@@ -12,6 +11,5 @@ class Assignation(private val position: Position, private val variable: Variable
 
     fun getPosition(): Position = position
 
-    override fun toString(): String =
-        "name: ${variable.getName()} \t  value: $value"
+    override fun toString(): String = "name: ${variable.getName()} \t  value: $value"
 }

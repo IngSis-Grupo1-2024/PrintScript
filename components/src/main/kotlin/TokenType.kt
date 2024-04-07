@@ -15,5 +15,5 @@ enum class TokenType {
     STRING,
     INTEGER,
     STRINGTYPE,
-    INTEGERTYPE
+    INTEGERTYPE,
 }

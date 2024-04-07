@@ -1,6 +1,3 @@
 package components.statement
 
-
-
-interface Statement {
-}
+interface Statement
