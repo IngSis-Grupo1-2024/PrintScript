@@ -14,4 +14,6 @@ enum class TokenType {
     PARENTHESIS,
     STRING,
     INTEGER,
+    STRINGTYPE,
+    INTEGERTYPE
 }
