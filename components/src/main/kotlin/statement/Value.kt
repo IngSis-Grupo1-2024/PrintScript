@@ -1,11 +1,11 @@
 package components.statement
 
-import components.Position
-import components.TokenType
+import components.Token
 
 interface Value {
-
-    fun getValue(): String
-    fun getPosition(): Position
-    fun getType() : TokenType
+    fun isEmpty(): Boolean
+    fun getToken(): Token
+    fun getChildrenAmount(): Int
+    fun isLeaf(): Boolean
+    fun addChildren(ast: Value): Value
 }

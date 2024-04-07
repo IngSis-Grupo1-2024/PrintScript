@@ -9,6 +9,6 @@ class Keyword(private val modifier: Modifier,
     fun getValue(): String = value
     fun getPosition(): Position = position
     override fun toString(): String {
-        return "\tmodifier: " + modifier + "\n\tvalue: " + value
+        return "\tmodifier: $modifier\n\tvalue: $value"
     }
 }
