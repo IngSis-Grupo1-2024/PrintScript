@@ -8,7 +8,7 @@ plugins {
     jacoco
 }
 
-repositories{
+repositories {
     mavenCentral()
 }
 
@@ -37,6 +37,7 @@ dependencies {
     // Align versions of all Kotlin components
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
 
+
     // Use JUnit Jupiter for testing.
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.2")
 }
@@ -45,7 +46,6 @@ tasks.test {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }
-
 
 val ktlintCheck by tasks.registering(JavaExec::class) {
     group = LifecycleBasePlugin.VERIFICATION_GROUP
@@ -78,4 +78,3 @@ tasks.register<JavaExec>("ktlintFormat") {
         "!**/build/**",
     )
 }
-
