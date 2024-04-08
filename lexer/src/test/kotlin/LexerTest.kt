@@ -176,4 +176,16 @@ class LexerTest {
         assertEquals(TokenType.INTEGER, tokenList[12].getType())
         assertEquals(TokenType.SEMICOLON, tokenList[13].getType())
     }
+
+    @Test
+    fun testTokenizeWithPrint() {
+        val lexer = Lexer(Position())
+        val tokenList = lexer.tokenize("println(2);")
+
+        assertEquals("println", tokenList[0].getValue())
+        assertEquals("(", tokenList[1].getValue())
+        assertEquals("2", tokenList[2].getValue())
+        assertEquals(")", tokenList[3].getValue())
+        assertEquals(";", tokenList[4].getValue())
+    }
 }

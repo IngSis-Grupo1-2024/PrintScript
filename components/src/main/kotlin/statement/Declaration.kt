@@ -19,8 +19,7 @@ class Declaration(
     fun getPosition(): Position = position
 
     override fun toString(): String {
-        return "keyword: " + keyword +
-            "\nvariable: " + variable +
-            "\ntype: " + type
+        return "Declaration(\n\t\tkeyword=$keyword, \n\t\tvariable=$variable, \n\t\ttype=$type)"
     }
+
 }

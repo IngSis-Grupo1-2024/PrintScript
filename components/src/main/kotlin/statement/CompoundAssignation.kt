@@ -11,5 +11,9 @@ class CompoundAssignation(private val position: Position, private val declaratio
 
     fun getPosition(): Position = position
 
-    override fun toString(): String = "name: ${declaration.getVariable().getName()} \t  value: ${value.getToken()}"
+    override fun toString(): String {
+        return "CompoundAssignation(\n\tdeclaration = $declaration,\n\tvalue = $value)"
+    }
+
+
 }

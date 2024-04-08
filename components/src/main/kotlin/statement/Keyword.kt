@@ -14,6 +14,7 @@ class Keyword(
     fun getPosition(): Position = position
 
     override fun toString(): String {
-        return "\tmodifier: $modifier\n\tvalue: $value"
+        return "Keyword(modifier=$modifier, value='$value')"
     }
+
 }

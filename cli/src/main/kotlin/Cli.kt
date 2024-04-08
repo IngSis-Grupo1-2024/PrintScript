@@ -17,9 +17,10 @@ class Cli(private val scaRules: ArrayList<Rule>) {
     fun startCli(codeLines: String) {
         val lines = splitLines(codeLines)
         var tokens: List<Token>
-        for(line in lines) {
+        for((i, line) in lines.withIndex()) {
             tokens = tokenizeWithLexer(line)
-            print(parse(tokens).toString())
+            print("\ntokens of line $i: $tokens")
+            print("\nstatement of line $i -> " + parse(tokens).toString() + "\n")
         }
 //        val variableMapList = interpret(astList)
     }
