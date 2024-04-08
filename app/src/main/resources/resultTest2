@@ -1,0 +1,23 @@
+
+tokens of line 0: [type: KEYWORD, value: let, type: IDENTIFIER, value: x, type: DECLARATION, value: :, type: TYPE, value: number, type: ASSIGNATION, value: =, type: INTEGER, value: 1, type: SEMICOLON, value: ;]
+statement of line 0 -> CompoundAssignation(
+	declaration = Declaration(
+		keyword=Keyword(modifier=MUTABLE, value='let'), 
+		variable=Variable(name='x'), 
+		type=	value: number),
+	value = SingleValue(token=type: INTEGER, value: 1))
+
+tokens of line 1: [type: KEYWORD, value: let, type: IDENTIFIER, value: y, type: DECLARATION, value: :, type: TYPE, value: number, type: ASSIGNATION, value: =, type: INTEGER, value: 2, type: SEMICOLON, value: ;]
+statement of line 1 -> CompoundAssignation(
+	declaration = Declaration(
+		keyword=Keyword(modifier=MUTABLE, value='let'), 
+		variable=Variable(name='y'), 
+		type=	value: number),
+	value = SingleValue(token=type: INTEGER, value: 2))
+
+tokens of line 2: [type: FUNCTION, value: println, type: PARENTHESIS, value: (, type: INTEGER, value: x, type: OPERATOR, value: +, type: INTEGER, value: y, type: PARENTHESIS, value: ), type: SEMICOLON, value: ;]
+statement of line 2 -> Function(value=
+	Operator(
+	token=type: OPERATOR, value: +, 
+	leftOperator=SingleValue(token=type: INTEGER, value: x), 
+	rightOperator=SingleValue(token=type: INTEGER, value: y)))

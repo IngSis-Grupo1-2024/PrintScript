@@ -213,7 +213,7 @@ class Lexer(override val position: Position) : LexerInterface {
         currentPosition = position.copy()
     }
 
-    private fun addSemicolon(char: Char)  {
+    private fun addSemicolon(char: Char) {
         when (isInsideString) {
             true -> {
                 currentString.append(char)
@@ -230,7 +230,7 @@ class Lexer(override val position: Position) : LexerInterface {
         }
     }
 
-    private fun addRemainValue(currentPosition: Position)  {
+    private fun addRemainValue(currentPosition: Position) {
         val tempString = currentString.deleteAt(currentString.length - 1)
         if (tempString.toString() != StringBuilder("").toString()) {
             val pair = getTokenAndUpdateIsString(isString)
@@ -290,7 +290,7 @@ class Lexer(override val position: Position) : LexerInterface {
     private fun addTokenWithMap(
         currentPosition: Position,
         currentString: StringBuilder,
-    )  {
+    ) {
         tokenList.add(
             Token(
                 currentPosition.copy(endOffset = currentPosition.endOffset),
@@ -304,7 +304,7 @@ class Lexer(override val position: Position) : LexerInterface {
         position: Position,
         type: TokenType,
         value: String,
-    ): ArrayList<Token>  {
+    ): ArrayList<Token> {
         tokenList.add(
             Token(
                 position,

@@ -1,0 +1,3 @@
+
+tokens of line 0: [type: FUNCTION, value: println, type: PARENTHESIS, value: (, type: INTEGER, value: 2, type: PARENTHESIS, value: ), type: SEMICOLON, value: ;]
+statement of line 0 -> Function(value=SingleValue(token=type: INTEGER, value: 2))

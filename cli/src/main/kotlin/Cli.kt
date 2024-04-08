@@ -9,24 +9,28 @@ import scaRules.Rule
 import scan.ScanAssignation
 import scan.ScanDeclaration
 import scan.ScanFunction
+import java.io.PrintWriter
 
 class Cli(private val scaRules: ArrayList<Rule>) {
     private val lexer = Lexer(Position(0, 0))
     private val parser = Parser(listOf(ScanDeclaration(), ScanAssignation(), ScanFunction()))
     private val interpreter = Interpreter()
 
-    fun startCli(codeLines: String) {
+    fun startCli(codeLines: String) : String{
         val lines = splitLines(codeLines)
         var tokens: List<Token>
         var statement: Statement
-        val variableMapList = ArrayList<Map<String, Variable>>()
+        val string = StringBuilder()
+//        val variableMapList = ArrayList<Map<String, Variable>>()
         for ((i, line) in lines.withIndex()) {
             tokens = tokenizeWithLexer(line)
-            print("\ntokens of line $i: $tokens")
+            string.append("\ntokens of line $i: $tokens")
+
             statement = parse(tokens)
-            print("\nstatement of line $i -> $statement\n")
+            string.append("\nstatement of line $i -> $statement\n")
 //            variableMapList = interpret(variableMapList)
         }
+        return string.toString()
     }
 
     private fun tokenizeWithLexer(line: String): List<Token> = lexer.tokenize(line)
@@ -43,5 +47,12 @@ class Cli(private val scaRules: ArrayList<Rule>) {
 
     private fun splitLines(codeLines: String): List<String> {
         return codeLines.split("\n")
+    }
+
+    fun startCliResultInFile(fileInput: String, fileOutput: String) {
+        val string = startCli(fileInput)
+        val writer = PrintWriter(fileOutput)
+        writer.append(string)
+        writer.close()
     }
 }
