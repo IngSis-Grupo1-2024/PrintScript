@@ -12,4 +12,5 @@ dependencies {
     api(project(":lexer"))
     api(project(":parser"))
     api(project(":interpreter"))
+    implementation("com.github.ajalt.clikt:clikt:4.3.0")
 }

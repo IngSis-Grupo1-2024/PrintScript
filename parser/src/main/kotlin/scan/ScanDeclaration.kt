@@ -56,7 +56,7 @@ class ScanDeclaration : ScanStatement {
 
     private fun getTokenTypes(tokens: List<Token>): List<TokenType> = tokens.map { it.getType() }
 
-    private fun getKeyword(token: Token): Keyword  {
+    private fun getKeyword(token: Token): Keyword {
         val modifier: Modifier = Modifier.MUTABLE
         if (token.getValue() != "let") throw ParserError("error: keyword not found", token)
         return Keyword(modifier, token.getValue(), token.getPosition())
