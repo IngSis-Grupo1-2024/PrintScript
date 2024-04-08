@@ -21,5 +21,4 @@ class Declaration(
     override fun toString(): String {
         return "Declaration(\n\t\tkeyword=$keyword, \n\t\tvariable=$variable, \n\t\ttype=$type)"
     }
-
 }

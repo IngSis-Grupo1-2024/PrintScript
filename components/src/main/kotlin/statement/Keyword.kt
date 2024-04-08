@@ -16,5 +16,4 @@ class Keyword(
     override fun toString(): String {
         return "Keyword(modifier=$modifier, value='$value')"
     }
-
 }

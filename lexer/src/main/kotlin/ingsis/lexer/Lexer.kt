@@ -102,14 +102,14 @@ class Lexer(override val position: Position) : LexerInterface {
                                 addToken(
                                     changeEndOffsetAndColumn(currentPosition, -1),
                                     TokenType.IDENTIFIER,
-                                    currentString.toString()
+                                    currentString.toString(),
                                 )
                             }
                             if (currentString.toString() == ":") {
                                 addToken(
                                     currentPosition,
                                     TokenType.DECLARATION,
-                                    ":"
+                                    ":",
                                 )
                             } else {
                                 tokenList.add(
@@ -213,9 +213,7 @@ class Lexer(override val position: Position) : LexerInterface {
         currentPosition = position.copy()
     }
 
-    private fun addSemicolon(
-        char: Char,
-    ){
+    private fun addSemicolon(char: Char)  {
         when (isInsideString) {
             true -> {
                 currentString.append(char)
@@ -232,9 +230,7 @@ class Lexer(override val position: Position) : LexerInterface {
         }
     }
 
-    private fun addRemainValue(
-        currentPosition: Position
-    ){
+    private fun addRemainValue(currentPosition: Position)  {
         val tempString = currentString.deleteAt(currentString.length - 1)
         if (tempString.toString() != StringBuilder("").toString()) {
             val pair = getTokenAndUpdateIsString(isString)
@@ -246,7 +242,7 @@ class Lexer(override val position: Position) : LexerInterface {
                     endColumn = currentPosition.startColumn + currentString.length - 1,
                 ),
                 tokenType,
-                tempString.toString()
+                tempString.toString(),
             )
         }
     }
@@ -294,7 +290,7 @@ class Lexer(override val position: Position) : LexerInterface {
     private fun addTokenWithMap(
         currentPosition: Position,
         currentString: StringBuilder,
-    ){
+    )  {
         tokenList.add(
             Token(
                 currentPosition.copy(endOffset = currentPosition.endOffset),
@@ -303,13 +299,18 @@ class Lexer(override val position: Position) : LexerInterface {
             ),
         )
     }
-    private fun addToken(position: Position, type: TokenType, value: String) : ArrayList<Token>{
+
+    private fun addToken(
+        position: Position,
+        type: TokenType,
+        value: String,
+    ): ArrayList<Token>  {
         tokenList.add(
             Token(
                 position,
                 value,
-                type
-            )
+                type,
+            ),
         )
         return tokenList
     }

@@ -14,6 +14,4 @@ class CompoundAssignation(private val position: Position, private val declaratio
     override fun toString(): String {
         return "CompoundAssignation(\n\tdeclaration = $declaration,\n\tvalue = $value)"
     }
-
-
 }

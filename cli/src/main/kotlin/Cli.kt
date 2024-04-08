@@ -1,6 +1,5 @@
 import components.Position
 import components.Token
-import components.ast.ASTInterface
 import components.statement.Statement
 import ingsis.interpreter.Interpreter
 import ingsis.lexer.Lexer
@@ -12,36 +11,35 @@ import scan.ScanDeclaration
 import scan.ScanFunction
 
 class Cli(private val scaRules: ArrayList<Rule>) {
-    private val lexer = Lexer(Position(0,0 ))
+    private val lexer = Lexer(Position(0, 0))
     private val parser = Parser(listOf(ScanDeclaration(), ScanAssignation(), ScanFunction()))
+    private val interpreter = Interpreter()
+
     fun startCli(codeLines: String) {
         val lines = splitLines(codeLines)
         var tokens: List<Token>
-        for((i, line) in lines.withIndex()) {
+        var statement: Statement
+        val variableMapList = ArrayList<Map<String, Variable>>()
+        for ((i, line) in lines.withIndex()) {
             tokens = tokenizeWithLexer(line)
             print("\ntokens of line $i: $tokens")
-            print("\nstatement of line $i -> " + parse(tokens).toString() + "\n")
+            statement = parse(tokens)
+            print("\nstatement of line $i -> $statement\n")
+//            variableMapList = interpret(variableMapList)
         }
-//        val variableMapList = interpret(astList)
     }
 
     private fun tokenizeWithLexer(line: String): List<Token> = lexer.tokenize(line)
 
     private fun parse(tokens: List<Token>): Statement = parser.parse(tokens)
 
-    private fun interpret(astList: List<ASTInterface>): List<Map<String, Variable>> {
-        val interpreter = Interpreter()
-        val variableMapList = ArrayList<Map<String, Variable>>()
-        val sca = Sca(scaRules)
-
-        for (ast in astList) {
-            if (sca.analyze(ast)) {
-                variableMapList.add(interpreter.interpret(ast))
-            }
-        }
-
-        return variableMapList
-    }
+//    private fun interpret(statement: Statement, map: ArrayList<Map<String, Variable>>): ArrayList<Map<String, Variable>> {
+//        val sca = Sca(scaRules)
+//        if (sca.analyze(statement)) {
+//            map.add(interpreter.interpret(statement))
+//        }
+//        return map
+//    }
 
     private fun splitLines(codeLines: String): List<String> {
         return codeLines.split("\n")
