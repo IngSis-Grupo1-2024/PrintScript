@@ -32,18 +32,26 @@ class App : CliktCommand(name = "PrintScript") {
 
     override fun run() {
         echo("rules for SCA: $rules")
-        if(fileOutput != null)
+        if (fileOutput != null) {
             cli.startCliResultInFile(fileInput, fileOutput!!.toString())
-        else print(cli.startCli(fileInput))
+        } else {
+            print(cli.startCli(fileInput))
+        }
     }
 }
 
 fun main() {
-    test1Woutput()
-    test2Woutput()
+//    test1Woutput()
+//    test2Woutput()
+    test3Woutput()
 }
 
 fun test1WOoutput() = App().main(listOf("app/src/main/resources/test1"))
+
 fun test1Woutput() = App().main(listOf("app/src/main/resources/test1", "app/src/main/resources/resultTest1"))
+
 fun test2() = App().main(listOf("app/src/main/resources/test2"))
+
 fun test2Woutput() = App().main(listOf("app/src/main/resources/test2", "app/src/main/resources/resultTest2"))
+
+fun test3Woutput() = App().main(listOf("app/src/main/resources/errorWOSemicolon", "app/src/main/resources/resultErrorWOSemicolon"))

@@ -1,10 +1,10 @@
 import components.Position
 import components.Token
 import components.statement.Statement
+import error.ParserError
 import ingsis.interpreter.Interpreter
 import ingsis.lexer.Lexer
 import ingsis.parser.Parser
-import ingsis.utils.Variable
 import scaRules.Rule
 import scan.ScanAssignation
 import scan.ScanDeclaration
@@ -14,9 +14,9 @@ import java.io.PrintWriter
 class Cli(private val scaRules: ArrayList<Rule>) {
     private val lexer = Lexer(Position(0, 0))
     private val parser = Parser(listOf(ScanDeclaration(), ScanAssignation(), ScanFunction()))
-    private val interpreter = Interpreter()
+    private var interpreter = Interpreter()
 
-    fun startCli(codeLines: String) : String{
+    fun startCli(codeLines: String): String {
         val lines = splitLines(codeLines)
         var tokens: List<Token>
         var statement: Statement
@@ -26,9 +26,13 @@ class Cli(private val scaRules: ArrayList<Rule>) {
             tokens = tokenizeWithLexer(line)
             string.append("\ntokens of line $i: $tokens")
 
-            statement = parse(tokens)
-            string.append("\nstatement of line $i -> $statement\n")
-//            variableMapList = interpret(variableMapList)
+            try {
+                statement = parse(tokens)
+                string.append("\nstatement of line $i -> $statement\n")
+//                interpreter = interpret(variableMapList)
+            } catch (e: ParserError) {
+                string.append("\n" + e.localizedMessage)
+            }
         }
         return string.toString()
     }
@@ -49,7 +53,10 @@ class Cli(private val scaRules: ArrayList<Rule>) {
         return codeLines.split("\n")
     }
 
-    fun startCliResultInFile(fileInput: String, fileOutput: String) {
+    fun startCliResultInFile(
+        fileInput: String,
+        fileOutput: String,
+    ) {
         val string = startCli(fileInput)
         val writer = PrintWriter(fileOutput)
         writer.append(string)
