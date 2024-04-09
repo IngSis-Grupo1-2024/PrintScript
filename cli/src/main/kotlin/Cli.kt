@@ -4,7 +4,6 @@ import components.ast.ASTInterface
 import ingsis.interpreter.Interpreter
 import ingsis.lexer.Lexer
 import ingsis.parser.Parser
-import ingsis.utils.Variable
 import scaRules.Rule
 import java.io.File
 
@@ -46,9 +45,9 @@ class Cli(private val scaRules: ArrayList<Rule>) {
         return treeList
     }
 
-    private fun interpret(astList: List<ASTInterface>): List<Map<String, Variable>> {
+    private fun interpret(astList: List<ASTInterface>): List<Map<String, Result>> {
         val interpreter = Interpreter()
-        val variableMapList = ArrayList<Map<String, Variable>>()
+        val variableMapList = ArrayList<Map<String, Result>>()
         val sca = Sca(scaRules)
 
         for (ast in astList) {
