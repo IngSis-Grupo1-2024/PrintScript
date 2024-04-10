@@ -5,11 +5,12 @@ import ingsis.utils.Result
 import ingsis.utils.evaluateExpression
 
 class CompoundAssignationInterpreter : StatementInterpreter {
-    override fun canHandle(statement: Statement): Boolean {
-        return statement is CompoundAssignation
-    }
+    override fun canHandle(statement: Statement): Boolean = statement.getStatementType() == StatementType.COMPOUND_ASSIGNATION
 
-    override fun interpret(statement: Statement, previousState: HashMap<String, Result>): HashMap<String, Result> {
+    override fun interpret(
+        statement: Statement,
+        previousState: HashMap<String, Result>,
+    ): HashMap<String, Result> {
         val compoundAssignation = statement as CompoundAssignation
         val variable = compoundAssignation.getDeclaration().getVariable()
         val declarationType = compoundAssignation.getDeclaration().getType()
@@ -21,5 +22,4 @@ class CompoundAssignationInterpreter : StatementInterpreter {
 
         return previousState
     }
-
 }

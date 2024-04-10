@@ -1,18 +1,16 @@
 package ingsis.interpreter.interpretStatement
 
-import components.statement.Assignation
-import components.statement.Operator
-import components.statement.Statement
-import components.statement.Type
+import components.statement.*
 import ingsis.utils.Result
 import ingsis.utils.evaluateExpression
 
 class AssignationInterpreter : StatementInterpreter {
-    override fun canHandle(statement: Statement): Boolean {
-        return statement is Assignation
-    }
+    override fun canHandle(statement: Statement): Boolean = statement.getStatementType() == StatementType.ASSIGNATION
 
-    override fun interpret(statement: Statement, previousState: HashMap<String, Result>): HashMap<String, Result> {
+    override fun interpret(
+        statement: Statement,
+        previousState: HashMap<String, Result>,
+    ): HashMap<String, Result> {
         val assignation = statement as Assignation
         val variable = assignation.getVariable()
         val value = assignation.getValue()
@@ -23,9 +21,10 @@ class AssignationInterpreter : StatementInterpreter {
         return previousState
     }
 
-    private fun getVariableType(variableName: String, previousState: Map<String, Result>): Type {
+    private fun getVariableType(
+        variableName: String,
+        previousState: Map<String, Result>,
+    ): Type {
         return previousState[variableName]!!.getType()
     }
-
-
 }
