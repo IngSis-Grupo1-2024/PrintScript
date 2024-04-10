@@ -1,17 +1,17 @@
 package components.statement
 
-import components.Token
+import components.Position
 
-class PrintLine(private val token: Token, val value: Value) : Statement {
+class PrintLine(private val position: Position, private val value: Value) : Statement {
     private val statementType = StatementType.PRINT_LINE
 
     fun getValue(): Value = value
 
-    fun getToken(): Token = token
+    fun getPosition(): Position = position
 
     override fun getStatementType(): StatementType = statementType
 
     override fun toString(): String {
-        return "PrintLine()"
+        return "PrintLine(position=$position, value=$value, statementType=$statementType)"
     }
 }

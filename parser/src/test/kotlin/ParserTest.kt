@@ -10,10 +10,10 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import scan.ScanAssignation
 import scan.ScanDeclaration
-import scan.ScanFunction
+import scan.ScanPrintLine
 
 class ParserTest {
-    private val parser = Parser(listOf(ScanDeclaration(), ScanAssignation(), ScanFunction()))
+    private val parser = Parser(listOf(ScanDeclaration(), ScanAssignation(), ScanPrintLine()))
     private val position = Position()
 
     @Test
@@ -490,8 +490,8 @@ class ParserTest {
                 Token(position, "", TokenType.SEMICOLON),
             )
         val astExpected: Statement =
-            Function(
-                Token(position, "println", TokenType.FUNCTION),
+            PrintLine(
+                position,
                 SingleValue(Token(position, "c", TokenType.IDENTIFIER)),
             )
         assertEquals(astExpected.toString(), parser.parse(tokens).toString())
@@ -510,8 +510,8 @@ class ParserTest {
                 Token(position, "", TokenType.SEMICOLON),
             )
         val astExpected: Statement =
-            Function(
-                Token(position, "println", TokenType.FUNCTION),
+            PrintLine(
+                position,
                 Operator(
                     Token(position, "+", TokenType.OPERATOR),
                     SingleValue(Token(position, "8", TokenType.INTEGER)),
@@ -538,8 +538,8 @@ class ParserTest {
                 Token(position, "", TokenType.SEMICOLON),
             )
         val astExpected: Statement =
-            Function(
-                Token(position, "println", TokenType.FUNCTION),
+            PrintLine(
+                position,
                 Operator(
                     Token(position, "+", TokenType.OPERATOR),
                     SingleValue(Token(position, "8", TokenType.INTEGER)),

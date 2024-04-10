@@ -3,11 +3,11 @@ package scan
 import components.Position
 import components.Token
 import components.TokenType
-import components.statement.Function
+import components.statement.PrintLine
 import components.statement.Statement
 import error.ParserError
 
-class ScanFunction : ScanStatement {
+class ScanPrintLine : ScanStatement {
     private val scanValue = ScanValue()
     private val functionTypes = listOf(TokenType.FUNCTION, TokenType.PARENTHESIS)
 
@@ -44,8 +44,8 @@ class ScanFunction : ScanStatement {
     }
 
     override fun makeAST(tokens: List<Token>): Statement {
-        val function = tokens[0]
+        val printLinePosition = tokens[0].getPosition()
         val value = scanValue.makeValue(tokens.subList(2, tokens.size - 1))
-        return Function(function, value)
+        return PrintLine(printLinePosition, value)
     }
 }
