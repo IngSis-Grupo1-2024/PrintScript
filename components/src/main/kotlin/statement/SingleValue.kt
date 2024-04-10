@@ -3,17 +3,23 @@ package components.statement
 import components.Token
 
 class SingleValue(private val token: Token) : Value {
-    override fun isEmpty(): Boolean = false
+    override fun isEmpty(): Boolean {
+        TODO("Not yet implemented")
+    }
 
-    override fun getToken(): Token = token
+    override fun getToken(): Token {
+        return token
+    }
 
-    override fun getChildrenAmount(): Int = 0
+    override fun getChildrenAmount(): Int {
+        TODO("Not yet implemented")
+    }
 
-    override fun isLeaf(): Boolean = true
+    override fun isLeaf(): Boolean {
+        return true
+    }
 
-    override fun addChildren(ast: Value): Value = Operator(token, ast)
-
-    override fun toString(): String {
-        return "SingleValue(token=$token)"
+    override fun addChildren(ast: Value): Value {
+        TODO("Not yet implemented")
     }
 }
