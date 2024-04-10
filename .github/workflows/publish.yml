@@ -13,7 +13,7 @@ jobs:
         uses: actions/setup-java@v4.2.1
         with:
           java-version: 17
-          distribution: amazon
+          distribution: corretto
       - name: Build with Gradle
         run: ./gradlew build
       - name: Publish package
