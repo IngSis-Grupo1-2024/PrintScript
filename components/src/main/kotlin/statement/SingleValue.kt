@@ -4,7 +4,7 @@ import components.Token
 
 class SingleValue(private val token: Token) : Value {
     override fun isEmpty(): Boolean {
-        TODO("Not yet implemented")
+        return true
     }
 
     override fun getToken(): Token {

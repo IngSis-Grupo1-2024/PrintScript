@@ -2,7 +2,7 @@ package components.statement
 
 import components.Position
 
-class Assignation(private val variable: Variable, private val value: Value, private val position: Position) :
+class Assignation(private val position: Position, private val variable: Variable, private val value: Value) :
     Statement {
     fun getVariable(): Variable = variable
 

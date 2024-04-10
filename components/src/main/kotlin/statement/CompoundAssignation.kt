@@ -2,7 +2,7 @@ package components.statement
 
 import components.Position
 
-class CompoundAssignation(private val declaration: Declaration, private val value: Value, private val position: Position) : Statement {
+class CompoundAssignation(private val position: Position, private val declaration: Declaration, private val value: Value) : Statement {
     fun getDeclaration(): Declaration = declaration
 
     fun getValue(): Value = value

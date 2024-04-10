@@ -41,7 +41,7 @@ class FormatterTest {
         val token = Token(Position(3, 3, 1, 1, 3, 3), "4", TokenType.INTEGER)
         val value = SingleValue(token)
         val position = Position(2, 2, 1, 1, 2, 2)
-        val assignation = Assignation(variable, value, position)
+        val assignation = Assignation(position, variable, value)
         formatter.format(assignation, "src/test/kotlin/test.txt")
     }
 
@@ -55,7 +55,7 @@ class FormatterTest {
         val five = Token(Position(5, 5, 1, 1, 5, 5), "5", TokenType.INTEGER)
         val value = Operator(plus, Operator(four), Operator(five))
         val position = Position(2, 2, 1, 1, 2, 2)
-        val assignation = Assignation(variable, value, position)
+        val assignation = Assignation(position, variable, value)
         formatter.format(assignation, "src/test/kotlin/test.txt")
     }
 
@@ -71,7 +71,7 @@ class FormatterTest {
         val declarationPosition = Position(8, 8, 1, 1, 8, 8)
         val declaration = Declaration(keyword, variable, type, declarationPosition)
         val assignationPosition = Position(15, 15, 1, 1, 14, 14)
-        val compoundAssignation = CompoundAssignation(declaration, value, assignationPosition)
+        val compoundAssignation = CompoundAssignation(assignationPosition, declaration, value)
         formatter.format(compoundAssignation, "src/test/kotlin/test.txt")
     }
 
