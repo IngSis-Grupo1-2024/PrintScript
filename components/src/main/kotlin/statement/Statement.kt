@@ -1,3 +1,5 @@
 package components.statement
 
-interface Statement
+interface Statement {
+    fun getStatementType(): StatementType
+}

@@ -1,390 +1,549 @@
 import components.Position
 import components.Token
 import components.TokenType
-import components.ast.AST
+import components.statement.*
 import ingsis.interpreter.Interpreter
-import ingsis.utils.Variable
+import ingsis.interpreter.interpretStatement.AssignationInterpreter
+import ingsis.interpreter.interpretStatement.CompoundAssignationInterpreter
+import ingsis.interpreter.interpretStatement.DeclarationInterpreter
+import ingsis.interpreter.interpretStatement.PrintLineInterpreter
+import ingsis.utils.Result
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class InterpreterTest {
     @Test
     fun testDeclareNumericVariable() {
-        val interpreter = Interpreter()
+        val interpreter =
+            Interpreter(listOf(AssignationInterpreter(), DeclarationInterpreter(), CompoundAssignationInterpreter()))
         val position = Position()
-        val ast =
-            AST(
-                Token(position, "let", TokenType.DECLARATION),
-                listOf(
-                    AST(Token(position, "a", TokenType.IDENTIFIER)),
-                    AST(Token(position, "number", TokenType.INTEGER)),
-                ),
-            )
-        val variableMap = interpreter.interpret(ast)
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type("integer", position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val variableMap = interpreter.interpret(declarationStatement, HashMap())
         assertEquals(1, variableMap.size)
-        assertEquals(Variable(TokenType.INTEGER), variableMap["a"])
+        assertEquals(Result(type, null), variableMap["a"])
+    }
+
+    @Test
+    fun testDeclareAndThenAssignValueToAVariable() {
+        val interpreter =
+            Interpreter(listOf(AssignationInterpreter(), DeclarationInterpreter(), CompoundAssignationInterpreter()))
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type("integer", position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val variableMap1 = interpreter.interpret(declarationStatement, HashMap())
+        val assignationStatement = Assignation(position, variable, SingleValue(Token(position, "5", TokenType.INTEGER)))
+        val variableMap2 = interpreter.interpret(assignationStatement, variableMap1)
+        assertEquals(1, variableMap2.size)
+        assertEquals(Result(type, "5"), variableMap2["a"])
     }
 
     @Test
     fun testDeclareStringVariable() {
-        val interpreter = Interpreter()
+        val interpreter =
+            Interpreter(listOf(AssignationInterpreter(), DeclarationInterpreter(), CompoundAssignationInterpreter()))
         val position = Position()
-        val ast =
-            AST(
-                Token(position, "let", TokenType.DECLARATION),
-                listOf(
-                    AST(Token(position, "a", TokenType.IDENTIFIER)),
-                    AST(Token(position, "string", TokenType.STRING)),
-                ),
-            )
-        val variableMap = interpreter.interpret(ast)
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type("string", position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val variableMap = interpreter.interpret(declarationStatement, HashMap())
         assertEquals(1, variableMap.size)
-        assertEquals(Variable(TokenType.STRING), variableMap["a"])
+        assertEquals(Result(type, null), variableMap["a"])
     }
 
     @Test
     fun testDeclareAndAssignNumericVariable() {
-        val interpreter = Interpreter()
+        val interpreter =
+            Interpreter(listOf(AssignationInterpreter(), DeclarationInterpreter(), CompoundAssignationInterpreter()))
         val position = Position()
-        val leftAst =
-            AST(
-                Token(position, "let", TokenType.DECLARATION),
-                listOf(
-                    AST(Token(position, "a", TokenType.IDENTIFIER)),
-                    AST(Token(position, "number", TokenType.INTEGER)),
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type("integer", position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(position, declarationStatement, SingleValue(Token(position, "5", TokenType.INTEGER)))
+        val variableMap = interpreter.interpret(compoundAssignation, HashMap())
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, "5"), variableMap["a"])
+    }
+
+    @Test
+    fun testDeclareAndAssignANumericVariablesWithSum() {
+        val interpreter =
+            Interpreter(listOf(AssignationInterpreter(), DeclarationInterpreter(), CompoundAssignationInterpreter()))
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type("integer", position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "+", TokenType.OPERATOR),
+                    SingleValue(Token(position, "5", TokenType.INTEGER)),
+                    SingleValue(Token(position, "3", TokenType.INTEGER)),
                 ),
             )
-        val rightAst = AST(Token(position, "5", TokenType.INTEGER))
-        val ast = AST(Token(position, "=", TokenType.ASSIGNATION), listOf(leftAst, rightAst))
-        val variableMap = interpreter.interpret(ast)
+        val variableMap = interpreter.interpret(compoundAssignation, HashMap())
         assertEquals(1, variableMap.size)
-        assertEquals(Variable(TokenType.INTEGER, "5"), variableMap["a"])
+        assertEquals(Result(type, "8"), variableMap["a"])
     }
 
     @Test
-    fun testDeclareAndAssignNumericWithSumVariable() {
-        val interpreter = Interpreter()
+    fun testDeclareAndAssignANumericVariablesWithSubtraction() {
+        val interpreter =
+            Interpreter(listOf(AssignationInterpreter(), DeclarationInterpreter(), CompoundAssignationInterpreter()))
         val position = Position()
-        val leftAst =
-            AST(
-                Token(position, "let", TokenType.DECLARATION),
-                listOf(
-                    AST(Token(position, "a", TokenType.IDENTIFIER)),
-                    AST(Token(position, "number", TokenType.INTEGER)),
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type("integer", position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "-", TokenType.OPERATOR),
+                    SingleValue(Token(position, "5", TokenType.INTEGER)),
+                    SingleValue(Token(position, "3", TokenType.INTEGER)),
                 ),
             )
-        val rightAst =
-            AST(
-                Token(position, "+", TokenType.OPERATOR),
-                listOf(AST(Token(position, "5", TokenType.INTEGER)), AST(Token(position, "3", TokenType.INTEGER))),
-            )
-        val ast = AST(Token(position, "=", TokenType.ASSIGNATION), listOf(leftAst, rightAst))
-        val variableMap = interpreter.interpret(ast)
+        val variableMap = interpreter.interpret(compoundAssignation, HashMap())
         assertEquals(1, variableMap.size)
-        assertEquals(Variable(TokenType.INTEGER, "8"), variableMap["a"])
+        assertEquals(Result(type, "2"), variableMap["a"])
     }
 
     @Test
-    fun testDeclareAndAssignNumericWithSubtractionVariable() {
-        val interpreter = Interpreter()
+    fun testDeclareAndAssignANumericVariablesWithMultiplication() {
+        val interpreter =
+            Interpreter(listOf(AssignationInterpreter(), DeclarationInterpreter(), CompoundAssignationInterpreter()))
         val position = Position()
-        val leftAst =
-            AST(
-                Token(position, "let", TokenType.DECLARATION),
-                listOf(
-                    AST(Token(position, "a", TokenType.IDENTIFIER)),
-                    AST(Token(position, "number", TokenType.INTEGER)),
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type("integer", position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "*", TokenType.OPERATOR),
+                    SingleValue(Token(position, "5", TokenType.INTEGER)),
+                    SingleValue(Token(position, "3", TokenType.INTEGER)),
                 ),
             )
-        val rightAst =
-            AST(
-                Token(position, "-", TokenType.OPERATOR),
-                listOf(AST(Token(position, "5", TokenType.INTEGER)), AST(Token(position, "3", TokenType.INTEGER))),
-            )
-        val ast = AST(Token(position, "=", TokenType.ASSIGNATION), listOf(leftAst, rightAst))
-        val variableMap = interpreter.interpret(ast)
+        val variableMap = interpreter.interpret(compoundAssignation, HashMap())
         assertEquals(1, variableMap.size)
-        assertEquals(Variable(TokenType.INTEGER, "2"), variableMap["a"])
+        assertEquals(Result(type, "15"), variableMap["a"])
     }
 
     @Test
-    fun testDeclareAndAssignNumericWithMultiplicationVariable() {
-        val interpreter = Interpreter()
+    fun testDeclareAndAssignANumericVariablesWithDivision() {
+        val interpreter =
+            Interpreter(listOf(AssignationInterpreter(), DeclarationInterpreter(), CompoundAssignationInterpreter()))
         val position = Position()
-        val leftAst =
-            AST(
-                Token(position, "let", TokenType.DECLARATION),
-                listOf(
-                    AST(Token(position, "a", TokenType.IDENTIFIER)),
-                    AST(Token(position, "number", TokenType.INTEGER)),
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type("integer", position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "/", TokenType.OPERATOR),
+                    SingleValue(Token(position, "10", TokenType.INTEGER)),
+                    SingleValue(Token(position, "2", TokenType.INTEGER)),
                 ),
             )
-        val rightAst =
-            AST(
-                Token(position, "*", TokenType.OPERATOR),
-                listOf(AST(Token(position, "5", TokenType.INTEGER)), AST(Token(position, "3", TokenType.INTEGER))),
-            )
-        val ast = AST(Token(position, "=", TokenType.ASSIGNATION), listOf(leftAst, rightAst))
-        val variableMap = interpreter.interpret(ast)
+        val variableMap = interpreter.interpret(compoundAssignation, HashMap())
         assertEquals(1, variableMap.size)
-        assertEquals(Variable(TokenType.INTEGER, "15"), variableMap["a"])
+        assertEquals(Result(type, "5"), variableMap["a"])
     }
 
     @Test
-    fun testDeclareAndAssignNumericWithDivisionVariable() {
-        val interpreter = Interpreter()
+    fun testDeclareAndAssignANumericVariablesWithMultipleSum() {
+        val interpreter =
+            Interpreter(listOf(AssignationInterpreter(), DeclarationInterpreter(), CompoundAssignationInterpreter()))
         val position = Position()
-        val leftAst =
-            AST(
-                Token(position, "let", TokenType.DECLARATION),
-                listOf(
-                    AST(Token(position, "a", TokenType.IDENTIFIER)),
-                    AST(Token(position, "number", TokenType.INTEGER)),
-                ),
-            )
-        val rightAst =
-            AST(
-                Token(position, "/", TokenType.OPERATOR),
-                listOf(AST(Token(position, "10", TokenType.INTEGER)), AST(Token(position, "2", TokenType.INTEGER))),
-            )
-        val ast = AST(Token(position, "=", TokenType.ASSIGNATION), listOf(leftAst, rightAst))
-        val variableMap = interpreter.interpret(ast)
-        assertEquals(1, variableMap.size)
-        assertEquals(Variable(TokenType.INTEGER, "5"), variableMap["a"])
-    }
-
-    @Test
-    fun testDeclareAndAssignStringVariable() {
-        val interpreter = Interpreter()
-        val position = Position()
-        val leftAst =
-            AST(
-                Token(position, "let", TokenType.DECLARATION),
-                listOf(
-                    AST(Token(position, "a", TokenType.IDENTIFIER)),
-                    AST(Token(position, "string", TokenType.STRING)),
-                ),
-            )
-        val rightAst = AST(Token(position, "hello", TokenType.STRING))
-        val ast = AST(Token(position, "=", TokenType.ASSIGNATION), listOf(leftAst, rightAst))
-        val variableMap = interpreter.interpret(ast)
-        assertEquals(1, variableMap.size)
-        assertEquals(Variable(TokenType.STRING, "hello"), variableMap["a"])
-    }
-
-    @Test
-    fun testDeclareAndAssignStringWithSumVariable() {
-        val interpreter = Interpreter()
-        val position = Position()
-        val leftAst =
-            AST(
-                Token(position, "let", TokenType.DECLARATION),
-                listOf(
-                    AST(Token(position, "a", TokenType.IDENTIFIER)),
-                    AST(Token(position, "string", TokenType.STRING)),
-                ),
-            )
-        val rightAst =
-            AST(
-                Token(position, "+", TokenType.OPERATOR),
-                listOf(AST(Token(position, "hello", TokenType.STRING)), AST(Token(position, "world", TokenType.STRING))),
-            )
-        val ast = AST(Token(position, "=", TokenType.ASSIGNATION), listOf(leftAst, rightAst))
-        val variableMap = interpreter.interpret(ast)
-        assertEquals(1, variableMap.size)
-        assertEquals(Variable(TokenType.STRING, "helloworld"), variableMap["a"])
-    }
-
-    @Test
-    fun testDeclareAndAssignStringWithSumAndMultiplicationNumericVariables() {
-        val interpreter = Interpreter()
-        val position = Position()
-        val leftAst =
-            AST(
-                Token(position, "let", TokenType.DECLARATION),
-                listOf(
-                    AST(Token(position, "a", TokenType.IDENTIFIER)),
-                    AST(Token(position, "number", TokenType.INTEGER)),
-                ),
-            )
-        val multiplicationAST =
-            AST(
-                Token(position, "*", TokenType.OPERATOR),
-                listOf(AST(Token(position, "5", TokenType.INTEGER)), AST(Token(position, "3", TokenType.INTEGER))),
-            )
-        val rightAst =
-            AST(
-                Token(position, "+", TokenType.OPERATOR),
-                listOf(AST(Token(position, "5", TokenType.INTEGER)), multiplicationAST),
-            )
-        val ast = AST(Token(position, "=", TokenType.ASSIGNATION), listOf(leftAst, rightAst))
-        val variableMap = interpreter.interpret(ast)
-        assertEquals(1, variableMap.size)
-        assertEquals(Variable(TokenType.INTEGER, "20"), variableMap["a"])
-    }
-
-    @Test
-    fun testPrintFunctionWithOnlyOneValue() {
-        val interpreter = Interpreter()
-        val position = Position()
-        val childAst =
-            AST(
-                Token(position, "8", TokenType.INTEGER),
-            )
-        val ast = AST(Token(position, "println", TokenType.FUNCTION), listOf(childAst))
-        interpreter.interpret(ast)
-    }
-
-    @Test
-    fun testPrintFunctionWithTwoValuesAndAnOperator() {
-        val interpreter = Interpreter()
-//        val sca = Sca(ArrayList<Rule>())
-        val position = Position()
-        val rightAst =
-            AST(
-                Token(position, "+", TokenType.OPERATOR),
-                listOf(
-                    AST(Token(position, "5", TokenType.INTEGER)),
-                    AST(
-                        Token(position, "8", TokenType.INTEGER),
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type("integer", position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "+", TokenType.OPERATOR),
+                    SingleValue(Token(position, "5", TokenType.INTEGER)),
+                    Operator(
+                        Token(position, "+", TokenType.OPERATOR),
+                        SingleValue(Token(position, "5", TokenType.INTEGER)),
+                        SingleValue(Token(position, "3", TokenType.INTEGER)),
                     ),
                 ),
             )
-        val ast = AST(Token(position, "println", TokenType.FUNCTION), listOf(rightAst))
-        interpreter.interpret(ast)
+        val variableMap = interpreter.interpret(compoundAssignation, HashMap())
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, "13"), variableMap["a"])
     }
 
     @Test
-    fun testPrintFunctionWithOneIntegerAndOneString() {
-        val interpreter = Interpreter()
+    fun testDeclareAndAssignANumericVariablesWithMultipleSumAndMultiplication() {
+        val interpreter =
+            Interpreter(listOf(AssignationInterpreter(), DeclarationInterpreter(), CompoundAssignationInterpreter()))
         val position = Position()
-        val rightAst =
-            AST(
-                Token(position, "+", TokenType.OPERATOR),
-                listOf(
-                    AST(Token(position, "Result: ", TokenType.STRING)),
-                    AST(
-                        Token(position, "8", TokenType.INTEGER),
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type("integer", position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "+", TokenType.OPERATOR),
+                    SingleValue(Token(position, "5", TokenType.INTEGER)),
+                    Operator(
+                        Token(position, "*", TokenType.OPERATOR),
+                        SingleValue(Token(position, "5", TokenType.INTEGER)),
+                        SingleValue(Token(position, "3", TokenType.INTEGER)),
                     ),
                 ),
             )
-        val ast = AST(Token(position, "println", TokenType.FUNCTION), listOf(rightAst))
-        interpreter.interpret(ast)
+        val variableMap = interpreter.interpret(compoundAssignation, HashMap())
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, "20"), variableMap["a"])
     }
 
     @Test
-    fun testPrintFunctionWithOneIntegerAndOneStringButBothAppearIntegers() {
-        val interpreter = Interpreter()
+    fun testDeclareAndAssignANumericVariablesWithSumAndSubtraction() {
+        val interpreter =
+            Interpreter(listOf(AssignationInterpreter(), DeclarationInterpreter(), CompoundAssignationInterpreter()))
         val position = Position()
-        val rightAst =
-            AST(
-                Token(position, "+", TokenType.OPERATOR),
-                listOf(
-                    AST(Token(position, "5", TokenType.STRING)),
-                    AST(
-                        Token(position, "8", TokenType.INTEGER),
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type("integer", position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "+", TokenType.OPERATOR),
+                    SingleValue(Token(position, "5", TokenType.INTEGER)),
+                    Operator(
+                        Token(position, "-", TokenType.OPERATOR),
+                        SingleValue(Token(position, "5", TokenType.INTEGER)),
+                        SingleValue(Token(position, "3", TokenType.INTEGER)),
                     ),
                 ),
             )
-        val ast = AST(Token(position, "println", TokenType.FUNCTION), listOf(rightAst))
-        interpreter.interpret(ast)
+        val variableMap = interpreter.interpret(compoundAssignation, HashMap())
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, "7"), variableMap["a"])
     }
 
     @Test
-    fun testPrintFunctionWithFourIntegerAndTwoSums() {
-        val interpreter = Interpreter()
-//        val sca = Sca(ArrayList<Rule>())
+    fun testDeclareAndAssignANumericVariablesWithSumAndDivision() {
+        val interpreter =
+            Interpreter(listOf(AssignationInterpreter(), DeclarationInterpreter(), CompoundAssignationInterpreter()))
         val position = Position()
-        val rightAst =
-            AST(
-                Token(position, "+", TokenType.OPERATOR),
-                children =
-                    listOf(
-                        AST(
-                            Token(position, "+", TokenType.OPERATOR),
-                            children =
-                                listOf(
-                                    AST((Token(position, "1", TokenType.INTEGER))),
-                                    AST((Token(position, "2", TokenType.INTEGER))),
-                                ),
-                        ),
-                        AST(
-                            Token(position, "8", TokenType.INTEGER),
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type("integer", position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "+", TokenType.OPERATOR),
+                    SingleValue(Token(position, "5", TokenType.INTEGER)),
+                    Operator(
+                        Token(position, "+", TokenType.OPERATOR),
+                        SingleValue(Token(position, "5", TokenType.INTEGER)),
+                        Operator(
+                            Token(position, "/", TokenType.OPERATOR),
+                            SingleValue(Token(position, "10", TokenType.INTEGER)),
+                            SingleValue(Token(position, "2", TokenType.INTEGER)),
                         ),
                     ),
-            )
-        val ast = AST(Token(position, "println", TokenType.FUNCTION), listOf(rightAst))
-        interpreter.interpret(ast)
-    }
-
-    @Test
-    fun testPrintFunctionWithThreeIntegerAndOneStringAndTwoSums() {
-        val interpreter = Interpreter()
-        val position = Position()
-        val leftAst =
-            AST(
-                Token(position, "let", TokenType.DECLARATION),
-                listOf(
-                    AST(Token(position, "a", TokenType.IDENTIFIER)),
-                    AST(Token(position, "number", TokenType.INTEGER)),
                 ),
             )
-        val rightAst2 = AST(Token(position, "5", TokenType.INTEGER))
-        val astLetVariable = AST(Token(position, "=", TokenType.ASSIGNATION), listOf(leftAst, rightAst2))
-        val rightAst =
-            AST(
-                Token(position, "+", TokenType.OPERATOR),
-                children =
-                    listOf(
-                        AST(
-                            Token(position, "+", TokenType.OPERATOR),
-                            children =
-                                listOf(
-                                    AST((Token(position, "a", TokenType.IDENTIFIER))),
-                                    AST((Token(position, "2", TokenType.INTEGER))),
-                                ),
-                        ),
-                        AST(
-                            Token(position, "8", TokenType.INTEGER),
-                        ),
-                    ),
-            )
-        val variableMap = interpreter.interpret(astLetVariable)
-        val ast = AST(Token(position, "println", TokenType.FUNCTION), listOf(rightAst))
-        interpreter.printLine(ast, variableMap)
-        // The output is 15
+        val variableMap = interpreter.interpret(compoundAssignation, HashMap())
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, "15"), variableMap["a"])
     }
 
     @Test
-    fun testPrintFunctionWithOneStringVariableAndOneNumber() {
-        val interpreter = Interpreter()
+    fun testDeclareAndAssignANumericVariablesWithTwoSumsAndMultiplication() {
+        val interpreter =
+            Interpreter(listOf(AssignationInterpreter(), DeclarationInterpreter(), CompoundAssignationInterpreter()))
         val position = Position()
-        val leftAst =
-            AST(
-                Token(position, "let", TokenType.DECLARATION),
-                listOf(
-                    AST(Token(position, "a", TokenType.IDENTIFIER)),
-                    AST(Token(position, "string", TokenType.STRING)),
-                ),
-            )
-        val rightAst2 = AST(Token(position, "Result: ", TokenType.STRING))
-        val astLetVariable = AST(Token(position, "=", TokenType.ASSIGNATION), listOf(leftAst, rightAst2))
-        val rightAst =
-            AST(
-                Token(position, "+", TokenType.OPERATOR),
-                children =
-                    listOf(
-                        AST(
-                            Token(position, "a", TokenType.IDENTIFIER),
-                        ),
-                        AST(
-                            Token(position, "8", TokenType.INTEGER),
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type("integer", position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "+", TokenType.OPERATOR),
+                    SingleValue(Token(position, "5", TokenType.INTEGER)),
+                    Operator(
+                        Token(position, "+", TokenType.OPERATOR),
+                        SingleValue(Token(position, "5", TokenType.INTEGER)),
+                        Operator(
+                            Token(position, "*", TokenType.OPERATOR),
+                            SingleValue(Token(position, "5", TokenType.INTEGER)),
+                            SingleValue(Token(position, "3", TokenType.INTEGER)),
                         ),
                     ),
+                ),
             )
-        val variableMap = interpreter.interpret(astLetVariable)
-        val ast = AST(Token(position, "println", TokenType.FUNCTION), listOf(rightAst))
-        interpreter.printLine(ast, variableMap)
-        // The output is Result: 8
+        val variableMap = interpreter.interpret(compoundAssignation, HashMap())
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, "25"), variableMap["a"])
+    }
+
+    @Test
+    fun testDeclareAndAssignAVariableSummingAStringAndANumber() {
+        val interpreter =
+            Interpreter(listOf(AssignationInterpreter(), DeclarationInterpreter(), CompoundAssignationInterpreter()))
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type("string", position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "+", TokenType.OPERATOR),
+                    SingleValue(Token(position, "Hello", TokenType.STRING)),
+                    SingleValue(Token(position, "5", TokenType.INTEGER)),
+                ),
+            )
+        val variableMap = interpreter.interpret(compoundAssignation, HashMap())
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, "Hello5"), variableMap["a"])
+    }
+
+    @Test
+    fun testDeclareAndAssignAVariableSummingTwoStrings() {
+        val interpreter =
+            Interpreter(listOf(AssignationInterpreter(), DeclarationInterpreter(), CompoundAssignationInterpreter()))
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type("string", position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "+", TokenType.OPERATOR),
+                    SingleValue(Token(position, "Hello", TokenType.STRING)),
+                    SingleValue(Token(position, "World", TokenType.STRING)),
+                ),
+            )
+        val variableMap = interpreter.interpret(compoundAssignation, HashMap())
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, "HelloWorld"), variableMap["a"])
+    }
+
+    @Test
+    fun testPrintLineWithAString() {
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(),
+                    PrintLineInterpreter(),
+                ),
+            )
+        val position = Position()
+        val printLine = PrintLine(position, (SingleValue(Token(position, "Hello", TokenType.STRING))))
+        println()
+        println()
+        interpreter.interpret(printLine, HashMap())
+        println()
+        println()
+    }
+
+    @Test
+    fun testPrintLineWithAnInteger() {
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(),
+                    PrintLineInterpreter(),
+                ),
+            )
+        val position = Position()
+        val printLine = PrintLine(position, (SingleValue(Token(position, "5", TokenType.INTEGER))))
+        println()
+        println()
+        interpreter.interpret(printLine, HashMap())
+        println()
+        println()
+    }
+
+    @Test
+    fun testPrintLineWithAVariable() {
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(),
+                    PrintLineInterpreter(),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type("integer", position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                SingleValue(Token(position, "10", TokenType.INTEGER)),
+            )
+        val variableMap = interpreter.interpret(compoundAssignation, HashMap())
+        val printLine = PrintLine(position, (SingleValue(Token(position, "a", TokenType.IDENTIFIER))))
+        println()
+        println()
+        interpreter.interpret(printLine, variableMap)
+        println()
+        println()
+    }
+
+    @Test
+    fun testPrintLineWithASum() {
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(),
+                    PrintLineInterpreter(),
+                ),
+            )
+        val position = Position()
+        val printLine =
+            PrintLine(
+                position,
+                Operator(
+                    Token(position, "+", TokenType.OPERATOR),
+                    SingleValue(Token(position, "5", TokenType.INTEGER)),
+                    SingleValue(Token(position, "3", TokenType.INTEGER)),
+                ),
+            )
+        println()
+        println()
+        interpreter.interpret(printLine, HashMap())
+        println()
+        println()
+    }
+
+    @Test
+    fun testPrintLineWithASubtraction() {
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(),
+                    PrintLineInterpreter(),
+                ),
+            )
+        val position = Position()
+        val printLine =
+            PrintLine(
+                position,
+                Operator(
+                    Token(position, "-", TokenType.OPERATOR),
+                    SingleValue(Token(position, "5", TokenType.INTEGER)),
+                    SingleValue(Token(position, "3", TokenType.INTEGER)),
+                ),
+            )
+        println()
+        println()
+        interpreter.interpret(printLine, HashMap())
+        println()
+        println()
+    }
+
+    @Test
+    fun testPrintLineWithAMultiplication() {
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(),
+                    PrintLineInterpreter(),
+                ),
+            )
+        val position = Position()
+        val printLine =
+            PrintLine(
+                position,
+                Operator(
+                    Token(position, "*", TokenType.OPERATOR),
+                    SingleValue(Token(position, "5", TokenType.INTEGER)),
+                    SingleValue(Token(position, "3", TokenType.INTEGER)),
+                ),
+            )
+        println()
+        println()
+        interpreter.interpret(printLine, HashMap())
+        println()
+        println()
+    }
+
+    @Test
+    fun testPrintLineWithADivision() {
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(),
+                    PrintLineInterpreter(),
+                ),
+            )
+        val position = Position()
+        val printLine =
+            PrintLine(
+                position,
+                Operator(
+                    Token(position, "/", TokenType.OPERATOR),
+                    SingleValue(Token(position, "10", TokenType.INTEGER)),
+                    SingleValue(Token(position, "2", TokenType.INTEGER)),
+                ),
+            )
+        println()
+        println()
+        interpreter.interpret(printLine, HashMap())
+        println()
+        println()
     }
 }

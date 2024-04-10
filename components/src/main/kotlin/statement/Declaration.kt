@@ -8,7 +8,7 @@ class Declaration(
     private val type: Type,
     private val position: Position,
 ) : Statement {
-    val statementType: StatementType = StatementType.DECLARATION
+    private val statementType: StatementType = StatementType.DECLARATION
 
     fun getVariable(): Variable = variable
 
@@ -17,6 +17,8 @@ class Declaration(
     fun getType(): Type = type
 
     fun getPosition(): Position = position
+
+    override fun getStatementType(): StatementType = statementType
 
     override fun toString(): String {
         return "Declaration(\n\t\tkeyword=$keyword, \n\t\tvariable=$variable, \n\t\ttype=$type)"
