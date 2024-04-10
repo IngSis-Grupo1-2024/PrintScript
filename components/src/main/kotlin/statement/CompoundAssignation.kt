@@ -13,5 +13,11 @@ class CompoundAssignation(private val position: Position, private val declaratio
 
     override fun getStatementType(): StatementType = statementType
 
-    override fun toString(): String = "name: ${declaration.getVariable().getName()} \t  value: ${value.getToken()}"
+    override fun toString(): String{
+        return try{
+            "name: ${declaration.getVariable().getName()} \t  value: ${value.getToken()}"
+        } catch(e:NullPointerException){
+            "name: ${declaration.getVariable().getName()} \t  value: empty"
+        }
+    }
 }

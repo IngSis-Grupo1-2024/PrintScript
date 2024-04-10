@@ -17,7 +17,7 @@ class ScanPrintLine : ScanStatement {
         if (hasFunctionTypes(tokenTypes)) {
             if (hasLastParenthesis(tokenTypes)) {
                 throw ParserError(
-                    tokens.last().getPosition().startLine.toString() + ":error: ')' expected " + lastPosition(tokens),
+                    ":error: ')' expected.",
                     tokens.last(),
                 )
             } else if (emptyValue(tokens)) {
