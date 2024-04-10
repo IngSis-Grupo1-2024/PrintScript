@@ -5,5 +5,5 @@ enum class StatementType {
     ASSIGNATION,
     COMPOUND_ASSIGNATION,
     FUNCTION,
-    PRINT_LINE
+    PRINT_LINE,
 }

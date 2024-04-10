@@ -127,10 +127,9 @@ class ScanValue {
             Operator(token, ast)
         } else if (abs(compareTokens) == 2) {
             ast
-        } else if (ast is Operator)
-            {
-                removeLastChild(ast, token)
-            } else {
+        } else if (ast is Operator) {
+            removeLastChild(ast, token)
+        } else {
             ast.addChildren(SingleValue(token))
         }
     }
@@ -192,10 +191,9 @@ class ScanValue {
         }
         return if (ast.getChildrenAmount() < 2 && ast.getToken().getType() in twoChildrenType) {
             ast.addChildren(SingleValue(token))
-        } else if (ast is Operator)
-            {
-                removeLastChild(ast, token)
-            } else {
+        } else if (ast is Operator) {
+            removeLastChild(ast, token)
+        } else {
             ast.addChildren(SingleValue(token))
         }
     }

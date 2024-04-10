@@ -5,7 +5,10 @@ import components.statement.SingleValue
 import components.statement.Type
 import components.statement.Value
 
-fun evaluateExpression(value: Value, declarationType: Type): String {
+fun evaluateExpression(
+    value: Value,
+    declarationType: Type,
+): String {
     return when (value) {
         is SingleValue -> value.getToken().getValue().toString()
         is Operator -> {
@@ -23,7 +26,12 @@ fun evaluateExpression(value: Value, declarationType: Type): String {
     }
 }
 
-fun performOperation(leftValue: String, rightValue: String, operator: String, variableType: Type): String {
+fun performOperation(
+    leftValue: String,
+    rightValue: String,
+    operator: String,
+    variableType: Type,
+): String {
     return when (operator) {
         "+" ->
             if (variableType.getValue() == "string") {

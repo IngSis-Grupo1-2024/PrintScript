@@ -57,7 +57,7 @@ class Operator(
     fun replace(
         value: Value,
         other: Value,
-    ): Operator  {
+    ): Operator {
         return if (rightOperator.isEmpty() && leftOperator == value) {
             Operator(token, other)
         } else if (rightOperator == value) {

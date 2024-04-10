@@ -13,11 +13,10 @@ class ScanAssignation : ScanStatement {
         if (tokens.size < 3) return false
         val assignIndex = findAssignIndex(tokens)
         if (assignIndex == -1) return false
-        if (checkFirstPartOfAssignation(tokens, assignIndex))
-            {
-                if (emptyValue(tokens, assignIndex)) throw ParserError("error: expected value", tokens[assignIndex])
-                return scanValue.canHandle(tokens.subList(assignIndex + 1, tokens.size))
-            }
+        if (checkFirstPartOfAssignation(tokens, assignIndex)) {
+            if (emptyValue(tokens, assignIndex)) throw ParserError("error: expected value", tokens[assignIndex])
+            return scanValue.canHandle(tokens.subList(assignIndex + 1, tokens.size))
+        }
         return false
     }
 
