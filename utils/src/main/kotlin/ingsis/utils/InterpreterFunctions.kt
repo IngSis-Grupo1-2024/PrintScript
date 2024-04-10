@@ -13,14 +13,14 @@ fun evaluateExpression(
 ): String {
     return when (value) {
         is SingleValue ->
-            if (value.getToken().getType() == TokenType.IDENTIFIER){
+            if (value.getToken().getType() == TokenType.IDENTIFIER) {
                 val variable = previousState[value.getToken().getValue()]
                 if (variable != null) {
                     variable.getValue()!!
                 }
                 else throw IllegalArgumentException("Variable ${value.getToken().getValue()} not declared")
             }
-            else value.getToken().getValue().toString()
+            else value.getToken().getValue()
         is Operator -> {
             val left = value.getLeftOperator()
             val right = value.getRightOperator()
@@ -42,14 +42,24 @@ fun performOperation(
     operator: String,
     variableType: Type,
 ): String {
+    when {
+        (variableType.getValue() != "integer" && (operator != "+")) -> {
+            throw IllegalArgumentException("Invalid operation: $leftValue $operator $rightValue")
+        }
+
+        (variableType.getValue() == "integer" &&
+                (leftValue.toIntOrNull() == null || rightValue.toIntOrNull() == null) &&
+                (operator in listOf("*", "/", "+", "-"))) -> {
+            throw IllegalArgumentException("Invalid operation: $leftValue $operator $rightValue")
+        }
+    }
+
     return when (operator) {
-        "+" ->
-            if (variableType.getValue() == "string") {
-                leftValue + rightValue
-            }
-            else {
-                (leftValue.toInt() + rightValue.toInt()).toString()
-            }
+        "+" -> if (variableType.getValue() == "string") {
+            leftValue + rightValue
+        } else {
+            (leftValue.toInt() + rightValue.toInt()).toString()
+        }
 
         "-" -> (leftValue.toInt() - rightValue.toInt()).toString()
         "*" -> (leftValue.toInt() * rightValue.toInt()).toString()
