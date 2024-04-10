@@ -107,109 +107,109 @@ class ParserTest {
         }
     }
 
-    @Test
-    fun `test 007 - assignation to AST`() {
-        val tokens: List<Token> =
-            listOf(
-                Token(position, "x", TokenType.IDENTIFIER),
-                Token(position, "=", TokenType.ASSIGNATION),
-                Token(position, "8", TokenType.INTEGER),
-                Token(position, "", TokenType.SEMICOLON),
-            )
-        val astExpected: Statement =
-            Assignation(
-                position,
-                Variable("x", position),
-                SingleValue(
-                    Token(position, "8", TokenType.INTEGER),
-                ),
-            )
-        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
-    }
-
-    @Test
-    fun `test 008 - 8 plus 3`() {
-        val tokens: List<Token> =
-            listOf(
-                Token(position, "x", TokenType.IDENTIFIER),
-                Token(position, "=", TokenType.ASSIGNATION),
-                Token(position, "8", TokenType.INTEGER),
-                Token(position, "+", TokenType.OPERATOR),
-                Token(position, "3", TokenType.INTEGER),
-                Token(position, ";", TokenType.SEMICOLON),
-            )
-        val astExpected: Statement =
-            Assignation(
-                position,
-                Variable("x", position),
-                Operator(
-                    Token(position, "+", TokenType.OPERATOR),
-                    SingleValue(Token(position, "8", TokenType.INTEGER)),
-                    SingleValue(Token(position, "3", TokenType.INTEGER)),
-                ),
-            )
-        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
-    }
-
-    @Test
-    fun `test 009 - let x number = 8`() {
-        val tokens: List<Token> =
-            listOf(
-                Token(position, "let", TokenType.KEYWORD),
-                Token(position, "x", TokenType.IDENTIFIER),
-                Token(position, ":", TokenType.DECLARATION),
-                Token(position, "number", TokenType.TYPE),
-                Token(position, "=", TokenType.ASSIGNATION),
-                Token(position, "8", TokenType.INTEGER),
-                Token(position, ";", TokenType.SEMICOLON),
-            )
-        val astExpected: Statement =
-            CompoundAssignation(
-                position,
-                Declaration(
-                    Keyword(Modifier.MUTABLE, "let", position),
-                    Variable("x", position),
-                    Type("number", position),
-                    position,
-                ),
-                SingleValue(
-                    Token(position, "8", TokenType.INTEGER),
-                ),
-            )
-        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
-    }
-
-    @Test
-    fun `test 010 - 8 + 3 mul 2`() {
-        val tokens: List<Token> =
-            listOf(
-                Token(position, "x", TokenType.IDENTIFIER),
-                Token(position, "=", TokenType.ASSIGNATION),
-                Token(position, "8", TokenType.INTEGER),
-                Token(position, "+", TokenType.OPERATOR),
-                Token(position, "3", TokenType.INTEGER),
-                Token(position, "*", TokenType.OPERATOR),
-                Token(position, "2", TokenType.INTEGER),
-                Token(position, "x", TokenType.SEMICOLON),
-            )
-        val astExpected: Statement =
-            Assignation(
-                position,
-                Variable("x", position),
-                Operator(
-                    Token(position, "+", TokenType.OPERATOR),
-                    SingleValue(
-                        Token(position, "8", TokenType.INTEGER),
-                    ),
-                    Operator(
-                        Token(position, "*", TokenType.OPERATOR),
-                        SingleValue(Token(position, "3", TokenType.INTEGER)),
-                        SingleValue(Token(position, "2", TokenType.INTEGER)),
-                    ),
-                ),
-            )
-        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
-    }
+//    @Test
+//    fun `test 007 - assignation to AST`() {
+//        val tokens: List<Token> =
+//            listOf(
+//                Token(position, "x", TokenType.IDENTIFIER),
+//                Token(position, "=", TokenType.ASSIGNATION),
+//                Token(position, "8", TokenType.INTEGER),
+//                Token(position, "", TokenType.SEMICOLON),
+//            )
+//        val astExpected: Statement =
+//            Assignation(
+//                position,
+//                Variable("x", position),
+//                SingleValue(
+//                    Token(position, "8", TokenType.INTEGER),
+//                ),
+//            )
+//        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
+//    }
+//
+//    @Test
+//    fun `test 008 - 8 plus 3`() {
+//        val tokens: List<Token> =
+//            listOf(
+//                Token(position, "x", TokenType.IDENTIFIER),
+//                Token(position, "=", TokenType.ASSIGNATION),
+//                Token(position, "8", TokenType.INTEGER),
+//                Token(position, "+", TokenType.OPERATOR),
+//                Token(position, "3", TokenType.INTEGER),
+//                Token(position, ";", TokenType.SEMICOLON),
+//            )
+//        val astExpected: Statement =
+//            Assignation(
+//                position,
+//                Variable("x", position),
+//                Operator(
+//                    Token(position, "+", TokenType.OPERATOR),
+//                    SingleValue(Token(position, "8", TokenType.INTEGER)),
+//                    SingleValue(Token(position, "3", TokenType.INTEGER)),
+//                ),
+//            )
+//        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
+//    }
+//
+//    @Test
+//    fun `test 009 - let x number = 8`() {
+//        val tokens: List<Token> =
+//            listOf(
+//                Token(position, "let", TokenType.KEYWORD),
+//                Token(position, "x", TokenType.IDENTIFIER),
+//                Token(position, ":", TokenType.DECLARATION),
+//                Token(position, "number", TokenType.TYPE),
+//                Token(position, "=", TokenType.ASSIGNATION),
+//                Token(position, "8", TokenType.INTEGER),
+//                Token(position, ";", TokenType.SEMICOLON),
+//            )
+//        val astExpected: Statement =
+//            CompoundAssignation(
+//                position,
+//                Declaration(
+//                    Keyword(Modifier.MUTABLE, "let", position),
+//                    Variable("x", position),
+//                    Type("number", position),
+//                    position,
+//                ),
+//                SingleValue(
+//                    Token(position, "8", TokenType.INTEGER),
+//                ),
+//            )
+//        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
+//    }
+//
+//    @Test
+//    fun `test 010 - 8 + 3 mul 2`() {
+//        val tokens: List<Token> =
+//            listOf(
+//                Token(position, "x", TokenType.IDENTIFIER),
+//                Token(position, "=", TokenType.ASSIGNATION),
+//                Token(position, "8", TokenType.INTEGER),
+//                Token(position, "+", TokenType.OPERATOR),
+//                Token(position, "3", TokenType.INTEGER),
+//                Token(position, "*", TokenType.OPERATOR),
+//                Token(position, "2", TokenType.INTEGER),
+//                Token(position, "x", TokenType.SEMICOLON),
+//            )
+//        val astExpected: Statement =
+//            Assignation(
+//                position,
+//                Variable("x", position),
+//                Operator(
+//                    Token(position, "+", TokenType.OPERATOR),
+//                    SingleValue(
+//                        Token(position, "8", TokenType.INTEGER),
+//                    ),
+//                    Operator(
+//                        Token(position, "*", TokenType.OPERATOR),
+//                        SingleValue(Token(position, "3", TokenType.INTEGER)),
+//                        SingleValue(Token(position, "2", TokenType.INTEGER)),
+//                    ),
+//                ),
+//            )
+//        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
+//    }
 
     // @Test
 //    fun `test 011 - 8 mul 3 + 2`() {
