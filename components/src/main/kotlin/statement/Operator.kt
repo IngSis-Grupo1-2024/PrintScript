@@ -9,7 +9,9 @@ class Operator(
 ) : Value {
 
     constructor(token: Token) : this(token, EmptyValue(), EmptyValue())
-    constructor(token: Token, leftOperator: Value) : this(token, EmptyValue(), EmptyValue())
+    constructor(token: Token, leftOperator: Value) : this(token, leftOperator, EmptyValue())
+
+
 
     override fun isEmpty(): Boolean = false
 
@@ -26,6 +28,7 @@ class Operator(
         if(isEmpty()) return ast
         else if(isLeaf()) return Operator(token, ast)
         return Operator(token, leftOperator, ast)
+
     }
 
     fun getLeftOperator(): Value {

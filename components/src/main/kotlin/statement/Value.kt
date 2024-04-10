@@ -8,4 +8,5 @@ interface Value {
     fun getChildrenAmount(): Int
     fun isLeaf(): Boolean
     fun addChildren(ast: Value): Value
+
 }

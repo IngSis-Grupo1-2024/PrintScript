@@ -1,14 +1,28 @@
 package components.statement
 
-import components.Position
-import components.TokenType
+import components.Token
 
-class SingleValue(private val value:String, private val position: Position, private val type :TokenType):Value {
+class SingleValue(private val token: Token):Value {
 
-    override fun getValue(): String = value
 
-    override fun getPosition(): Position = position
+    override fun isEmpty(): Boolean {
+        TODO("Not yet implemented")
+    }
 
-    override fun getType() : TokenType = type
+    override fun getToken(): Token {
+        return token
+    }
+
+    override fun getChildrenAmount(): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun isLeaf(): Boolean {
+        return true
+    }
+
+    override fun addChildren(ast: Value): Value {
+        TODO("Not yet implemented")
+    }
 
 }
