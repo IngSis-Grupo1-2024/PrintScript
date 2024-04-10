@@ -41,8 +41,8 @@ class App : CliktCommand(name = "PrintScript") {
 }
 
 fun main() {
-//    test1Woutput()
-//    test2Woutput()
+    test1Woutput()
+    test2Woutput()
     test3Woutput()
 }
 

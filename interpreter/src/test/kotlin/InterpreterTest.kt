@@ -546,4 +546,98 @@ class InterpreterTest {
         println()
         println()
     }
+
+//    @Test
+//    fun testPrintLineWithASumWithVariables() {
+//        val interpreter =
+//            Interpreter(
+//                listOf(
+//                    AssignationInterpreter(),
+//                    DeclarationInterpreter(),
+//                    CompoundAssignationInterpreter(),
+//                    PrintLineInterpreter(),
+//                ),
+//            )
+//        val position = Position()
+//        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+//        val variableA = Variable("a", position)
+//        val type = Type("integer", position)
+//        val declarationStatementA = Declaration(keyword, variableA, type, position)
+//        val compoundAssignationVarA =
+//            CompoundAssignation(
+//                position,
+//                declarationStatementA,
+//                SingleValue(Token(position, "10", TokenType.INTEGER)),
+//            )
+//        val variableB = Variable("b", position)
+//        val declarationStatementB = Declaration(keyword, variableB, type, position)
+//        val compoundAssignationVarB =
+//            CompoundAssignation(
+//                position,
+//                declarationStatementB,
+//                SingleValue(Token(position, "20", TokenType.INTEGER)),
+//            )
+//        val printLine =
+//            PrintLine(
+//                position,
+//                Operator(
+//                    Token(position, "+", TokenType.OPERATOR),
+//                    SingleValue(Token(position, "a", TokenType.IDENTIFIER)),
+//                    SingleValue(Token(position, "b", TokenType.IDENTIFIER)),
+//                ),
+//            )
+//        var map = HashMap<String, Result>()
+//        map = interpreter.interpret(compoundAssignationVarA, map)
+//        map = interpreter.interpret(compoundAssignationVarB, map)
+//        println()
+//        println()
+//        interpreter.interpret(printLine, map)
+//        println()
+//        println()
+//    }
+//
+//    @Test
+//    fun testPrintLineAVariable() {
+//        val interpreter =
+//            Interpreter(
+//                listOf(
+//                    AssignationInterpreter(),
+//                    DeclarationInterpreter(),
+//                    CompoundAssignationInterpreter(),
+//                    PrintLineInterpreter(),
+//                ),
+//            )
+//        val position = Position()
+//        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+//        val variableA = Variable("a", position)
+//        val type = Type("integer", position)
+//        val declarationStatementA = Declaration(keyword, variableA, type, position)
+//        val compoundAssignationVarA =
+//            CompoundAssignation(
+//                position,
+//                declarationStatementA,
+//                SingleValue(Token(position, "10", TokenType.INTEGER)),
+//            )
+//        val variableB = Variable("b", position)
+//        val declarationStatementB = Declaration(keyword, variableB, type, position)
+//        val compoundAssignationVarB =
+//            CompoundAssignation(
+//                position,
+//                declarationStatementB,
+//                SingleValue(Token(position, "a", TokenType.IDENTIFIER)),
+//            )
+//        val printLine =
+//            PrintLine(
+//                position,
+//                SingleValue(Token(position, "b", TokenType.IDENTIFIER)),
+//            )
+//        var map = HashMap<String, Result>()
+//        map = interpreter.interpret(compoundAssignationVarA, map)
+//        map = interpreter.interpret(compoundAssignationVarB, map)
+//        println()
+//        println()
+//        interpreter.interpret(printLine, map)
+//        println()
+//        println()
+//    }
 }
