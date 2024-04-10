@@ -15,8 +15,7 @@ class Parser(private val scanStatement: List<ScanStatement>) {
         val tokWOSemicolon = tokens.subList(0, tokens.size - 1)
 
         scanStatement.forEach {
-                scan ->
-            if (scan.canHandle(tokWOSemicolon)) return scan.makeAST(tokWOSemicolon)
+            if (it.canHandle(tokWOSemicolon)) return it.makeAST(tokWOSemicolon)
         }
 
         throw ParserError("PrintScript couldn't parse that code " + tokens[0].getPosition(), tokens[0])
