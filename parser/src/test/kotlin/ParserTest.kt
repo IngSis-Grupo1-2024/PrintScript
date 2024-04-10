@@ -269,13 +269,11 @@ class ParserTest {
                 ),
                 Operator(
                     Token(position, "+", TokenType.OPERATOR),
+                    SingleValue(Token(position, "8", TokenType.INTEGER)),
                     Operator(
                         Token(position, "*", TokenType.OPERATOR),
-                        SingleValue(Token(position, "8", TokenType.INTEGER)),
                         SingleValue(Token(position, "3", TokenType.INTEGER)),
-                    ),
-                    SingleValue(
-                        Token(position, "2", TokenType.INTEGER),
+                        SingleValue(Token(position, "2", TokenType.INTEGER)),
                     ),
                 ),
             )
