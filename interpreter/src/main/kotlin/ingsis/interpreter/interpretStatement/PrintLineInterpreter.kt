@@ -1,12 +1,14 @@
 package ingsis.interpreter.interpretStatement
 
-import components.Position
+import components.Token
 import components.TokenType
 import components.statement.*
+import ingsis.utils.InterpreterFunctions
 import ingsis.utils.Result
-import ingsis.utils.evaluateExpression
 
 class PrintLineInterpreter : StatementInterpreter {
+    private val functions = InterpreterFunctions()
+
     override fun canHandle(statement: Statement): Boolean = statement.getStatementType() == StatementType.PRINT_LINE
 
     override fun interpret(
@@ -15,20 +17,35 @@ class PrintLineInterpreter : StatementInterpreter {
     ): HashMap<String, Result> {
         val printLine = statement as PrintLine
         val valueToken = printLine.getValue().getToken()
+        val result: String = getResult(valueToken, previousState, printLine)
 
-        if (valueToken.getType() == TokenType.IDENTIFIER) {
-            val variable = previousState[valueToken.getValue()]
-            if (variable != null) {
-                println(variable.getValue())
-            }
-        }
-        else if (printLine.getValue() is Operator) {
-            println(evaluateExpression(printLine.getValue(), Type(valueToken.getValue(), Position()), previousState))
-        }
-        else {
-            println(evaluateExpression(printLine.getValue(), Type(valueToken.getValue(), Position()), previousState))
-        }
+        println(result)
 
         return previousState
+    }
+
+    private fun getResult(
+        valueToken: Token,
+        previousState: HashMap<String, Result>,
+        printLine: PrintLine,
+    ): String {
+        val result: String
+        if (valueToken.getType() == TokenType.IDENTIFIER) {
+            val variable = previousState[valueToken.getValue()]
+            result = variable?.getValue() ?: ""
+        } else if (printLine.getValue() is Operator) {
+            result =
+                functions.evaluateExpression(
+                    printLine.getValue(),
+                    previousState,
+                )
+        } else {
+            result =
+                functions.evaluateExpression(
+                    printLine.getValue(),
+                    previousState,
+                )
+        }
+        return result
     }
 }

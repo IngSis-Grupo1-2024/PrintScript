@@ -656,7 +656,7 @@ class InterpreterTest {
         val position = Position()
         val keyword = Keyword(Modifier.MUTABLE, "let", position)
         val variableA = Variable("a", position)
-        val type = Type("integer", position)
+        val type = Type("string", position)
         val declarationStatementA = Declaration(keyword, variableA, type, position)
         val compoundAssignationVarA =
             CompoundAssignation(
@@ -676,7 +676,7 @@ class InterpreterTest {
             PrintLine(
                 position,
                 Operator(
-                    Token(position, "-", TokenType.OPERATOR),
+                    Token(position, "+", TokenType.OPERATOR),
                     SingleValue(Token(position, "a", TokenType.IDENTIFIER)),
                     SingleValue(Token(position, "b", TokenType.IDENTIFIER)),
                 ),
