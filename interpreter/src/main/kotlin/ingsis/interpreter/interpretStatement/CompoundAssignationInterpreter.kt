@@ -18,7 +18,7 @@ class CompoundAssignationInterpreter : StatementInterpreter {
         val declarationType = compoundAssignation.getDeclaration().getType()
         val value = compoundAssignation.getValue()
 
-        val result = functions.evaluateExpression(value, declarationType, previousState)
+        val result = functions.evaluateExpression(value, previousState)
 
         previousState[variable.getName()] = Result(declarationType, result)
 

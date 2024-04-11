@@ -17,7 +17,7 @@ class AssignationInterpreter : StatementInterpreter {
         val variable = assignation.getVariable()
         val value = assignation.getValue()
 
-        val result = functions.evaluateExpression(value, functions.getVariableType(variable.getName(), previousState), previousState)
+        val result = functions.evaluateExpression(value, previousState)
         previousState[variable.getName()] = Result(functions.getVariableType(variable.getName(), previousState), result)
 
         return previousState
