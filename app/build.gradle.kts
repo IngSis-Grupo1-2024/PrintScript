@@ -3,6 +3,7 @@
  */
 
 plugins {
+    application
     id("PrintScript.kotlin-application-conventions")
 }
 
@@ -13,5 +14,5 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass.set("PrintScript.app.AppKt")
+    mainClass = "PrintScript.app.AppKt"
 }

@@ -35,7 +35,7 @@ class Cli(private val scaRules: ArrayList<Rule>) {
                 statement = parse(tokens)
                 string.append("\nstatement of line $i -> $statement\n")
                 variableMap = interpreter.interpret(statement, variableMap)
-            } catch (e: ParserError) {
+            } catch (e: Exception) {
                 string.append("\n" + e.localizedMessage)
             }
         }
@@ -61,8 +61,29 @@ class Cli(private val scaRules: ArrayList<Rule>) {
     fun startCliResultInFile(
         fileInput: String,
         fileOutput: String,
-    ) {
-        val string = startCli(fileInput)
+    ) = writeInFile(fileOutput, startCli(fileInput))
+
+    fun validate(codeLines: String) : String {
+        val lines = splitLines(codeLines)
+        var tokens: List<Token>
+        val string = StringBuilder()
+        for (line in lines) {
+            tokens = tokenizeWithLexer(line)
+            try {
+                parse(tokens)
+            } catch (e: ParserError) {
+                string.append("\n" + e.localizedMessage + " in position :" + e.getTokenPosition())
+            }
+        }
+        if(string.isEmpty()) {
+            return "VALIDATION SUCCESSFUL"
+        }
+        return string.toString()
+    }
+    fun validateResultInFile(input: String, output: String) =
+        writeInFile(output, validate(input))
+
+    private fun writeInFile(fileOutput: String, string: String) {
         val writer = PrintWriter(fileOutput)
         writer.append(string)
         writer.close()
