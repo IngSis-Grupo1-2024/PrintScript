@@ -14,5 +14,5 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = "PrintScript.app.AppKt"
+    mainClass = "app.AppKt"
 }
