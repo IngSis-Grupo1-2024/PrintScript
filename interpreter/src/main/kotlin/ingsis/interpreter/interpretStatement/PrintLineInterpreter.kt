@@ -3,10 +3,12 @@ package ingsis.interpreter.interpretStatement
 import components.Position
 import components.TokenType
 import components.statement.*
+import ingsis.utils.InterpreterFunctions
 import ingsis.utils.Result
-import ingsis.utils.evaluateExpression
 
 class PrintLineInterpreter : StatementInterpreter {
+    private val functions = InterpreterFunctions()
+
     override fun canHandle(statement: Statement): Boolean = statement.getStatementType() == StatementType.PRINT_LINE
 
     override fun interpret(
@@ -23,10 +25,10 @@ class PrintLineInterpreter : StatementInterpreter {
             }
         }
         else if (printLine.getValue() is Operator) {
-            println(evaluateExpression(printLine.getValue(), Type(valueToken.getValue(), Position()), previousState))
+            println(functions.evaluateExpression(printLine.getValue(), Type(valueToken.getValue(), Position()), previousState))
         }
         else {
-            println(evaluateExpression(printLine.getValue(), Type(valueToken.getValue(), Position()), previousState))
+            println(functions.evaluateExpression(printLine.getValue(), Type(valueToken.getValue(), Position()), previousState))
         }
 
         return previousState
