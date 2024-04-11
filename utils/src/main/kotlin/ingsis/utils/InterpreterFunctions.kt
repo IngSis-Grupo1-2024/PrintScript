@@ -9,10 +9,10 @@ import components.statement.SingleValue
 import components.statement.Type
 import components.statement.Value
 
-class InterpreterFunctions{
+class InterpreterFunctions {
     fun evaluateExpression(
         value: Value,
-        previousState: Map<String, Result>
+        previousState: Map<String, Result>,
     ): String {
         return when (value) {
             is SingleValue ->
@@ -20,10 +20,12 @@ class InterpreterFunctions{
                     val variable = previousState[value.getToken().getValue()]
                     if (variable != null) {
                         variable.getValue()!!
+                    } else {
+                        throw IllegalArgumentException("Variable ${value.getToken().getValue()} not declared")
                     }
-                    else throw IllegalArgumentException("Variable ${value.getToken().getValue()} not declared")
+                } else {
+                    value.getToken().getValue()
                 }
-                else value.getToken().getValue()
             is Operator -> {
                 val left = value.getLeftOperator()
                 val right = value.getRightOperator()
@@ -40,7 +42,7 @@ class InterpreterFunctions{
                         rightResult.getValue()!!,
                         operator,
                         leftResult.getType(),
-                        rightResult.getType()
+                        rightResult.getType(),
                     )
                 }
             }
@@ -51,15 +53,13 @@ class InterpreterFunctions{
 
     private fun evaluateExpressionOperator(
         value: Value,
-        previousState: Map<String, Result>
+        previousState: Map<String, Result>,
     ): Result {
         return when (value) {
             is SingleValue -> {
                 if (value.getToken().getType() == TokenType.IDENTIFIER) {
-                    val variable = previousState[value.getToken().getValue()]
-                    if (variable != null) {
-                        variable
-                    } else throw IllegalArgumentException("Variable ${value.getToken().getValue()} not declared")
+                    previousState[value.getToken().getValue()]
+                        ?: throw IllegalArgumentException("Variable ${value.getToken().getValue()} not declared")
                 } else {
                     val type = getTypeByASingleValue(value.getToken())
                     val valueStr = value.getToken().getValue()
@@ -75,18 +75,19 @@ class InterpreterFunctions{
                 val rightResult = evaluateExpressionOperator(right, previousState)
 
                 if (leftResult.getType().getValue() == rightResult.getType().getValue()) {
-                    val value = performOperation(leftResult.getValue()!!, rightResult.getValue()!!, operator, leftResult.getType())
-                    Result(leftResult.getType(), value)
+                    val resultValue = performOperation(leftResult.getValue()!!, rightResult.getValue()!!, operator, leftResult.getType())
+                    Result(leftResult.getType(), resultValue)
                 } else {
-                    val value = performOperationWithDiffTypes(
-                        leftResult.getValue()!!,
-                        rightResult.getValue()!!,
-                        operator,
-                        leftResult.getType(),
-                        rightResult.getType()
-                    )
+                    val resultValue =
+                        performOperationWithDiffTypes(
+                            leftResult.getValue()!!,
+                            rightResult.getValue()!!,
+                            operator,
+                            leftResult.getType(),
+                            rightResult.getType(),
+                        )
                     val type = getHigherType(leftResult.getType(), rightResult.getType())
-                    Result(type, value)
+                    Result(type, resultValue)
                 }
             }
 
@@ -94,9 +95,15 @@ class InterpreterFunctions{
         }
     }
 
-    private fun getHigherType(type: Type, otherType: Type): Type {
-        if(type.getValue() == "string") return type
-        else if(otherType.getValue() == "string") return otherType
+    private fun getHigherType(
+        type: Type,
+        otherType: Type,
+    ): Type {
+        if (type.getValue() == "string") {
+            return type
+        } else if (otherType.getValue() == "string") {
+            return otherType
+        }
         return type
     }
 
@@ -111,19 +118,22 @@ class InterpreterFunctions{
                 throw IllegalArgumentException("Invalid operation: $leftValue $operator $rightValue")
             }
 
-            (variableType.getValue() == "integer" &&
+            (
+                variableType.getValue() == "integer" &&
                     (leftValue.toIntOrNull() == null || rightValue.toIntOrNull() == null) &&
-                    (operator in listOf("*", "/", "+", "-"))) -> {
+                    (operator in listOf("*", "/", "+", "-"))
+            ) -> {
                 throw IllegalArgumentException("Invalid operation: $leftValue $operator $rightValue")
             }
         }
 
         return when (operator) {
-            "+" -> if (variableType.getValue() == "string") {
-                leftValue + rightValue
-            } else {
-                (leftValue.toInt() + rightValue.toInt()).toString()
-            }
+            "+" ->
+                if (variableType.getValue() == "string") {
+                    leftValue + rightValue
+                } else {
+                    (leftValue.toInt() + rightValue.toInt()).toString()
+                }
 
             "-" -> (leftValue.toInt() - rightValue.toInt()).toString()
             "*" -> (leftValue.toInt() * rightValue.toInt()).toString()
@@ -144,19 +154,22 @@ class InterpreterFunctions{
                 throw IllegalArgumentException("Invalid operation: $leftValue $operator $rightValue")
             }
 
-            (typesEqualInteger(leftType, rightType) &&
+            (
+                typesEqualInteger(leftType, rightType) &&
                     (leftValue.toIntOrNull() == null || rightValue.toIntOrNull() == null) &&
-                    (operator in listOf("*", "/", "+", "-"))) -> {
+                    (operator in listOf("*", "/", "+", "-"))
+            ) -> {
                 throw IllegalArgumentException("Invalid operation: $leftValue $operator $rightValue")
             }
         }
 
         return when (operator) {
-            "+" -> if (typesDiffInteger(leftType, rightType)) {
-                leftValue + rightValue
-            } else {
-                (leftValue.toInt() + rightValue.toInt()).toString()
-            }
+            "+" ->
+                if (typesDiffInteger(leftType, rightType)) {
+                    leftValue + rightValue
+                } else {
+                    (leftValue.toInt() + rightValue.toInt()).toString()
+                }
 
             "-" -> (leftValue.toInt() - rightValue.toInt()).toString()
             "*" -> (leftValue.toInt() * rightValue.toInt()).toString()
@@ -165,11 +178,15 @@ class InterpreterFunctions{
         }
     }
 
-    private fun typesEqualInteger(leftType: Type, rightType: Type): Boolean =
-        leftType.getValue() == "integer" && rightType.getValue() == "integer"
+    private fun typesEqualInteger(
+        leftType: Type,
+        rightType: Type,
+    ): Boolean = leftType.getValue() == "integer" && rightType.getValue() == "integer"
 
-    private fun typesDiffInteger(leftType: Type, rightType: Type): Boolean =
-        leftType.getValue() != "integer" || rightType.getValue() != "integer"
+    private fun typesDiffInteger(
+        leftType: Type,
+        rightType: Type,
+    ): Boolean = leftType.getValue() != "integer" || rightType.getValue() != "integer"
 
     fun getVariableType(
         variableName: String,
@@ -177,11 +194,21 @@ class InterpreterFunctions{
     ): Type {
         return previousState[variableName]!!.getType()
     }
+
     private fun getTypeByASingleValue(token: Token): Type {
         val tokenType = token.getType()
-        val tokenValue = if(tokenType == TokenType.STRING) "string"
-        else if(tokenType == TokenType.INTEGER) "integer"
-        else throw InvalidTypeException("Invalid type")
+        val tokenValue =
+            when (tokenType) {
+                TokenType.STRING -> {
+                    "string"
+                }
+                TokenType.INTEGER -> {
+                    "integer"
+                }
+                else -> {
+                    throw InvalidTypeException("Invalid type")
+                }
+            }
         return Type(tokenValue, Position())
     }
 }

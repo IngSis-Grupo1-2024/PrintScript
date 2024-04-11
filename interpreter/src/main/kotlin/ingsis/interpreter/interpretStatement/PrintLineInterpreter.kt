@@ -1,6 +1,5 @@
 package ingsis.interpreter.interpretStatement
 
-import components.Position
 import components.Token
 import components.TokenType
 import components.statement.*
@@ -18,7 +17,7 @@ class PrintLineInterpreter : StatementInterpreter {
     ): HashMap<String, Result> {
         val printLine = statement as PrintLine
         val valueToken = printLine.getValue().getToken()
-        val result : String = getResult(valueToken, previousState, printLine)
+        val result: String = getResult(valueToken, previousState, printLine)
 
         println(result)
 
@@ -28,22 +27,24 @@ class PrintLineInterpreter : StatementInterpreter {
     private fun getResult(
         valueToken: Token,
         previousState: HashMap<String, Result>,
-        printLine: PrintLine
+        printLine: PrintLine,
     ): String {
-        val result : String
+        val result: String
         if (valueToken.getType() == TokenType.IDENTIFIER) {
             val variable = previousState[valueToken.getValue()]
             result = variable?.getValue() ?: ""
         } else if (printLine.getValue() is Operator) {
-            result = functions.evaluateExpression(
-                printLine.getValue(),
-                previousState
-            )
+            result =
+                functions.evaluateExpression(
+                    printLine.getValue(),
+                    previousState,
+                )
         } else {
-            result = functions.evaluateExpression(
-                printLine.getValue(),
-                previousState
-            )
+            result =
+                functions.evaluateExpression(
+                    printLine.getValue(),
+                    previousState,
+                )
         }
         return result
     }

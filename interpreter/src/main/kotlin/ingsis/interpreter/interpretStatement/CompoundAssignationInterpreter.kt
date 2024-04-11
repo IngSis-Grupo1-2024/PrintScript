@@ -4,9 +4,9 @@ import components.statement.*
 import ingsis.utils.InterpreterFunctions
 import ingsis.utils.Result
 
-
 class CompoundAssignationInterpreter : StatementInterpreter {
     private val functions = InterpreterFunctions()
+
     override fun canHandle(statement: Statement): Boolean = statement.getStatementType() == StatementType.COMPOUND_ASSIGNATION
 
     override fun interpret(

@@ -1,12 +1,12 @@
 package ingsis.interpreter.interpretStatement
 
-import components.TokenType
 import components.statement.*
-import ingsis.utils.Result
 import ingsis.utils.*
+import ingsis.utils.Result
 
 class AssignationInterpreter : StatementInterpreter {
     private val functions = InterpreterFunctions()
+
     override fun canHandle(statement: Statement): Boolean = statement.getStatementType() == StatementType.ASSIGNATION
 
     override fun interpret(
@@ -22,5 +22,4 @@ class AssignationInterpreter : StatementInterpreter {
 
         return previousState
     }
-
 }
