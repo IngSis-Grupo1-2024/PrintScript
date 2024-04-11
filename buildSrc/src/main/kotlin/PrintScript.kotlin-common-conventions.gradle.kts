@@ -6,6 +6,8 @@ plugins {
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
     id("org.jetbrains.kotlin.jvm")
     jacoco
+    java
+    `maven-publish`
 }
 
 repositories {
@@ -78,3 +80,26 @@ tasks.register<JavaExec>("ktlintFormat") {
         "!**/build/**",
     )
 }
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/maxigeist/PrintScript")
+            credentials {
+                username = System.getenv("GITHUB_AUTHOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+    publications {
+        register<MavenPublication>("maven") {
+            groupId = "org.gradle.PrintScript"
+            artifactId = "library"
+            version = "1.1.0-SNAPSHOT"
+            from(components["java"])
+        }
+
+    }
+}
+
