@@ -49,22 +49,6 @@ class InterpreterFunctions{
         }
     }
 
-//    private fun getType(
-//        value: Value,
-//        previousState: Map<String, Result>
-//    ): Type {
-//        val leftDeclarationType: Type
-//        if (value.isLeaf() && value.getToken().getType() == TokenType.IDENTIFIER) {
-//            leftDeclarationType = previousState[value.getToken().getValue()]!!.getType()
-//        } else if (value.isLeaf()) {
-//            leftDeclarationType = getTypeByASingleValue(value.getToken())
-//        } else {
-//            val leftDeclarationResult: Result = evaluateExpressionOperator(value, previousState)
-//            leftDeclarationType = leftDeclarationResult.getType()
-//        }
-//        return leftDeclarationType
-//    }
-
     private fun evaluateExpressionOperator(
         value: Value,
         previousState: Map<String, Result>
