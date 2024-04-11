@@ -21,8 +21,12 @@ class PrintLineInterpreter : StatementInterpreter {
             if (variable != null) {
                 println(variable.getValue())
             }
-        } else {
-            println(evaluateExpression(printLine.getValue(), Type("sting", Position())))
+        }
+        else if (printLine.getValue() is Operator) {
+            println(evaluateExpression(printLine.getValue(), Type(valueToken.getValue(), Position()), previousState))
+        }
+        else {
+            println(evaluateExpression(printLine.getValue(), Type(valueToken.getValue(), Position()), previousState))
         }
 
         return previousState

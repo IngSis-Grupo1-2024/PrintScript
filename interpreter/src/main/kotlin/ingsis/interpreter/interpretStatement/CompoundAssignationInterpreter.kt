@@ -1,8 +1,10 @@
 package ingsis.interpreter.interpretStatement
 
+import components.TokenType
 import components.statement.*
 import ingsis.utils.Result
 import ingsis.utils.evaluateExpression
+import ingsis.utils.getVariableType
 
 class CompoundAssignationInterpreter : StatementInterpreter {
     override fun canHandle(statement: Statement): Boolean = statement.getStatementType() == StatementType.COMPOUND_ASSIGNATION
@@ -16,7 +18,7 @@ class CompoundAssignationInterpreter : StatementInterpreter {
         val declarationType = compoundAssignation.getDeclaration().getType()
         val value = compoundAssignation.getValue()
 
-        val result = evaluateExpression(value, declarationType)
+        val result = evaluateExpression(value, declarationType, previousState)
 
         previousState[variable.getName()] = Result(declarationType, result)
 
