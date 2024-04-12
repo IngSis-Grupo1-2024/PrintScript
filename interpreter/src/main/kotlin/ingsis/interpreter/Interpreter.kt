@@ -3,18 +3,37 @@ package ingsis.interpreter
 import components.statement.Statement
 import ingsis.interpreter.interpretStatement.*
 import ingsis.utils.Result
+import operator.scanner.ScanDivOperator
+import operator.scanner.ScanSubOperator
+import scan.value.ScanMulOperator
+import scan.value.ScanSumOperator
 
 object PrintScriptInterpreter {
     fun createInterpreter(version: String): Interpreter {
         return when (version) {
-            "VERSION_1" ->
+            "VERSION_1" -> {
+                val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
                 Interpreter(
-                    listOf(DeclarationInterpreter(), AssignationInterpreter(), CompoundAssignationInterpreter(), PrintLineInterpreter()),
+                    listOf(
+                        DeclarationInterpreter(),
+                        AssignationInterpreter(scanners),
+                        CompoundAssignationInterpreter(scanners),
+                        PrintLineInterpreter(scanners),
+                    ),
                 )
-            else ->
+            }
+
+            else -> {
+                val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
                 Interpreter(
-                    listOf(DeclarationInterpreter(), AssignationInterpreter(), CompoundAssignationInterpreter(), PrintLineInterpreter()),
+                    listOf(
+                        DeclarationInterpreter(),
+                        AssignationInterpreter(scanners),
+                        CompoundAssignationInterpreter(scanners),
+                        PrintLineInterpreter(scanners),
+                    ),
                 )
+            }
         }
     }
 }

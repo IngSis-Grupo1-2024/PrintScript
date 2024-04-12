@@ -5,6 +5,7 @@ import components.Token
 import components.statement.Statement
 import error.ParserError
 import ingsis.interpreter.Interpreter
+import ingsis.interpreter.PrintScriptInterpreter
 import ingsis.interpreter.interpretStatement.AssignationInterpreter
 import ingsis.interpreter.interpretStatement.CompoundAssignationInterpreter
 import ingsis.interpreter.interpretStatement.DeclarationInterpreter
@@ -17,8 +18,7 @@ import java.io.PrintWriter
 class Cli(private val scaRules: ArrayList<Rule>, version: Version) {
     private val lexer = Lexer(Position(0, 0))
     private val parser = PrintScriptParser.createParser(version.toString())
-    private val interpreter =
-        Interpreter(listOf(DeclarationInterpreter(), AssignationInterpreter(), CompoundAssignationInterpreter(), PrintLineInterpreter()))
+    private val interpreter = PrintScriptInterpreter.createInterpreter(version.toString())
 
     fun startCli(codeLines: String): String {
         val lines = splitLines(codeLines)
