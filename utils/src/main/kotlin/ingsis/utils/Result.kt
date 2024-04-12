@@ -13,9 +13,7 @@ data class Result(private val type: Type, private val value: String? = null) { /
         if (this === other) return true
         if (other !is Result) return false
 
-        val otherObject = other as Result
-
-        return this.type.getValue() == otherObject.type.getValue() && this.value == otherObject.value
+        return this.type.getValue() == other.type.getValue() && this.value == other.value
     }
 
     override fun hashCode(): Int {
