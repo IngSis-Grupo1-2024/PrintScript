@@ -1,6 +1,6 @@
 package app
 
-import Cli
+import cli.Cli
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.context
 import com.github.ajalt.clikt.parameters.arguments.*
@@ -11,10 +11,14 @@ import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.clikt.parameters.types.path
 import com.github.ajalt.mordant.rendering.AnsiLevel
 import com.github.ajalt.mordant.terminal.Terminal
-import java.util.ArrayList
+import kotlin.collections.ArrayList
 import kotlin.io.path.readText
 
-class App : CliktCommand(name = "printscript") {
+class App : CliktCommand() {
+    private val version by argument()
+        .choice("v1")
+        .help { "the version of the printscript" }
+
     private val operation by argument()
         .choice("validation", "execution", "formatting", "analyzing")
         .help { "this is the operation that you want to do with the code" }
@@ -35,14 +39,21 @@ class App : CliktCommand(name = "printscript") {
         .help { "this is the rules for additional SCA" }
         .default("none")
 
-    private val cli = Cli(ArrayList())
+    private lateinit var cli : Cli
 
     override fun run() {
+        startCli()
         if(checkValidation()) doValidation()
         else if(checkFormatting()) doFormatting()
         else if(checkAnalyzing()) doAnalyze()
         else{
             doExecution()
+        }
+    }
+
+    private fun startCli() {
+        if(version == "v1"){
+            cli = Cli(ArrayList(), Version.VERSION_1)
         }
     }
 
@@ -90,22 +101,17 @@ class Hello : CliktCommand() {
     }
 }
 
- fun main() {
-    test1Woutput()
-    test2Woutput()
-    test3Woutput()
- }
-//fun main(args: Array<String>) {
-//    App()
-//        .main(listOf("--help"))
-//}
+// fun main(args: Array<String>) {
+//    App().main(args)
+// }
+
+fun main(args: Array<String>) {
+    test1WOoutput()
+}
 
 fun test1WOoutput() =
     App()
-        .context {
-            terminal = Terminal(ansiLevel = AnsiLevel.TRUECOLOR, interactive = true)
-        }
-        .main(listOf("app/src/main/resources/test1"))
+        .main(listOf("v1", "validation", "app/src/main/resources/test1"))
 
 fun test1Woutput() = App().main(listOf("execution","app/src/main/resources/test1", "app/src/main/resources/resultTest1"))
 
