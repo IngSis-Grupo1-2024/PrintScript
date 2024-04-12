@@ -10,12 +10,19 @@ class ScanDeclaration : ScanStatement {
     private val declarationTypes = listOf(TokenType.KEYWORD, TokenType.IDENTIFIER, TokenType.DECLARATION, TokenType.TYPE)
 
     override fun canHandle(tokens: List<Token>): Boolean {
-        return if (declarationTypes == getTokenTypes(tokens)) {
-            true
-        } else {
-            checkIfDeclarationTypesMissing(tokens)
+        if (checkIfThereIsNoDelimiter(tokens)) {
+            throw ParserError("error: ';' expected  " + tokens.last().getPosition(), tokens.last())
         }
+
+        val tokWODelimiter = tokens.subList(0, tokens.size - 1)
+        return canHandleWODelimiter(tokWODelimiter)
     }
+
+    override fun canHandleWODelimiter(tokens: List<Token>): Boolean =
+        if (declarationTypes == getTokenTypes(tokens))
+            true
+        else
+            checkIfDeclarationTypesMissing(tokens)
 
     override fun makeAST(tokens: List<Token>): Statement {
         val keyword: Keyword = getKeyword(tokens[0])
@@ -75,4 +82,6 @@ class ScanDeclaration : ScanStatement {
     private fun getPosition(token: Token): Position = token.getPosition()
 
     private fun getVariable(token: Token): Variable = Variable(token.getValue(), token.getPosition())
+
+    private fun checkIfThereIsNoDelimiter(tokens: List<Token>) = tokens.last().getType() != TokenType.SEMICOLON
 }

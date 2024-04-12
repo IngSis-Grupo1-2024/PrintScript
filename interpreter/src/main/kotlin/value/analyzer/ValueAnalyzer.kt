@@ -57,23 +57,21 @@ class ValueAnalyzer(private val scanners: List<ScanOperatorType>) {
                 }
             }
             return operator
-        } else {
-            val left =
-                if (!operator.getLeftOperator().isLeaf()) {
-                    recursiveOperationAnalyzer(operator.getLeftOperator() as Operator, map)
-                } else {
-                    operator.getLeftOperator()
-                }
-
-            val right =
-                if (!operator.getRightOperator().isLeaf()) {
-                    recursiveOperationAnalyzer(operator.getRightOperator() as Operator, map)
-                } else {
-                    operator.getRightOperator()
-                }
-
-            return recursiveOperationAnalyzer(Operator(operator.getToken(), left, right), map)
         }
-        return operator
+        val left =
+            if (!operator.getLeftOperator().isLeaf()) {
+                recursiveOperationAnalyzer(operator.getLeftOperator() as Operator, map)
+            } else {
+                operator.getLeftOperator()
+            }
+
+        val right =
+            if (!operator.getRightOperator().isLeaf()) {
+                recursiveOperationAnalyzer(operator.getRightOperator() as Operator, map)
+            } else {
+                operator.getRightOperator()
+            }
+
+        return recursiveOperationAnalyzer(Operator(operator.getToken(), left, right), map)
     }
 }
