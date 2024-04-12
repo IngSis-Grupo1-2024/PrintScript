@@ -1,3 +1,4 @@
+
 import components.Position
 import components.Token
 import components.statement.Statement
@@ -10,17 +11,29 @@ import ingsis.interpreter.interpretStatement.PrintLineInterpreter
 import ingsis.lexer.Lexer
 import ingsis.parser.Parser
 import ingsis.utils.Result
+import operator.scanner.ScanDivOperator
+import operator.scanner.ScanSubOperator
 import scaRules.Rule
 import scan.ScanAssignation
 import scan.ScanDeclaration
 import scan.ScanPrintLine
+import scan.value.ScanMulOperator
+import scan.value.ScanSumOperator
 import java.io.PrintWriter
 
 class Cli(private val scaRules: ArrayList<Rule>) {
     private val lexer = Lexer(Position(0, 0))
     private val parser = Parser(listOf(ScanDeclaration(), ScanAssignation(), ScanPrintLine()))
+    val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
     private val interpreter =
-        Interpreter(listOf(DeclarationInterpreter(), AssignationInterpreter(), CompoundAssignationInterpreter(), PrintLineInterpreter()))
+        Interpreter(
+            listOf(
+                DeclarationInterpreter(),
+                AssignationInterpreter(scanners),
+                CompoundAssignationInterpreter(scanners),
+                PrintLineInterpreter(scanners),
+            ),
+        )
 
     fun startCli(codeLines: String): String {
         val lines = splitLines(codeLines)

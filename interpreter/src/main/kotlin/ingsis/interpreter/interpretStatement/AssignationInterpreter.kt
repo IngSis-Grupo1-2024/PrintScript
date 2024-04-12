@@ -1,12 +1,13 @@
 package ingsis.interpreter.interpretStatement
 
-import components.statement.*
-import ingsis.utils.*
+import components.statement.Assignation
+import components.statement.Statement
+import components.statement.StatementType
 import ingsis.utils.Result
+import scan.value.ScanOperatorType
+import value.analyzer.ValueAnalyzer
 
-class AssignationInterpreter : StatementInterpreter {
-    private val functions = InterpreterFunctions()
-
+class AssignationInterpreter(private val scanners: List<ScanOperatorType>) : StatementInterpreter {
     override fun canHandle(statement: Statement): Boolean = statement.getStatementType() == StatementType.ASSIGNATION
 
     override fun interpret(
@@ -17,8 +18,8 @@ class AssignationInterpreter : StatementInterpreter {
         val variable = assignation.getVariable()
         val value = assignation.getValue()
 
-        val result = functions.evaluateExpression(value, previousState)
-        previousState[variable.getName()] = Result(functions.getVariableType(variable.getName(), previousState), result)
+        val result = ValueAnalyzer(scanners).analyze(value, previousState)
+        previousState[variable.getName()] = result
 
         return previousState
     }

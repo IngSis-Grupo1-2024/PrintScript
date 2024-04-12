@@ -1,12 +1,13 @@
 package ingsis.interpreter.interpretStatement
 
-import components.statement.*
-import ingsis.utils.InterpreterFunctions
+import components.statement.CompoundAssignation
+import components.statement.Statement
+import components.statement.StatementType
 import ingsis.utils.Result
+import scan.value.ScanOperatorType
+import value.analyzer.ValueAnalyzer
 
-class CompoundAssignationInterpreter : StatementInterpreter {
-    private val functions = InterpreterFunctions()
-
+class CompoundAssignationInterpreter(private val scanners: List<ScanOperatorType>) : StatementInterpreter {
     override fun canHandle(statement: Statement): Boolean = statement.getStatementType() == StatementType.COMPOUND_ASSIGNATION
 
     override fun interpret(
@@ -15,12 +16,9 @@ class CompoundAssignationInterpreter : StatementInterpreter {
     ): HashMap<String, Result> {
         val compoundAssignation = statement as CompoundAssignation
         val variable = compoundAssignation.getDeclaration().getVariable()
-        val declarationType = compoundAssignation.getDeclaration().getType()
         val value = compoundAssignation.getValue()
-
-        val result = functions.evaluateExpression(value, previousState)
-
-        previousState[variable.getName()] = Result(declarationType, result)
+        val result = ValueAnalyzer(scanners).analyze(value, previousState)
+        previousState[variable.getName()] = result
 
         return previousState
     }

@@ -1,7 +1,7 @@
 package scaRules
 
-import components.ast.ASTInterface
+import components.statement.Statement
 
 interface Rule {
-    fun validate(ast: ASTInterface): Boolean
+    fun validate(statement: Statement): Boolean
 }

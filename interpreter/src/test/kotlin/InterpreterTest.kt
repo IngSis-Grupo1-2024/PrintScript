@@ -8,18 +8,30 @@ import ingsis.interpreter.interpretStatement.CompoundAssignationInterpreter
 import ingsis.interpreter.interpretStatement.DeclarationInterpreter
 import ingsis.interpreter.interpretStatement.PrintLineInterpreter
 import ingsis.utils.Result
+import operator.scanner.ScanDivOperator
+import operator.scanner.ScanSubOperator
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import scan.value.ScanMulOperator
+import scan.value.ScanSumOperator
 
 class InterpreterTest {
     @Test
     fun testDeclareNumericVariable() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
         val interpreter =
-            Interpreter(listOf(AssignationInterpreter(), DeclarationInterpreter(), CompoundAssignationInterpreter()))
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
         val position = Position()
         val keyword = Keyword(Modifier.MUTABLE, "let", position)
         val variable = Variable("a", position)
-        val type = Type("integer", position)
+        val type = Type(TokenType.INTEGER, position)
         val declarationStatement = Declaration(keyword, variable, type, position)
         val variableMap = interpreter.interpret(declarationStatement, HashMap())
         assertEquals(1, variableMap.size)
@@ -28,12 +40,19 @@ class InterpreterTest {
 
     @Test
     fun testDeclareAndThenAssignValueToAVariable() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
         val interpreter =
-            Interpreter(listOf(AssignationInterpreter(), DeclarationInterpreter(), CompoundAssignationInterpreter()))
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
         val position = Position()
         val keyword = Keyword(Modifier.MUTABLE, "let", position)
         val variable = Variable("a", position)
-        val type = Type("integer", position)
+        val type = Type(TokenType.INTEGER, position)
         val declarationStatement = Declaration(keyword, variable, type, position)
         val variableMap1 = interpreter.interpret(declarationStatement, HashMap())
         val assignationStatement = Assignation(position, variable, SingleValue(Token(position, "5", TokenType.INTEGER)))
@@ -44,12 +63,19 @@ class InterpreterTest {
 
     @Test
     fun testDeclareStringVariable() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
         val interpreter =
-            Interpreter(listOf(AssignationInterpreter(), DeclarationInterpreter(), CompoundAssignationInterpreter()))
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
         val position = Position()
         val keyword = Keyword(Modifier.MUTABLE, "let", position)
         val variable = Variable("a", position)
-        val type = Type("string", position)
+        val type = Type(TokenType.STRING, position)
         val declarationStatement = Declaration(keyword, variable, type, position)
         val variableMap = interpreter.interpret(declarationStatement, HashMap())
         assertEquals(1, variableMap.size)
@@ -58,12 +84,19 @@ class InterpreterTest {
 
     @Test
     fun testDeclareAndAssignNumericVariable() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
         val interpreter =
-            Interpreter(listOf(AssignationInterpreter(), DeclarationInterpreter(), CompoundAssignationInterpreter()))
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
         val position = Position()
         val keyword = Keyword(Modifier.MUTABLE, "let", position)
         val variable = Variable("a", position)
-        val type = Type("integer", position)
+        val type = Type(TokenType.INTEGER, position)
         val declarationStatement = Declaration(keyword, variable, type, position)
         val compoundAssignation =
             CompoundAssignation(position, declarationStatement, SingleValue(Token(position, "5", TokenType.INTEGER)))
@@ -74,12 +107,19 @@ class InterpreterTest {
 
     @Test
     fun testDeclareAndAssignANumericVariablesWithSum() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
         val interpreter =
-            Interpreter(listOf(AssignationInterpreter(), DeclarationInterpreter(), CompoundAssignationInterpreter()))
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
         val position = Position()
         val keyword = Keyword(Modifier.MUTABLE, "let", position)
         val variable = Variable("a", position)
-        val type = Type("integer", position)
+        val type = Type(TokenType.INTEGER, position)
         val declarationStatement = Declaration(keyword, variable, type, position)
         val compoundAssignation =
             CompoundAssignation(
@@ -98,12 +138,19 @@ class InterpreterTest {
 
     @Test
     fun testDeclareAndAssignANumericVariablesWithSubtraction() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
         val interpreter =
-            Interpreter(listOf(AssignationInterpreter(), DeclarationInterpreter(), CompoundAssignationInterpreter()))
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
         val position = Position()
         val keyword = Keyword(Modifier.MUTABLE, "let", position)
         val variable = Variable("a", position)
-        val type = Type("integer", position)
+        val type = Type(TokenType.INTEGER, position)
         val declarationStatement = Declaration(keyword, variable, type, position)
         val compoundAssignation =
             CompoundAssignation(
@@ -121,13 +168,53 @@ class InterpreterTest {
     }
 
     @Test
-    fun testDeclareAndAssignANumericVariablesWithMultiplication() {
+    fun testDeclareAndAssignANumericVariablesWithSubtractionUsingStringAndInt() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
         val interpreter =
-            Interpreter(listOf(AssignationInterpreter(), DeclarationInterpreter(), CompoundAssignationInterpreter()))
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
         val position = Position()
         val keyword = Keyword(Modifier.MUTABLE, "let", position)
         val variable = Variable("a", position)
-        val type = Type("integer", position)
+        val type = Type(TokenType.INTEGER, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "-", TokenType.OPERATOR),
+                    SingleValue(Token(position, "5", TokenType.INTEGER)),
+                    SingleValue(Token(position, "3", TokenType.STRING)),
+                ),
+            )
+        val exception = assertThrows<Error> { interpreter.interpret(compoundAssignation, HashMap()) }
+        assertEquals(
+            "Can't do subtraction using strings in line " + position.startLine + "at position " + position.startColumn,
+            exception.message,
+        )
+    }
+
+    @Test
+    fun testDeclareAndAssignANumericVariablesWithMultiplication() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.INTEGER, position)
         val declarationStatement = Declaration(keyword, variable, type, position)
         val compoundAssignation =
             CompoundAssignation(
@@ -145,13 +232,54 @@ class InterpreterTest {
     }
 
     @Test
-    fun testDeclareAndAssignANumericVariablesWithDivision() {
+    fun testDeclareAndAssignANumericVariablesWithMultiplicationBetweenStrings() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
         val interpreter =
-            Interpreter(listOf(AssignationInterpreter(), DeclarationInterpreter(), CompoundAssignationInterpreter()))
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
         val position = Position()
         val keyword = Keyword(Modifier.MUTABLE, "let", position)
         val variable = Variable("a", position)
-        val type = Type("integer", position)
+        val type = Type(TokenType.INTEGER, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "*", TokenType.OPERATOR),
+                    SingleValue(Token(position, "5", TokenType.STRING)),
+                    SingleValue(Token(position, "3", TokenType.STRING)),
+                ),
+            )
+
+        val exception = assertThrows<Error> { interpreter.interpret(compoundAssignation, HashMap()) }
+        assertEquals(
+            "Can't do multiplication using strings in line " + position.startLine + "at position " + position.startColumn,
+            exception.message,
+        )
+    }
+
+    @Test
+    fun testDeclareAndAssignANumericVariablesWithDivision() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.INTEGER, position)
         val declarationStatement = Declaration(keyword, variable, type, position)
         val compoundAssignation =
             CompoundAssignation(
@@ -169,13 +297,54 @@ class InterpreterTest {
     }
 
     @Test
-    fun testDeclareAndAssignANumericVariablesWithMultipleSum() {
+    fun testDeclareAndAssignANumericVariablesWithDivisionUsingStringAndInteger() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
         val interpreter =
-            Interpreter(listOf(AssignationInterpreter(), DeclarationInterpreter(), CompoundAssignationInterpreter()))
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
         val position = Position()
         val keyword = Keyword(Modifier.MUTABLE, "let", position)
         val variable = Variable("a", position)
-        val type = Type("integer", position)
+        val type = Type(TokenType.INTEGER, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "/", TokenType.OPERATOR),
+                    SingleValue(Token(position, "10", TokenType.STRING)),
+                    SingleValue(Token(position, "2", TokenType.INTEGER)),
+                ),
+            )
+
+        val exception = assertThrows<Error> { interpreter.interpret(compoundAssignation, HashMap()) }
+        assertEquals(
+            "Can't do division using strings in line " + position.startLine + "at position " + position.startColumn,
+            exception.message,
+        )
+    }
+
+    @Test
+    fun testDeclareAndAssignANumericVariablesWithMultipleSum() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.INTEGER, position)
         val declarationStatement = Declaration(keyword, variable, type, position)
         val compoundAssignation =
             CompoundAssignation(
@@ -198,12 +367,19 @@ class InterpreterTest {
 
     @Test
     fun testDeclareAndAssignANumericVariablesWithMultipleSumAndMultiplication() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
         val interpreter =
-            Interpreter(listOf(AssignationInterpreter(), DeclarationInterpreter(), CompoundAssignationInterpreter()))
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
         val position = Position()
         val keyword = Keyword(Modifier.MUTABLE, "let", position)
         val variable = Variable("a", position)
-        val type = Type("integer", position)
+        val type = Type(TokenType.INTEGER, position)
         val declarationStatement = Declaration(keyword, variable, type, position)
         val compoundAssignation =
             CompoundAssignation(
@@ -226,12 +402,19 @@ class InterpreterTest {
 
     @Test
     fun testDeclareAndAssignANumericVariablesWithSumAndSubtraction() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
         val interpreter =
-            Interpreter(listOf(AssignationInterpreter(), DeclarationInterpreter(), CompoundAssignationInterpreter()))
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
         val position = Position()
         val keyword = Keyword(Modifier.MUTABLE, "let", position)
         val variable = Variable("a", position)
-        val type = Type("integer", position)
+        val type = Type(TokenType.INTEGER, position)
         val declarationStatement = Declaration(keyword, variable, type, position)
         val compoundAssignation =
             CompoundAssignation(
@@ -254,12 +437,19 @@ class InterpreterTest {
 
     @Test
     fun testDeclareAndAssignANumericVariablesWithSumAndDivision() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
         val interpreter =
-            Interpreter(listOf(AssignationInterpreter(), DeclarationInterpreter(), CompoundAssignationInterpreter()))
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
         val position = Position()
         val keyword = Keyword(Modifier.MUTABLE, "let", position)
         val variable = Variable("a", position)
-        val type = Type("integer", position)
+        val type = Type(TokenType.INTEGER, position)
         val declarationStatement = Declaration(keyword, variable, type, position)
         val compoundAssignation =
             CompoundAssignation(
@@ -286,12 +476,19 @@ class InterpreterTest {
 
     @Test
     fun testDeclareAndAssignANumericVariablesWithTwoSumsAndMultiplication() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
         val interpreter =
-            Interpreter(listOf(AssignationInterpreter(), DeclarationInterpreter(), CompoundAssignationInterpreter()))
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
         val position = Position()
         val keyword = Keyword(Modifier.MUTABLE, "let", position)
         val variable = Variable("a", position)
-        val type = Type("integer", position)
+        val type = Type(TokenType.INTEGER, position)
         val declarationStatement = Declaration(keyword, variable, type, position)
         val compoundAssignation =
             CompoundAssignation(
@@ -318,12 +515,19 @@ class InterpreterTest {
 
     @Test
     fun testDeclareAndAssignAVariableSummingAStringAndANumber() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
         val interpreter =
-            Interpreter(listOf(AssignationInterpreter(), DeclarationInterpreter(), CompoundAssignationInterpreter()))
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
         val position = Position()
         val keyword = Keyword(Modifier.MUTABLE, "let", position)
         val variable = Variable("a", position)
-        val type = Type("string", position)
+        val type = Type(TokenType.STRING, position)
         val declarationStatement = Declaration(keyword, variable, type, position)
         val compoundAssignation =
             CompoundAssignation(
@@ -342,12 +546,19 @@ class InterpreterTest {
 
     @Test
     fun testDeclareAndAssignAVariableSummingTwoStrings() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
         val interpreter =
-            Interpreter(listOf(AssignationInterpreter(), DeclarationInterpreter(), CompoundAssignationInterpreter()))
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
         val position = Position()
         val keyword = Keyword(Modifier.MUTABLE, "let", position)
         val variable = Variable("a", position)
-        val type = Type("string", position)
+        val type = Type(TokenType.STRING, position)
         val declarationStatement = Declaration(keyword, variable, type, position)
         val compoundAssignation =
             CompoundAssignation(
@@ -366,13 +577,14 @@ class InterpreterTest {
 
     @Test
     fun testPrintLineWithAString() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
         val interpreter =
             Interpreter(
                 listOf(
-                    AssignationInterpreter(),
+                    AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
-                    CompoundAssignationInterpreter(),
-                    PrintLineInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                    PrintLineInterpreter(scanners),
                 ),
             )
         val position = Position()
@@ -386,13 +598,14 @@ class InterpreterTest {
 
     @Test
     fun testPrintLineWithAnInteger() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
         val interpreter =
             Interpreter(
                 listOf(
-                    AssignationInterpreter(),
+                    AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
-                    CompoundAssignationInterpreter(),
-                    PrintLineInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                    PrintLineInterpreter(scanners),
                 ),
             )
         val position = Position()
@@ -406,19 +619,20 @@ class InterpreterTest {
 
     @Test
     fun testPrintLineWithAVariable() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
         val interpreter =
             Interpreter(
                 listOf(
-                    AssignationInterpreter(),
+                    AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
-                    CompoundAssignationInterpreter(),
-                    PrintLineInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                    PrintLineInterpreter(scanners),
                 ),
             )
         val position = Position()
         val keyword = Keyword(Modifier.MUTABLE, "let", position)
         val variable = Variable("a", position)
-        val type = Type("integer", position)
+        val type = Type(TokenType.INTEGER, position)
         val declarationStatement = Declaration(keyword, variable, type, position)
         val compoundAssignation =
             CompoundAssignation(
@@ -437,13 +651,14 @@ class InterpreterTest {
 
     @Test
     fun testPrintLineWithASum() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
         val interpreter =
             Interpreter(
                 listOf(
-                    AssignationInterpreter(),
+                    AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
-                    CompoundAssignationInterpreter(),
-                    PrintLineInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                    PrintLineInterpreter(scanners),
                 ),
             )
         val position = Position()
@@ -465,13 +680,14 @@ class InterpreterTest {
 
     @Test
     fun testPrintLineWithASubtraction() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
         val interpreter =
             Interpreter(
                 listOf(
-                    AssignationInterpreter(),
+                    AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
-                    CompoundAssignationInterpreter(),
-                    PrintLineInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                    PrintLineInterpreter(scanners),
                 ),
             )
         val position = Position()
@@ -480,8 +696,8 @@ class InterpreterTest {
                 position,
                 Operator(
                     Token(position, "-", TokenType.OPERATOR),
-                    SingleValue(Token(position, "5", TokenType.INTEGER)),
                     SingleValue(Token(position, "3", TokenType.INTEGER)),
+                    SingleValue(Token(position, "5", TokenType.INTEGER)),
                 ),
             )
         println()
@@ -493,13 +709,14 @@ class InterpreterTest {
 
     @Test
     fun testPrintLineWithAMultiplication() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
         val interpreter =
             Interpreter(
                 listOf(
-                    AssignationInterpreter(),
+                    AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
-                    CompoundAssignationInterpreter(),
-                    PrintLineInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                    PrintLineInterpreter(scanners),
                 ),
             )
         val position = Position()
@@ -521,13 +738,14 @@ class InterpreterTest {
 
     @Test
     fun testPrintLineWithADivision() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
         val interpreter =
             Interpreter(
                 listOf(
-                    AssignationInterpreter(),
+                    AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
-                    CompoundAssignationInterpreter(),
-                    PrintLineInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                    PrintLineInterpreter(scanners),
                 ),
             )
         val position = Position()
@@ -549,19 +767,20 @@ class InterpreterTest {
 
     @Test
     fun testPrintLineWithASumWithVariables() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
         val interpreter =
             Interpreter(
                 listOf(
-                    AssignationInterpreter(),
+                    AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
-                    CompoundAssignationInterpreter(),
-                    PrintLineInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                    PrintLineInterpreter(scanners),
                 ),
             )
         val position = Position()
         val keyword = Keyword(Modifier.MUTABLE, "let", position)
         val variableA = Variable("a", position)
-        val type = Type("integer", position)
+        val type = Type(TokenType.INTEGER, position)
         val declarationStatementA = Declaration(keyword, variableA, type, position)
         val compoundAssignationVarA =
             CompoundAssignation(
@@ -596,22 +815,22 @@ class InterpreterTest {
         println()
     }
 
-//
     @Test
     fun testPrintLineAVariable() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
         val interpreter =
             Interpreter(
                 listOf(
-                    AssignationInterpreter(),
+                    AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
-                    CompoundAssignationInterpreter(),
-                    PrintLineInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                    PrintLineInterpreter(scanners),
                 ),
             )
         val position = Position()
         val keyword = Keyword(Modifier.MUTABLE, "let", position)
         val variableA = Variable("a", position)
-        val type = Type("integer", position)
+        val type = Type(TokenType.INTEGER, position)
         val declarationStatementA = Declaration(keyword, variableA, type, position)
         val compoundAssignationVarA =
             CompoundAssignation(
@@ -644,19 +863,20 @@ class InterpreterTest {
 
     @Test
     fun testPrintLineWithADifferenceWithVariablesWithTypeString() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
         val interpreter =
             Interpreter(
                 listOf(
-                    AssignationInterpreter(),
+                    AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
-                    CompoundAssignationInterpreter(),
-                    PrintLineInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                    PrintLineInterpreter(scanners),
                 ),
             )
         val position = Position()
         val keyword = Keyword(Modifier.MUTABLE, "let", position)
         val variableA = Variable("a", position)
-        val type = Type("string", position)
+        val type = Type(TokenType.STRING, position)
         val declarationStatementA = Declaration(keyword, variableA, type, position)
         val compoundAssignationVarA =
             CompoundAssignation(

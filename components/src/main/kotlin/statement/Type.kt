@@ -1,9 +1,10 @@
 package components.statement
 
 import components.Position
+import components.TokenType
 
-class Type(private val value: String, private val position: Position) {
-    fun getValue(): String = value
+class Type(private val value: TokenType, private val position: Position) {
+    fun getValue(): TokenType = value
 
     fun getPosition(): Position = position
 

@@ -1,0 +1,3 @@
+package result
+
+interface Result
