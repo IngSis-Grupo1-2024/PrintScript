@@ -59,7 +59,7 @@ class Cli(private val scaRules: ArrayList<Rule>, version: Version) {
         fileOutput: String,
     ) = writeInFile(fileOutput, startCli(fileInput))
 
-    fun validate(codeLines: String) : String {
+    fun validate(codeLines: String): String {
         val lines = splitLines(codeLines)
         var tokens: List<Token>
         val string = StringBuilder()
@@ -71,15 +71,21 @@ class Cli(private val scaRules: ArrayList<Rule>, version: Version) {
                 string.append("\n" + e.localizedMessage + " in position :" + e.getTokenPosition())
             }
         }
-        if(string.isEmpty()) {
+        if (string.isEmpty()) {
             return "VALIDATION SUCCESSFUL"
         }
         return string.toString()
     }
-    fun validateResultInFile(input: String, output: String) =
-        writeInFile(output, validate(input))
 
-    private fun writeInFile(fileOutput: String, string: String) {
+    fun validateResultInFile(
+        input: String,
+        output: String,
+    ) = writeInFile(output, validate(input))
+
+    private fun writeInFile(
+        fileOutput: String,
+        string: String,
+    ) {
         val writer = PrintWriter(fileOutput)
         writer.append(string)
         writer.close()

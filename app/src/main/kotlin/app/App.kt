@@ -22,7 +22,6 @@ class App : CliktCommand() {
         .help { "this is the operation that you want to do with the code" }
         .default("execution")
 
-
     private val fileInput by argument()
         .path(canBeDir = false, mustExist = true, mustBeReadable = true)
         .convert { it.readText() }
@@ -37,20 +36,23 @@ class App : CliktCommand() {
         .help { "this is the rules for additional SCA" }
         .default("none")
 
-    private lateinit var cli : Cli
+    private lateinit var cli: Cli
 
     override fun run() {
         startCli()
-        if(checkValidation()) doValidation()
-        else if(checkFormatting()) doFormatting()
-        else if(checkAnalyzing()) doAnalyze()
-        else{
+        if (checkValidation()) {
+            doValidation()
+        } else if (checkFormatting()) {
+            doFormatting()
+        } else if (checkAnalyzing()) {
+            doAnalyze()
+        } else {
             doExecution()
         }
     }
 
     private fun startCli() {
-        if(version == "v1"){
+        if (version == "v1") {
             cli = Cli(ArrayList(), Version.VERSION_1)
         }
     }
@@ -58,10 +60,11 @@ class App : CliktCommand() {
     private fun doExecution() {
         echo("execution in progress...")
         echo("rules for SCA: $rules")
-        if (outputPresent())
+        if (outputPresent()) {
             cli.startCliResultInFile(fileInput, fileOutput!!.toString())
-        else
+        } else {
             print(cli.startCli(fileInput))
+        }
     }
 
     private fun checkAnalyzing(): Boolean = operation == "analyzing"
@@ -74,18 +77,22 @@ class App : CliktCommand() {
 
     private fun doFormatting() {
         echo("formatting...")
-        if (outputPresent()) TODO("Format with output not yet implemented")
-        else TODO("Format not yet implemented")
-
+        if (outputPresent()) {
+            TODO("Format with output not yet implemented")
+        } else {
+            TODO("Format not yet implemented")
+        }
     }
 
-    private fun checkFormatting(): Boolean =
-        operation == "formatting"
+    private fun checkFormatting(): Boolean = operation == "formatting"
 
     private fun doValidation() {
         echo("validation in progress...")
-        if (outputPresent()) cli.validateResultInFile(fileInput, fileOutput.toString())
-        else cli.validate(fileInput)
+        if (outputPresent()) {
+            cli.validateResultInFile(fileInput, fileOutput.toString())
+        } else {
+            cli.validate(fileInput)
+        }
     }
 
     private fun checkValidation() = operation == "validation"
@@ -111,10 +118,11 @@ fun test1WOoutput() =
     App()
         .main(listOf("v1", "validation", "app/src/main/resources/test1"))
 
-fun test1Woutput() = App().main(listOf("execution","app/src/main/resources/test1", "app/src/main/resources/resultTest1"))
+fun test1Woutput() = App().main(listOf("execution", "app/src/main/resources/test1", "app/src/main/resources/resultTest1"))
 
 fun test2() = App().main(listOf("app/src/main/resources/test2"))
 
 fun test2Woutput() = App().main(listOf("validation", "app/src/main/resources/test2", "app/src/main/resources/resultTest2"))
 
-fun test3Woutput() = App().main(listOf("validation", "app/src/main/resources/errorWOSemicolon", "app/src/main/resources/resultErrorWOSemicolon"))
+fun test3Woutput() =
+    App().main(listOf("validation", "app/src/main/resources/errorWOSemicolon", "app/src/main/resources/resultErrorWOSemicolon"))

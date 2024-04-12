@@ -62,12 +62,13 @@ class ScanDeclaration : ScanStatement {
         return Keyword(modifier, token.getValue(), token.getPosition())
     }
 
-    private fun getType(token: Token): Type{
-        val tokenType = when (token.getValue()) {
-            "string" -> TokenType.STRING
-            "integer" -> TokenType.INTEGER
-            else -> throw ParserError("error: invalid token", token)
-        }
+    private fun getType(token: Token): Type {
+        val tokenType =
+            when (token.getValue()) {
+                "string" -> TokenType.STRING
+                "integer" -> TokenType.INTEGER
+                else -> throw ParserError("error: invalid token", token)
+            }
         return Type(tokenType, token.getPosition())
     }
 
