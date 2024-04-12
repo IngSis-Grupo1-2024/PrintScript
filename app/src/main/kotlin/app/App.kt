@@ -100,9 +100,9 @@ class App : CliktCommand() {
     private fun outputPresent(): Boolean = fileOutput != null
 }
 
- fun main(args: Array<String>) {
+fun main(args: Array<String>) {
     App().main(args)
- }
+}
 
 fun test1WOoutput() =
     App()
