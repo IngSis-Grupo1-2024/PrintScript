@@ -4,22 +4,27 @@ import components.Token
 import components.TokenType
 import components.statement.Statement
 import error.ParserError
+import scan.ScanAssignation
+import scan.ScanDeclaration
+import scan.ScanPrintLine
 import scan.ScanStatement
+
+object PrintScriptParser {
+
+    fun createParser(version: String): Parser {
+        return when(version) {
+            "VERSION_1" -> Parser(listOf(ScanDeclaration(), ScanAssignation(), ScanPrintLine()))
+            else -> Parser(listOf(ScanDeclaration(), ScanAssignation(), ScanPrintLine()))
+        }
+    }
+}
 
 class Parser(private val scanStatement: List<ScanStatement>) {
     fun parse(tokens: List<Token>): Statement {
-        if (checkIfThereIsADelimiter(tokens)) {
-            throw ParserError("error: ';' expected  " + tokens.last().getPosition(), tokens.last())
-        }
-
-        val tokWOSemicolon = tokens.subList(0, tokens.size - 1)
-
         scanStatement.forEach {
-            if (it.canHandle(tokWOSemicolon)) return it.makeAST(tokWOSemicolon)
+            if (it.canHandle(tokens)) return it.makeAST(tokens)
         }
 
         throw ParserError("PrintScript couldn't parse that code " + tokens[0].getPosition(), tokens[0])
     }
-
-    private fun checkIfThereIsADelimiter(tokens: List<Token>) = tokens.last().getType() != TokenType.SEMICOLON
 }
