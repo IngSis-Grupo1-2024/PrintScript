@@ -100,19 +100,9 @@ class App : CliktCommand() {
     private fun outputPresent(): Boolean = fileOutput != null
 }
 
-class Hello : CliktCommand() {
-    override fun run() {
-        echo("hello world")
-    }
-}
-
-// fun main(args: Array<String>) {
-//    App().main(args)
-// }
-
-fun main(args: Array<String>) {
-    test1WOoutput()
-}
+ fun main(args: Array<String>) {
+    App().main(args)
+ }
 
 fun test1WOoutput() =
     App()

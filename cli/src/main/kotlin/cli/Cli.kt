@@ -4,12 +4,7 @@ import components.Position
 import components.Token
 import components.statement.Statement
 import error.ParserError
-import ingsis.interpreter.Interpreter
 import ingsis.interpreter.PrintScriptInterpreter
-import ingsis.interpreter.interpretStatement.AssignationInterpreter
-import ingsis.interpreter.interpretStatement.CompoundAssignationInterpreter
-import ingsis.interpreter.interpretStatement.DeclarationInterpreter
-import ingsis.interpreter.interpretStatement.PrintLineInterpreter
 import ingsis.lexer.Lexer
 import ingsis.parser.PrintScriptParser
 import scaRules.Rule
