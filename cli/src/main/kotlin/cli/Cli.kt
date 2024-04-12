@@ -1,6 +1,5 @@
 package cli
 
-import app.Version
 import components.Position
 import components.Token
 import components.statement.Statement
