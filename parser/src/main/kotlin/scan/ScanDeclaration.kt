@@ -19,10 +19,11 @@ class ScanDeclaration : ScanStatement {
     }
 
     override fun canHandleWODelimiter(tokens: List<Token>): Boolean =
-        if (declarationTypes == getTokenTypes(tokens))
+        if (declarationTypes == getTokenTypes(tokens)) {
             true
-        else
+        } else {
             checkIfDeclarationTypesMissing(tokens)
+        }
 
     override fun makeAST(tokens: List<Token>): Statement {
         val keyword: Keyword = getKeyword(tokens[0])

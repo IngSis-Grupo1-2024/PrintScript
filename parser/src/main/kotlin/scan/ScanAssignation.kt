@@ -10,8 +10,9 @@ class ScanAssignation : ScanStatement {
     private val scanValue = ScanValue()
 
     override fun canHandle(tokens: List<Token>): Boolean {
-        if (checkIfThereIsNoDelimiter(tokens))
+        if (checkIfThereIsNoDelimiter(tokens)) {
             throw ParserError("error: ';' expected  " + tokens.last().getPosition(), tokens.last())
+        }
 
         val tokWODelimiter = tokens.subList(0, tokens.size - 1)
         return canHandleWODelimiter(tokWODelimiter)

@@ -12,8 +12,9 @@ class ScanPrintLine : ScanStatement {
     private val functionTypes = listOf(TokenType.FUNCTION, TokenType.PARENTHESIS)
 
     override fun canHandle(tokens: List<Token>): Boolean {
-        if (checkIfThereIsNoDelimiter(tokens))
+        if (checkIfThereIsNoDelimiter(tokens)) {
             throw ParserError("error: ';' expected  " + tokens.last().getPosition(), tokens.last())
+        }
 
         val tokensWODelimiter = tokens.subList(0, tokens.size - 1)
         return canHandleWODelimiter(tokensWODelimiter)
@@ -22,12 +23,14 @@ class ScanPrintLine : ScanStatement {
     override fun canHandleWODelimiter(tokens: List<Token>): Boolean {
         val tokenTypes = getTokenTypes(tokens)
         if (hasFunctionTypes(tokenTypes)) {
-            if (!hasLastParenthesis(tokens))
+            if (!hasLastParenthesis(tokens)) {
                 throw ParserError(
                     ":error: ')' expected.",
                     tokens.last(),
                 )
-            else if (emptyValue(tokens)) throw ParserError("error: expected value", tokens.last())
+            } else if (emptyValue(tokens)) {
+                throw ParserError("error: expected value", tokens.last())
+            }
             return valueCanHandle(tokens)
         }
 
@@ -55,5 +58,6 @@ class ScanPrintLine : ScanStatement {
         val value = tokens.subList(functionTypes.size, tokens.size)
         return value.isEmpty()
     }
+
     private fun checkIfThereIsNoDelimiter(tokens: List<Token>) = tokens.last().getType() != TokenType.SEMICOLON
 }
