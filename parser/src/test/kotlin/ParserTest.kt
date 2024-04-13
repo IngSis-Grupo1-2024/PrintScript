@@ -4,8 +4,8 @@ import components.Position
 import components.Token
 import components.TokenType
 import components.statement.*
-import error.ParserError
 import ingsis.parser.PrintScriptParser
+import ingsis.parser.error.ParserError
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
@@ -155,7 +155,7 @@ class ParserTest {
                 Token(position, "let", TokenType.KEYWORD),
                 Token(position, "x", TokenType.IDENTIFIER),
                 Token(position, ":", TokenType.DECLARATION),
-                Token(position, "integer", TokenType.TYPE),
+                Token(position, "number", TokenType.TYPE),
                 Token(position, "=", TokenType.ASSIGNATION),
                 Token(position, "8", TokenType.INTEGER),
                 Token(position, ";", TokenType.SEMICOLON),
@@ -247,7 +247,7 @@ class ParserTest {
                 Token(position, "let", TokenType.KEYWORD),
                 Token(position, "x", TokenType.IDENTIFIER),
                 Token(position, ":", TokenType.DECLARATION),
-                Token(position, "integer", TokenType.TYPE),
+                Token(position, "number", TokenType.TYPE),
                 Token(position, "=", TokenType.ASSIGNATION),
                 Token(position, "8", TokenType.INTEGER),
                 Token(position, "+", TokenType.OPERATOR),
@@ -334,7 +334,7 @@ class ParserTest {
                 Token(position, "let", TokenType.KEYWORD),
                 Token(position, "x", TokenType.IDENTIFIER),
                 Token(position, ":", TokenType.DECLARATION),
-                Token(position, "integer", TokenType.TYPE),
+                Token(position, "number", TokenType.TYPE),
                 Token(position, "=", TokenType.ASSIGNATION),
                 Token(position, "3", TokenType.INTEGER),
                 Token(position, "/", TokenType.OPERATOR),
@@ -378,7 +378,7 @@ class ParserTest {
                 Token(position, "let", TokenType.KEYWORD),
                 Token(position, "x", TokenType.IDENTIFIER),
                 Token(position, ":", TokenType.DECLARATION),
-                Token(position, "integer", TokenType.TYPE),
+                Token(position, "number", TokenType.TYPE),
                 Token(position, "=", TokenType.ASSIGNATION),
                 Token(position, "3", TokenType.INTEGER),
                 Token(position, "/", TokenType.OPERATOR),
@@ -421,7 +421,7 @@ class ParserTest {
                 Token(position, "let", TokenType.KEYWORD),
                 Token(position, "x", TokenType.IDENTIFIER),
                 Token(position, ":", TokenType.DECLARATION),
-                Token(position, "integer", TokenType.TYPE),
+                Token(position, "number", TokenType.TYPE),
                 Token(position, "=", TokenType.ASSIGNATION),
                 Token(position, "3", TokenType.INTEGER),
                 Token(position, "/", TokenType.OPERATOR),

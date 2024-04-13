@@ -1,9 +1,9 @@
-package scan
+package ingsis.parser.scan
 
 import components.Token
 import components.TokenType
 import components.statement.*
-import error.ParserError
+import ingsis.parser.error.ParserError
 
 class ScanAssignation : ScanStatement {
     private val scanDeclaration = ScanDeclaration()

@@ -1,11 +1,11 @@
-package scan
+package ingsis.parser.scan
 
 import components.Position
 import components.Token
 import components.TokenType
 import components.statement.PrintLine
 import components.statement.Statement
-import error.ParserError
+import ingsis.parser.error.ParserError
 
 class ScanPrintLine : ScanStatement {
     private val scanValue = ScanValue()

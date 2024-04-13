@@ -2,11 +2,11 @@ package ingsis.parser
 
 import components.Token
 import components.statement.Statement
-import error.ParserError
-import scan.ScanAssignation
-import scan.ScanDeclaration
-import scan.ScanPrintLine
-import scan.ScanStatement
+import ingsis.parser.error.ParserError
+import ingsis.parser.scan.ScanAssignation
+import ingsis.parser.scan.ScanDeclaration
+import ingsis.parser.scan.ScanPrintLine
+import ingsis.parser.scan.ScanStatement
 
 object PrintScriptParser {
     fun createParser(version: String): Parser {
@@ -19,9 +19,13 @@ object PrintScriptParser {
 
 class Parser(private val scanStatement: List<ScanStatement>) {
     fun parse(tokens: List<Token>): Statement {
-        scanStatement.forEach {
-            if (it.canHandle(tokens)) return it.makeAST(tokens)
+        for (pepito in scanStatement) {
+            val result = pepito.canHandle(tokens)
+            if (result) return pepito.makeAST(tokens)
         }
+//        scanStatement.forEach {
+//            if (it.canHandle(tokens)) return it.makeAST(tokens)
+//        }
 
         throw ParserError("PrintScript couldn't parse that code " + tokens[0].getPosition(), tokens[0])
     }

@@ -1,4 +1,4 @@
-package error
+package ingsis.parser.error
 
 import components.Position
 import components.Token

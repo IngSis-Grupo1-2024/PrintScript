@@ -1,10 +1,10 @@
-package scan
+package ingsis.parser.scan
 
 import components.Position
 import components.Token
 import components.TokenType
 import components.statement.*
-import error.ParserError
+import ingsis.parser.error.ParserError
 
 class ScanDeclaration : ScanStatement {
     private val declarationTypes = listOf(TokenType.KEYWORD, TokenType.IDENTIFIER, TokenType.DECLARATION, TokenType.TYPE)
@@ -74,7 +74,7 @@ class ScanDeclaration : ScanStatement {
         val tokenType =
             when (token.getValue()) {
                 "string" -> TokenType.STRING
-                "integer" -> TokenType.INTEGER
+                "number" -> TokenType.INTEGER
                 else -> throw ParserError("error: invalid token", token)
             }
         return Type(tokenType, token.getPosition())

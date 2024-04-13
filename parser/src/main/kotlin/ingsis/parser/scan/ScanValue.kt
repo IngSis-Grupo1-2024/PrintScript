@@ -1,4 +1,4 @@
-package scan
+package ingsis.parser.scan
 
 import components.ComparatorTokenType
 import components.ComparatorTokenValue
@@ -8,7 +8,7 @@ import components.statement.EmptyValue
 import components.statement.Operator
 import components.statement.SingleValue
 import components.statement.Value
-import error.ParserError
+import ingsis.parser.error.ParserError
 import kotlin.math.abs
 
 class ScanValue {

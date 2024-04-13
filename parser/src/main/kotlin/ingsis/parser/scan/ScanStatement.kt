@@ -1,4 +1,4 @@
-package scan
+package ingsis.parser.scan
 
 import components.Token
 import components.statement.Statement
