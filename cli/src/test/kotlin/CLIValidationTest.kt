@@ -21,13 +21,8 @@ class CLIValidationTest {
         val result = cliV1.validate(readFile("src/test/resources/declaration/WithEqualsSign"))
         val expected =
             "\n" +
-                "PrintScript couldn't parse that code {\n" +
-                "\tstartOffset: 0,\n" +
-                "\tendOffset: 2,\n" +
-                "\tstartLine: 1,\n" +
-                "\tendLine: 1,\n" +
-                "\tstartColumn: 1,\n" +
-                "\tendColumn: 3} in position :{\n" +
+                "error: to declare a variable, it's expected to do it by" +
+                " 'let <name of the variable>: <type of the variable>' in position :{\n" +
                 "\tstartOffset: 0,\n" +
                 "\tendOffset: 2,\n" +
                 "\tstartLine: 1,\n" +

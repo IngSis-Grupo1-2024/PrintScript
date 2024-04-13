@@ -33,18 +33,6 @@ class ScanDeclaration : ScanStatement {
         return Declaration(keyword, variable, type, declPosition)
     }
 
-    private fun checkCollections(
-        declarationTypesPresent: Set<TokenType>,
-        tokenTypes: List<TokenType>,
-    ): Boolean {
-        if (tokenTypes.size != declarationTypesPresent.size) return false
-        for ((i, type) in declarationTypesPresent.withIndex()) {
-            if (i >= tokenTypes.size) return false
-            if (tokenTypes[i] != type) return false
-        }
-        return true
-    }
-
     private fun checkIfDeclarationTypesMissing(tokens: List<Token>): Boolean {
         val declarationTypesPresent = declarationTypes.intersect(getTokenTypes(tokens).toSet())
         if (checkIfDeclarationTypesMissing(declarationTypesPresent, tokens)) {
@@ -60,7 +48,7 @@ class ScanDeclaration : ScanStatement {
     private fun checkIfDeclarationTypesMissing(
         declarationTypesPresent: Set<TokenType>,
         tokens: List<Token>,
-    ) = declarationTypesPresent.size > 2 || checkCollections(declarationTypesPresent, getTokenTypes(tokens))
+    ) = declarationTypesPresent.size >= 2 && tokens.size == declarationTypesPresent.size
 
     private fun getTokenTypes(tokens: List<Token>): List<TokenType> = tokens.map { it.getType() }
 

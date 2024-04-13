@@ -664,16 +664,48 @@ class ParserTest {
                 Token(position, "string", TokenType.TYPE),
                 Token(position, "", TokenType.SEMICOLON),
             )
-        val astExpected: Statement =
-            Declaration(
-                Keyword(Modifier.MUTABLE, "let", position),
-                Variable("x", position),
-                Type(TokenType.STRING, position),
-                position,
-            )
         assertThrows(ParserError::class.java) {
             parser.parse(tokens)
         }
     }
 
+    @Test
+    fun `test 028 - declaration of x as string without declaration sign`() {
+        val tokens: List<Token> =
+            listOf(
+                Token(position, "let", TokenType.KEYWORD),
+                Token(position, "x", TokenType.SYMBOL),
+                Token(position, "string", TokenType.TYPE),
+                Token(position, "=", TokenType.ASSIGNATION),
+                Token(position, "", TokenType.SEMICOLON),
+            )
+        try {
+            parser.parse(tokens)
+        } catch (e: ParserError) {
+            assertEquals(
+                "error: to declare a variable, it's expected to do it by 'let <name of the variable>: <type of the variable>'",
+                e.localizedMessage,
+            )
+        }
+    }
+
+    @Test
+    fun `test 029 - declaration of x as string without declaration sign and type`() {
+        val tokens: List<Token> =
+            listOf(
+                Token(position, "let", TokenType.KEYWORD),
+                Token(position, "x", TokenType.SYMBOL),
+                Token(position, "=", TokenType.ASSIGNATION),
+                Token(position, "8", TokenType.SYMBOL),
+                Token(position, "", TokenType.SEMICOLON),
+            )
+        try {
+            parser.parse(tokens)
+        } catch (e: ParserError) {
+            assertEquals(
+                "error: to declare a variable, it's expected to do it by 'let <name of the variable>: <type of the variable>'",
+                e.localizedMessage,
+            )
+        }
+    }
 }
