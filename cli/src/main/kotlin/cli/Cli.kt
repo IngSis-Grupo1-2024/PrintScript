@@ -3,10 +3,11 @@ package cli
 import components.Position
 import components.Token
 import components.statement.Statement
-import error.ParserError
 import ingsis.interpreter.PrintScriptInterpreter
 import ingsis.lexer.Lexer
 import ingsis.parser.PrintScriptParser
+import ingsis.parser.error.ParserError
+import ingsis.utils.Result
 import scaRules.Rule
 import java.io.PrintWriter
 
@@ -20,12 +21,13 @@ class Cli(private val scaRules: ArrayList<Rule>, version: Version) {
         var tokens: List<Token>
         var statement: Statement
         val string = StringBuilder()
+        val variableMap = HashMap<String, Result>()
         for ((i, line) in lines.withIndex()) {
             tokens = tokenizeWithLexer(line)
-            string.append("\ntokens of line $i: $tokens")
             try {
                 statement = parse(tokens)
                 string.append("\nstatement of line $i -> $statement\n")
+                interpreter.interpret(statement, variableMap)
             } catch (e: Exception) {
                 string.append("\n" + e.localizedMessage)
             }
