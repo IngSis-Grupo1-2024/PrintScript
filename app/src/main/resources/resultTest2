@@ -1,1 +1,16 @@
-VALIDATION SUCCESSFUL
+
+statement of line 0 -> name: x 	  value: type: OPERATOR, value: +
+
+statement of line 1 -> PrintLine(position={
+	startOffset: 0,
+	endOffset: 6,
+	startLine: 1,
+	endLine: 1,
+	startColumn: 1,
+	endColumn: 7}, value=
+	Operator(
+	token=type: OPERATOR, value: +, 
+	leftOperator=SingleValue(token=type: INTEGER, value: 1), 
+	rightOperator=SingleValue(token=type: INTEGER, value: x)), statementType=PRINT_LINE)
+
+For input string: "x"

@@ -108,9 +108,9 @@ fun test1WOoutput() =
     App()
         .main(listOf("v1", "validation", "app/src/main/resources/test1"))
 
-fun test1Woutput() = App().main(listOf("execution", "app/src/main/resources/test1", "app/src/main/resources/resultTest1"))
+fun test1Woutput() = App().main(listOf("v1", "execution", "app/src/main/resources/test1", "app/src/main/resources/resultTest1"))
 
-fun test2() = App().main(listOf("app/src/main/resources/test2"))
+fun test2() = App().main(listOf("v1", "execution", "app/src/main/resources/test2"))
 
 fun test2Woutput() = App().main(listOf("validation", "app/src/main/resources/test2", "app/src/main/resources/resultTest2"))
 
