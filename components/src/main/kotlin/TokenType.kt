@@ -16,4 +16,5 @@ enum class TokenType {
     INTEGER,
     STRINGTYPE,
     INTEGERTYPE,
+    SYMBOL,
 }
