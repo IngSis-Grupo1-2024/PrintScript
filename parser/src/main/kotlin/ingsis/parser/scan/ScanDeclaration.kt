@@ -60,7 +60,7 @@ class ScanDeclaration : ScanStatement {
     private fun checkIfDeclarationTypesMissing(
         declarationTypesPresent: Set<TokenType>,
         tokens: List<Token>,
-    ) = declarationTypesPresent.size > 2 && checkCollections(declarationTypesPresent, getTokenTypes(tokens))
+    ) = declarationTypesPresent.size > 2 || checkCollections(declarationTypesPresent, getTokenTypes(tokens))
 
     private fun getTokenTypes(tokens: List<Token>): List<TokenType> = tokens.map { it.getType() }
 

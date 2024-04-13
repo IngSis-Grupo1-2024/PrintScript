@@ -653,4 +653,27 @@ class ParserTest {
             )
         assertEquals(astExpected.toString(), parser.parse(tokens).toString())
     }
+
+    @Test
+    fun `test 027 - declaration of x as string with equals sign`() {
+        val tokens: List<Token> =
+            listOf(
+                Token(position, "let", TokenType.KEYWORD),
+                Token(position, "x", TokenType.SYMBOL),
+                Token(position, "=", TokenType.ASSIGNATION),
+                Token(position, "string", TokenType.TYPE),
+                Token(position, "", TokenType.SEMICOLON),
+            )
+        val astExpected: Statement =
+            Declaration(
+                Keyword(Modifier.MUTABLE, "let", position),
+                Variable("x", position),
+                Type(TokenType.STRING, position),
+                position,
+            )
+        assertThrows(ParserError::class.java) {
+            parser.parse(tokens)
+        }
+    }
+
 }
