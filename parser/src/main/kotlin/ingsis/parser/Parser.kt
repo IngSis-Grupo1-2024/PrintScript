@@ -19,13 +19,9 @@ object PrintScriptParser {
 
 class Parser(private val scanStatement: List<ScanStatement>) {
     fun parse(tokens: List<Token>): Statement {
-        for (pepito in scanStatement) {
-            val result = pepito.canHandle(tokens)
-            if (result) return pepito.makeAST(tokens)
+        scanStatement.forEach {
+            if (it.canHandle(tokens)) return it.makeAST(tokens)
         }
-//        scanStatement.forEach {
-//            if (it.canHandle(tokens)) return it.makeAST(tokens)
-//        }
 
         throw ParserError("PrintScript couldn't parse that code " + tokens[0].getPosition(), tokens[0])
     }
