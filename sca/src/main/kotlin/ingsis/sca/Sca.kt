@@ -35,8 +35,8 @@ class Sca(private val scanners: List<ScanStatement>) {
 
     fun analyze(
         statement: Statement,
-        jsonPath: String
-    ) : String{
+        jsonPath: String,
+    ): String {
         val result = StringBuilder()
         val jsonReader = ReadScaRulesFile(jsonPath)
         for (scan in scanners) {
@@ -45,7 +45,7 @@ class Sca(private val scanners: List<ScanStatement>) {
                     is InvalidResult -> {
                         result.append(
                             "${scanResult.getMessage()} at line " +
-                                    "${scanResult.getPosition().startLine} and column ${scanResult.getPosition().startColumn}\n",
+                                "${scanResult.getPosition().startLine} and column ${scanResult.getPosition().startColumn}\n",
                         )
                     }
                 }

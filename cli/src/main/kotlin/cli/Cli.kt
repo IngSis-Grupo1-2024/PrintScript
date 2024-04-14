@@ -149,7 +149,9 @@ class Cli(version: Version) {
             if (tokens.isEmpty()) continue
             try {
                 statement = parse(tokens)
-                result.append(sca.analyze(statement, "/home/constanza/projects/facu/PrintScript/sca/src/main/kotlin/ingsis/sca/rules/rules.json"))
+                result.append(
+                    sca.analyze(statement, "/home/constanza/projects/facu/PrintScript/sca/src/main/kotlin/ingsis/sca/rules/rules.json"),
+                )
             } catch (e: ParserError) {
                 result.append("\n" + e.localizedMessage + " in position :" + e.getTokenPosition())
             }

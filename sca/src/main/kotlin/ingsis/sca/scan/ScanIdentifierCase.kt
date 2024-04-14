@@ -16,7 +16,7 @@ class ScanIdentifierCase() :
     ScanStatement {
     override fun canHandle(statement: Statement): Boolean {
         return statement.getStatementType() == StatementType.DECLARATION ||
-                statement.getStatementType() == StatementType.COMPOUND_ASSIGNATION
+            statement.getStatementType() == StatementType.COMPOUND_ASSIGNATION
     }
 
     override fun analyze(
