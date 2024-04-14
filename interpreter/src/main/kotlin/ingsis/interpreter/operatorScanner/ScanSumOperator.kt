@@ -1,4 +1,4 @@
-package scan.value
+package ingsis.interpreter.operatorScanner
 
 import components.Position
 import components.Token
@@ -26,7 +26,12 @@ class ScanSumOperator : ScanOperatorType {
             val finalValue = firstValue.getValue() + secondValue.getValue()
             return SingleValue(token = Token(Position(), finalValue, TokenType.STRING))
         }
-
+        else if (firstValue.getType().getValue() != TokenType.INTEGER ||
+            secondValue.getType().getValue() != TokenType.INTEGER) {
+            throw Error(
+                "Can't do addition using no integer types or string types in line " + operatorPosition.startLine + "at position " + operatorPosition.startColumn,
+            )
+        }
         val finalValue = firstValue.getValue()!!.toInt() + secondValue.getValue()!!.toInt()
         return SingleValue(token = Token(Position(), finalValue.toString(), TokenType.INTEGER))
     }

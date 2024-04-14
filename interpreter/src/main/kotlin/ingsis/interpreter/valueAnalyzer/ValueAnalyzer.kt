@@ -1,4 +1,4 @@
-package value.analyzer
+package ingsis.interpreter.valueAnalyzer
 
 import components.TokenType
 import components.statement.Operator
@@ -6,7 +6,7 @@ import components.statement.SingleValue
 import components.statement.Type
 import components.statement.Value
 import ingsis.utils.Result
-import scan.value.ScanOperatorType
+import ingsis.interpreter.operatorScanner.ScanOperatorType
 
 class ValueAnalyzer(private val scanners: List<ScanOperatorType>) {
     fun analyze(

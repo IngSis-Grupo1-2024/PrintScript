@@ -4,8 +4,8 @@ import components.statement.CompoundAssignation
 import components.statement.Statement
 import components.statement.StatementType
 import ingsis.utils.Result
-import scan.value.ScanOperatorType
-import value.analyzer.ValueAnalyzer
+import ingsis.interpreter.operatorScanner.ScanOperatorType
+import ingsis.interpreter.valueAnalyzer.ValueAnalyzer
 
 class CompoundAssignationInterpreter(private val scanners: List<ScanOperatorType>) : StatementInterpreter {
     override fun canHandle(statement: Statement): Boolean = statement.getStatementType() == StatementType.COMPOUND_ASSIGNATION

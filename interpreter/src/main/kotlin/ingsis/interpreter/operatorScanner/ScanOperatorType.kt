@@ -1,4 +1,4 @@
-package scan.value
+package ingsis.interpreter.operatorScanner
 
 import components.Position
 import components.statement.SingleValue

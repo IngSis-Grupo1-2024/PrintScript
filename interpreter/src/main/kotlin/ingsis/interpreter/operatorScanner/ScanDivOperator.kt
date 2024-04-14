@@ -1,4 +1,4 @@
-package operator.scanner
+package ingsis.interpreter.operatorScanner
 
 import components.Position
 import components.Token
@@ -7,7 +7,6 @@ import components.statement.SingleValue
 import components.statement.Value
 import ingsis.utils.Result
 import ingsis.utils.checkIfVariableDefined
-import scan.value.ScanOperatorType
 
 class ScanDivOperator : ScanOperatorType {
     override fun canHandle(operator: String): Boolean {
@@ -23,9 +22,10 @@ class ScanDivOperator : ScanOperatorType {
         val firstValue = checkIfVariableDefined(left, map)
         val secondValue = checkIfVariableDefined(right, map)
 
-        if (firstValue.getType().getValue() == TokenType.STRING || secondValue.getType().getValue() == TokenType.STRING) {
+        if (firstValue.getType().getValue() != TokenType.INTEGER ||
+            secondValue.getType().getValue() != TokenType.INTEGER) {
             throw Error(
-                "Can't do division using strings in line " + operatorPosition.startLine + "at position " + operatorPosition.startColumn,
+                "Can't do division using no integer types in line " + operatorPosition.startLine + "at position " + operatorPosition.startColumn,
             )
         }
         val finalValue = firstValue.getValue()!!.toInt() / secondValue.getValue()!!.toInt()

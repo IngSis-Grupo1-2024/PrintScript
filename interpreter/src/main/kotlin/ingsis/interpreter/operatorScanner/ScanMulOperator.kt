@@ -1,4 +1,4 @@
-package operator.scanner
+package ingsis.interpreter.operatorScanner
 
 import components.Position
 import components.Token
@@ -7,11 +7,10 @@ import components.statement.SingleValue
 import components.statement.Value
 import ingsis.utils.Result
 import ingsis.utils.checkIfVariableDefined
-import scan.value.ScanOperatorType
 
-class ScanSubOperator : ScanOperatorType {
+class ScanMulOperator : ScanOperatorType {
     override fun canHandle(operator: String): Boolean {
-        return operator == "-"
+        return operator == "*"
     }
 
     override fun analyze(
@@ -23,14 +22,14 @@ class ScanSubOperator : ScanOperatorType {
         val firstValue = checkIfVariableDefined(left, map)
         val secondValue = checkIfVariableDefined(right, map)
 
-        if (firstValue.getType().getValue() == TokenType.STRING || secondValue.getType()
-                .getValue() == TokenType.STRING
-        ) {
+        if (firstValue.getType().getValue() != TokenType.INTEGER ||
+            secondValue.getType().getValue() != TokenType.INTEGER) {
             throw Error(
-                "Can't do subtraction using strings in line " + operatorPosition.startLine + "at position " + operatorPosition.startColumn,
+                "Can't do multiplication using no integer types in line " +
+                    operatorPosition.startLine + "at position " + operatorPosition.startColumn,
             )
         }
-        val finalValue = firstValue.getValue()!!.toInt() - secondValue.getValue()!!.toInt()
-        return SingleValue(token = Token(Position(), finalValue.toString(), TokenType.INTEGER))
+        val result = firstValue.getValue()!!.toInt() * secondValue.getValue()!!.toInt()
+        return SingleValue(token = Token(Position(), result.toString(), TokenType.INTEGER))
     }
 }

@@ -6,8 +6,8 @@ import components.statement.PrintLine
 import components.statement.Statement
 import components.statement.StatementType
 import ingsis.utils.Result
-import scan.value.ScanOperatorType
-import value.analyzer.ValueAnalyzer
+import ingsis.interpreter.operatorScanner.ScanOperatorType
+import ingsis.interpreter.valueAnalyzer.ValueAnalyzer
 
 class PrintLineInterpreter(private val scanners: List<ScanOperatorType>) : StatementInterpreter {
 //    private val functions = InterpreterFunctions()
