@@ -1,11 +1,14 @@
 import components.Position
 import components.Token
 import components.TokenType
-import components.ast.AST
+import components.statement.*
 import ingsis.formatter.Formatter
-import ingsis.formatter.FormatterRule
+import ingsis.formatter.scan.ScanAssignation
+import ingsis.formatter.scan.ScanCompoundAssignation
+import ingsis.formatter.scan.ScanDeclaration
+import ingsis.formatter.scan.ScanPrintLine
+import ingsis.formatter.utils.FormatterRule
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Test
 
 class FormatterTest {
@@ -18,23 +21,79 @@ class FormatterTest {
 
     @Test
     fun testFormatWithSimpleDeclaration() {
-        val formatter = Formatter()
-        val children = ArrayList<AST>()
-        children.add(AST(Token(Position(1, 3, 1, 1, 1, 3), "let", TokenType.KEYWORD)))
-        children.add(AST(Token(Position(5, 5, 1, 1, 5, 5), "x", TokenType.IDENTIFIER)))
-        children.add(AST(Token(Position(9, 14, 1, 1, 9, 14), "string", TokenType.STRING)))
-        val input = AST(Token(Position(8, 8, 1, 1, 8, 8), ":", TokenType.DECLARATION), children)
-        val output = formatter.format(input)
+        val scanners = listOf(ScanDeclaration())
+        val formatter = Formatter(scanners)
+        val keyword = Keyword(Modifier.MUTABLE, "let", Position())
+        val variable = Variable("x", Position(5, 5, 1, 1, 5, 5))
+        val type = Type(TokenType.INTEGER, Position(14, 14, 1, 1, 14, 14))
+        val position = Position(8, 8, 1, 1, 8, 8)
+        val declaration = Declaration(keyword, variable, type, position)
+        val result = formatter.format(declaration, "src/main/kotlin/ingsis/formatter/rules/rules.json")
+        val expected = "let x: number;\n"
+        assertEquals(expected, result)
+    }
 
-        // This is an assert not equals, because the memory position of the two AST is different.
-        assertNotEquals(AST(Token(Position(1, 3, 1, 1, 1, 3), "let", TokenType.KEYWORD)), output.getChildren()[0])
-        assertEquals(6, output.getToken().getPosition().startOffset)
-        assertEquals(6, output.getToken().getPosition().endOffset)
-        assertEquals(6, output.getToken().getPosition().startColumn)
-        assertEquals(6, output.getToken().getPosition().endColumn)
-        assertEquals(8, output.getChildren()[2].getToken().getPosition().startOffset)
-        assertEquals(13, output.getChildren()[2].getToken().getPosition().endOffset)
-        assertEquals(8, output.getChildren()[2].getToken().getPosition().startColumn)
-        assertEquals(13, output.getChildren()[2].getToken().getPosition().endColumn)
+    @Test
+    fun testFormatWithSimpleAssignation() {
+        val scanners = listOf(ScanAssignation())
+        val formatter = Formatter(scanners)
+        val variable = Variable("x", Position(1, 1, 1, 1, 1, 1))
+        val token = Token(Position(3, 3, 1, 1, 3, 3), "4", TokenType.INTEGER)
+        val value = SingleValue(token)
+        val position = Position(2, 2, 1, 1, 2, 2)
+        val assignation = Assignation(position, variable, value)
+        val result = formatter.format(assignation, "src/main/kotlin/ingsis/formatter/rules/rules.json")
+        val expected = "x  =  4;\n"
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun testFormatWithSimpleAssignationAndOperatorAsValue() {
+        val scanners = listOf(ScanAssignation())
+        val formatter = Formatter(scanners)
+        val variable = Variable("x", Position(1, 1, 1, 1, 1, 1))
+        val four = Token(Position(3, 3, 1, 1, 3, 3), "4", TokenType.INTEGER)
+        val plus = Token(Position(4, 4, 1, 1, 4, 4), "+", TokenType.INTEGER)
+        val five = Token(Position(5, 5, 1, 1, 5, 5), "5", TokenType.INTEGER)
+        val value = Operator(plus, Operator(four), Operator(five))
+        val position = Position(2, 2, 1, 1, 2, 2)
+        val assignation = Assignation(position, variable, value)
+        val result = formatter.format(assignation, "src/main/kotlin/ingsis/formatter/rules/rules.json")
+        val expected = "x  =  4 + 5;\n"
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun testFormatWithCompoundAssignation() {
+        val scanners = listOf(ScanCompoundAssignation())
+        val formatter = Formatter(scanners)
+        val int = Token(Position(16, 16, 1, 1, 1, 1), "4", TokenType.INTEGER)
+        val value = SingleValue(int)
+        val keyword = Keyword(Modifier.MUTABLE, "let", Position())
+        val variable = Variable("x", Position(5, 5, 1, 1, 5, 5))
+        val type = Type(TokenType.INTEGER, Position(14, 14, 1, 1, 14, 14))
+        val declarationPosition = Position(8, 8, 1, 1, 8, 8)
+        val declaration = Declaration(keyword, variable, type, declarationPosition)
+        val assignationPosition = Position(15, 15, 1, 1, 14, 14)
+        val compoundAssignation = CompoundAssignation(assignationPosition, declaration, value)
+        val result = formatter.format(compoundAssignation, "src/main/kotlin/ingsis/formatter/rules/rules.json")
+        val expected = "let x: number  =  4;\n"
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun testFormatWithPrintFunction() {
+        val scanners = listOf(ScanPrintLine())
+        val formatter = Formatter(scanners)
+        val token = Token(Position(8, 8, 1, 1, 8, 8), "4", TokenType.INTEGER)
+        val value = SingleValue(token)
+        val function = PrintLine(Position(0, 6, 1, 1, 0, 6), value)
+        val result = formatter.format(function, "src/main/kotlin/ingsis/formatter/rules/rules.json")
+        val expected =
+            "\n" +
+                "\n" +
+                "println(4);" +
+                "\n"
+        assertEquals(expected, result)
     }
 }

@@ -4,16 +4,14 @@ import components.Position
 import components.Token
 import components.TokenType
 import components.statement.*
-import error.ParserError
-import ingsis.parser.Parser
-import org.junit.jupiter.api.Assertions.*
+import ingsis.parser.PrintScriptParser
+import ingsis.parser.error.ParserError
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
-import scan.ScanAssignation
-import scan.ScanDeclaration
-import scan.ScanPrintLine
 
 class ParserTest {
-    private val parser = Parser(listOf(ScanDeclaration(), ScanAssignation(), ScanPrintLine()))
+    private val parser = PrintScriptParser.createParser("VERSION_1")
     private val position = Position()
 
     @Test
@@ -21,7 +19,7 @@ class ParserTest {
         val tokens: List<Token> =
             listOf(
                 Token(position, "let", TokenType.KEYWORD),
-                Token(position, "x", TokenType.IDENTIFIER),
+                Token(position, "x", TokenType.SYMBOL),
                 Token(position, ":", TokenType.DECLARATION),
                 Token(position, "string", TokenType.TYPE),
                 Token(position, "", TokenType.SEMICOLON),
@@ -30,7 +28,7 @@ class ParserTest {
             Declaration(
                 Keyword(Modifier.MUTABLE, "let", position),
                 Variable("x", position),
-                Type("string", position),
+                Type(TokenType.STRING, position),
                 position,
             )
         print(parser.parse(tokens).toString())
@@ -41,7 +39,7 @@ class ParserTest {
     fun `test 002 - declaration without keyword`() {
         val tokens: List<Token> =
             listOf(
-                Token(position, "x", TokenType.IDENTIFIER),
+                Token(position, "x", TokenType.SYMBOL),
                 Token(position, ":", TokenType.DECLARATION),
                 Token(position, "string", TokenType.TYPE),
                 Token(position, "", TokenType.SEMICOLON),
@@ -70,7 +68,7 @@ class ParserTest {
         val tokens: List<Token> =
             listOf(
                 Token(position, "let", TokenType.KEYWORD),
-                Token(position, "x", TokenType.IDENTIFIER),
+                Token(position, "x", TokenType.SYMBOL),
                 Token(position, "string", TokenType.TYPE),
                 Token(position, "", TokenType.SEMICOLON),
             )
@@ -84,7 +82,7 @@ class ParserTest {
         val tokens: List<Token> =
             listOf(
                 Token(position, "let", TokenType.KEYWORD),
-                Token(position, "x", TokenType.IDENTIFIER),
+                Token(position, "x", TokenType.SYMBOL),
                 Token(position, ":", TokenType.DECLARATION),
                 Token(position, "", TokenType.SEMICOLON),
             )
@@ -98,7 +96,7 @@ class ParserTest {
         val tokens: List<Token> =
             listOf(
                 Token(position, "let", TokenType.KEYWORD),
-                Token(position, "x", TokenType.IDENTIFIER),
+                Token(position, "x", TokenType.SYMBOL),
                 Token(position, "", TokenType.SEMICOLON),
             )
         assertThrows(ParserError::class.java) {
@@ -110,9 +108,9 @@ class ParserTest {
     fun `test 007 - assignation to AST`() {
         val tokens: List<Token> =
             listOf(
-                Token(position, "x", TokenType.IDENTIFIER),
+                Token(position, "x", TokenType.SYMBOL),
                 Token(position, "=", TokenType.ASSIGNATION),
-                Token(position, "8", TokenType.INTEGER),
+                Token(position, "8", TokenType.SYMBOL),
                 Token(position, "", TokenType.SEMICOLON),
             )
         val astExpected: Statement =
@@ -130,11 +128,11 @@ class ParserTest {
     fun `test 008 - 8 plus 3`() {
         val tokens: List<Token> =
             listOf(
-                Token(position, "x", TokenType.IDENTIFIER),
+                Token(position, "x", TokenType.SYMBOL),
                 Token(position, "=", TokenType.ASSIGNATION),
-                Token(position, "8", TokenType.INTEGER),
+                Token(position, "8", TokenType.SYMBOL),
                 Token(position, "+", TokenType.OPERATOR),
-                Token(position, "3", TokenType.INTEGER),
+                Token(position, "3", TokenType.SYMBOL),
                 Token(position, ";", TokenType.SEMICOLON),
             )
         val astExpected: Statement =
@@ -151,15 +149,15 @@ class ParserTest {
     }
 
     @Test
-    fun `test 009 - let x number = 8`() {
+    fun `test 009 - let x integer = 8`() {
         val tokens: List<Token> =
             listOf(
                 Token(position, "let", TokenType.KEYWORD),
-                Token(position, "x", TokenType.IDENTIFIER),
+                Token(position, "x", TokenType.SYMBOL),
                 Token(position, ":", TokenType.DECLARATION),
                 Token(position, "number", TokenType.TYPE),
                 Token(position, "=", TokenType.ASSIGNATION),
-                Token(position, "8", TokenType.INTEGER),
+                Token(position, "8", TokenType.SYMBOL),
                 Token(position, ";", TokenType.SEMICOLON),
             )
         val astExpected: Statement =
@@ -168,7 +166,7 @@ class ParserTest {
                 Declaration(
                     Keyword(Modifier.MUTABLE, "let", position),
                     Variable("x", position),
-                    Type("number", position),
+                    Type(TokenType.INTEGER, position),
                     position,
                 ),
                 SingleValue(
@@ -182,13 +180,13 @@ class ParserTest {
     fun `test 010 - 8 + 3 mul 2`() {
         val tokens: List<Token> =
             listOf(
-                Token(position, "x", TokenType.IDENTIFIER),
+                Token(position, "x", TokenType.SYMBOL),
                 Token(position, "=", TokenType.ASSIGNATION),
-                Token(position, "8", TokenType.INTEGER),
+                Token(position, "8", TokenType.SYMBOL),
                 Token(position, "+", TokenType.OPERATOR),
-                Token(position, "3", TokenType.INTEGER),
+                Token(position, "3", TokenType.SYMBOL),
                 Token(position, "*", TokenType.OPERATOR),
-                Token(position, "2", TokenType.INTEGER),
+                Token(position, "2", TokenType.SYMBOL),
                 Token(position, "x", TokenType.SEMICOLON),
             )
         val astExpected: Statement =
@@ -214,13 +212,13 @@ class ParserTest {
     fun `test 011 - 8 mul 3 + 2`() {
         val tokens: List<Token> =
             listOf(
-                Token(position, "x", TokenType.IDENTIFIER),
+                Token(position, "x", TokenType.SYMBOL),
                 Token(position, "=", TokenType.ASSIGNATION),
-                Token(position, "8", TokenType.INTEGER),
+                Token(position, "8", TokenType.SYMBOL),
                 Token(position, "*", TokenType.OPERATOR),
-                Token(position, "3", TokenType.INTEGER),
+                Token(position, "3", TokenType.SYMBOL),
                 Token(position, "+", TokenType.OPERATOR),
-                Token(position, "2", TokenType.INTEGER),
+                Token(position, "2", TokenType.SYMBOL),
                 Token(position, ";", TokenType.SEMICOLON),
             )
         val astExpected: Statement =
@@ -243,19 +241,19 @@ class ParserTest {
     }
 
     @Test
-    fun `test 012 - let x number = 8 + 3 mul 2`() {
+    fun `test 012 - let x integer = 8 + 3 mul 2`() {
         val tokens: List<Token> =
             listOf(
                 Token(position, "let", TokenType.KEYWORD),
-                Token(position, "x", TokenType.IDENTIFIER),
+                Token(position, "x", TokenType.SYMBOL),
                 Token(position, ":", TokenType.DECLARATION),
                 Token(position, "number", TokenType.TYPE),
                 Token(position, "=", TokenType.ASSIGNATION),
-                Token(position, "8", TokenType.INTEGER),
+                Token(position, "8", TokenType.SYMBOL),
                 Token(position, "+", TokenType.OPERATOR),
-                Token(position, "3", TokenType.INTEGER),
+                Token(position, "3", TokenType.SYMBOL),
                 Token(position, "*", TokenType.OPERATOR),
-                Token(position, "2", TokenType.INTEGER),
+                Token(position, "2", TokenType.SYMBOL),
                 Token(position, "", TokenType.SEMICOLON),
             )
         val astExpected: Statement =
@@ -264,7 +262,7 @@ class ParserTest {
                 Declaration(
                     Keyword(Modifier.MUTABLE, "let", position),
                     Variable("x", position),
-                    Type("number", position),
+                    Type(TokenType.INTEGER, position),
                     position,
                 ),
                 Operator(
@@ -286,14 +284,14 @@ class ParserTest {
         val tokens: List<Token> =
             listOf(
                 Token(position, "let", TokenType.KEYWORD),
-                Token(position, "x", TokenType.IDENTIFIER),
+                Token(position, "x", TokenType.SYMBOL),
                 Token(position, ":", TokenType.DECLARATION),
                 Token(position, "string", TokenType.TYPE),
                 Token(position, "=", TokenType.ASSIGNATION),
                 Token(position, ";", TokenType.SEMICOLON),
-                Token(position, "'hello'", TokenType.STRING),
+                Token(position, "'hello'", TokenType.SYMBOL),
                 Token(position, "+", TokenType.OPERATOR),
-                Token(position, "bye", TokenType.STRING),
+                Token(position, "'bye'", TokenType.SYMBOL),
                 Token(position, ";", TokenType.SEMICOLON),
             )
         assertThrows(ParserError::class.java) {
@@ -307,7 +305,7 @@ class ParserTest {
             listOf(
                 Token(position, "println", TokenType.FUNCTION),
                 Token(position, "(", TokenType.PARENTHESIS),
-                Token(position, "'hello'", TokenType.STRING),
+                Token(position, "\"hello\"", TokenType.SYMBOL),
                 Token(position, "", TokenType.SEMICOLON),
             )
         assertThrows(ParserError::class.java) {
@@ -321,7 +319,7 @@ class ParserTest {
             listOf(
                 Token(position, "println", TokenType.FUNCTION),
                 Token(position, "(", TokenType.PARENTHESIS),
-                Token(position, "'hello'", TokenType.STRING),
+                Token(position, "\"hello\"", TokenType.SYMBOL),
                 Token(position, ")", TokenType.PARENTHESIS),
             )
         assertThrows(ParserError::class.java) {
@@ -334,17 +332,17 @@ class ParserTest {
         val tokens: List<Token> =
             listOf(
                 Token(position, "let", TokenType.KEYWORD),
-                Token(position, "x", TokenType.IDENTIFIER),
+                Token(position, "x", TokenType.SYMBOL),
                 Token(position, ":", TokenType.DECLARATION),
                 Token(position, "number", TokenType.TYPE),
                 Token(position, "=", TokenType.ASSIGNATION),
-                Token(position, "3", TokenType.INTEGER),
+                Token(position, "3", TokenType.SYMBOL),
                 Token(position, "/", TokenType.OPERATOR),
-                Token(position, "2", TokenType.INTEGER),
+                Token(position, "2", TokenType.SYMBOL),
                 Token(position, "+", TokenType.OPERATOR),
-                Token(position, "3", TokenType.INTEGER),
+                Token(position, "3", TokenType.SYMBOL),
                 Token(position, "*", TokenType.OPERATOR),
-                Token(position, "2", TokenType.INTEGER),
+                Token(position, "2", TokenType.SYMBOL),
                 Token(position, "", TokenType.SEMICOLON),
             )
         val astExpected: Statement =
@@ -353,7 +351,7 @@ class ParserTest {
                 Declaration(
                     Keyword(Modifier.MUTABLE, "let", position),
                     Variable("x", position),
-                    Type("number", position),
+                    Type(TokenType.INTEGER, position),
                     position,
                 ),
                 Operator(
@@ -378,16 +376,16 @@ class ParserTest {
         val tokens: List<Token> =
             listOf(
                 Token(position, "let", TokenType.KEYWORD),
-                Token(position, "x", TokenType.IDENTIFIER),
+                Token(position, "x", TokenType.SYMBOL),
                 Token(position, ":", TokenType.DECLARATION),
                 Token(position, "number", TokenType.TYPE),
                 Token(position, "=", TokenType.ASSIGNATION),
-                Token(position, "3", TokenType.INTEGER),
+                Token(position, "3", TokenType.SYMBOL),
                 Token(position, "/", TokenType.OPERATOR),
                 Token(position, "(", TokenType.PARENTHESIS),
-                Token(position, "2", TokenType.INTEGER),
+                Token(position, "2", TokenType.SYMBOL),
                 Token(position, "+", TokenType.OPERATOR),
-                Token(position, "3", TokenType.INTEGER),
+                Token(position, "3", TokenType.SYMBOL),
                 Token(position, ")", TokenType.PARENTHESIS),
                 Token(position, "", TokenType.SEMICOLON),
             )
@@ -397,7 +395,7 @@ class ParserTest {
                 Declaration(
                     Keyword(Modifier.MUTABLE, "let", position),
                     Variable("x", position),
-                    Type("number", position),
+                    Type(TokenType.INTEGER, position),
                     position,
                 ),
                 Operator(
@@ -421,22 +419,22 @@ class ParserTest {
         val tokens: List<Token> =
             listOf(
                 Token(position, "let", TokenType.KEYWORD),
-                Token(position, "x", TokenType.IDENTIFIER),
+                Token(position, "x", TokenType.SYMBOL),
                 Token(position, ":", TokenType.DECLARATION),
                 Token(position, "number", TokenType.TYPE),
                 Token(position, "=", TokenType.ASSIGNATION),
-                Token(position, "3", TokenType.INTEGER),
+                Token(position, "3", TokenType.SYMBOL),
                 Token(position, "/", TokenType.OPERATOR),
                 Token(position, "(", TokenType.PARENTHESIS),
-                Token(position, "2", TokenType.INTEGER),
+                Token(position, "2", TokenType.SYMBOL),
                 Token(position, "+", TokenType.OPERATOR),
                 Token(position, "(", TokenType.PARENTHESIS),
-                Token(position, "3", TokenType.INTEGER),
+                Token(position, "3", TokenType.SYMBOL),
                 Token(position, "/", TokenType.OPERATOR),
                 Token(position, "(", TokenType.PARENTHESIS),
-                Token(position, "2", TokenType.INTEGER),
+                Token(position, "2", TokenType.SYMBOL),
                 Token(position, "+", TokenType.OPERATOR),
-                Token(position, "3", TokenType.INTEGER),
+                Token(position, "3", TokenType.SYMBOL),
                 Token(position, ")", TokenType.PARENTHESIS),
                 Token(position, ")", TokenType.PARENTHESIS),
                 Token(position, ")", TokenType.PARENTHESIS),
@@ -448,7 +446,7 @@ class ParserTest {
                 Declaration(
                     Keyword(Modifier.MUTABLE, "let", position),
                     Variable("x", position),
-                    Type("number", position),
+                    Type(TokenType.INTEGER, position),
                     position,
                 ),
                 Operator(
@@ -483,7 +481,7 @@ class ParserTest {
             listOf(
                 Token(position, "println", TokenType.FUNCTION),
                 Token(position, "(", TokenType.PARENTHESIS),
-                Token(position, "c", TokenType.IDENTIFIER),
+                Token(position, "c", TokenType.SYMBOL),
                 Token(position, ")", TokenType.PARENTHESIS),
                 Token(position, "", TokenType.SEMICOLON),
             )
@@ -496,14 +494,14 @@ class ParserTest {
     }
 
     @Test
-    fun `test 020 - a print function with identifier + value`() {
+    fun `test 020 - a print function with SYMBOL + value`() {
         val tokens: List<Token> =
             listOf(
                 Token(position, "println", TokenType.FUNCTION),
                 Token(position, "(", TokenType.PARENTHESIS),
-                Token(position, "8", TokenType.INTEGER),
+                Token(position, "8", TokenType.SYMBOL),
                 Token(position, "+", TokenType.OPERATOR),
-                Token(position, "c", TokenType.IDENTIFIER),
+                Token(position, "c", TokenType.SYMBOL),
                 Token(position, ")", TokenType.PARENTHESIS),
                 Token(position, "", TokenType.SEMICOLON),
             )
@@ -525,12 +523,12 @@ class ParserTest {
             listOf(
                 Token(position, "println", TokenType.FUNCTION),
                 Token(position, "(", TokenType.PARENTHESIS),
-                Token(position, "8", TokenType.INTEGER),
+                Token(position, "8", TokenType.SYMBOL),
                 Token(position, "+", TokenType.OPERATOR),
                 Token(position, "(", TokenType.PARENTHESIS),
-                Token(position, "c", TokenType.IDENTIFIER),
+                Token(position, "c", TokenType.SYMBOL),
                 Token(position, "*", TokenType.OPERATOR),
-                Token(position, "3", TokenType.INTEGER),
+                Token(position, "3", TokenType.SYMBOL),
                 Token(position, ")", TokenType.PARENTHESIS),
                 Token(position, ")", TokenType.PARENTHESIS),
                 Token(position, "", TokenType.SEMICOLON),
@@ -557,12 +555,12 @@ class ParserTest {
             listOf(
                 Token(position, "println", TokenType.FUNCTION),
                 Token(position, "(", TokenType.PARENTHESIS),
-                Token(position, "8", TokenType.INTEGER),
+                Token(position, "8", TokenType.SYMBOL),
                 Token(position, "+", TokenType.OPERATOR),
                 Token(position, "(", TokenType.PARENTHESIS),
-                Token(position, "c", TokenType.IDENTIFIER),
+                Token(position, "c", TokenType.SYMBOL),
                 Token(position, "*", TokenType.OPERATOR),
-                Token(position, "3", TokenType.INTEGER),
+                Token(position, "3", TokenType.SYMBOL),
                 Token(position, ")", TokenType.PARENTHESIS),
                 Token(position, "", TokenType.SEMICOLON),
             )
@@ -576,7 +574,7 @@ class ParserTest {
         val tokens: List<Token> =
             listOf(
                 Token(position, "let", TokenType.KEYWORD),
-                Token(position, "x", TokenType.IDENTIFIER),
+                Token(position, "x", TokenType.SYMBOL),
                 Token(position, ":", TokenType.DECLARATION),
                 Token(position, "string", TokenType.TYPE),
                 Token(position, "=", TokenType.ASSIGNATION),
@@ -592,12 +590,12 @@ class ParserTest {
         val tokens: List<Token> =
             listOf(
                 Token(position, "let", TokenType.KEYWORD),
-                Token(position, "x", TokenType.IDENTIFIER),
+                Token(position, "x", TokenType.SYMBOL),
                 Token(position, ":", TokenType.DECLARATION),
                 Token(position, "string", TokenType.TYPE),
                 Token(position, "=", TokenType.ASSIGNATION),
-                Token(position, "c", TokenType.IDENTIFIER),
-                Token(position, "3", TokenType.STRING),
+                Token(position, "c", TokenType.SYMBOL),
+                Token(position, "\"3\"", TokenType.SYMBOL),
                 Token(position, "", TokenType.SEMICOLON),
             )
         assertThrows(ParserError::class.java) {
@@ -611,9 +609,9 @@ class ParserTest {
             listOf(
                 Token(position, "sum", TokenType.TYPE),
                 Token(position, "(", TokenType.PARENTHESIS),
-                Token(position, "c", TokenType.IDENTIFIER),
+                Token(position, "c", TokenType.SYMBOL),
                 Token(position, "+", TokenType.OPERATOR),
-                Token(position, "3", TokenType.STRING),
+                Token(position, "'3'", TokenType.SYMBOL),
                 Token(position, ")", TokenType.PARENTHESIS),
                 Token(position, "", TokenType.SEMICOLON),
             )
@@ -626,14 +624,14 @@ class ParserTest {
     fun `test 026 - x = 8 + (3 mul 2)`() {
         val tokens: List<Token> =
             listOf(
-                Token(position, "x", TokenType.IDENTIFIER),
+                Token(position, "x", TokenType.SYMBOL),
                 Token(position, "=", TokenType.ASSIGNATION),
-                Token(position, "8", TokenType.INTEGER),
+                Token(position, "8", TokenType.SYMBOL),
                 Token(position, "+", TokenType.OPERATOR),
                 Token(position, "(", TokenType.PARENTHESIS),
-                Token(position, "3", TokenType.INTEGER),
+                Token(position, "\"3\"", TokenType.SYMBOL),
                 Token(position, "*", TokenType.OPERATOR),
-                Token(position, "2", TokenType.INTEGER),
+                Token(position, "2", TokenType.SYMBOL),
                 Token(position, ")", TokenType.PARENTHESIS),
                 Token(position, "", TokenType.SEMICOLON),
             )
@@ -648,11 +646,66 @@ class ParserTest {
                     ),
                     Operator(
                         Token(position, "*", TokenType.OPERATOR),
-                        SingleValue(Token(position, "3", TokenType.INTEGER)),
+                        SingleValue(Token(position, "3", TokenType.STRING)),
                         SingleValue(Token(position, "2", TokenType.INTEGER)),
                     ),
                 ),
             )
         assertEquals(astExpected.toString(), parser.parse(tokens).toString())
+    }
+
+    @Test
+    fun `test 027 - declaration of x as string with equals sign`() {
+        val tokens: List<Token> =
+            listOf(
+                Token(position, "let", TokenType.KEYWORD),
+                Token(position, "x", TokenType.SYMBOL),
+                Token(position, "=", TokenType.ASSIGNATION),
+                Token(position, "string", TokenType.TYPE),
+                Token(position, "", TokenType.SEMICOLON),
+            )
+        assertThrows(ParserError::class.java) {
+            parser.parse(tokens)
+        }
+    }
+
+    @Test
+    fun `test 028 - declaration of x as string without declaration sign`() {
+        val tokens: List<Token> =
+            listOf(
+                Token(position, "let", TokenType.KEYWORD),
+                Token(position, "x", TokenType.SYMBOL),
+                Token(position, "string", TokenType.TYPE),
+                Token(position, "=", TokenType.ASSIGNATION),
+                Token(position, "", TokenType.SEMICOLON),
+            )
+        try {
+            parser.parse(tokens)
+        } catch (e: ParserError) {
+            assertEquals(
+                "error: to declare a variable, it's expected to do it by 'let <name of the variable>: <type of the variable>'",
+                e.localizedMessage,
+            )
+        }
+    }
+
+    @Test
+    fun `test 029 - declaration of x as string without declaration sign and type`() {
+        val tokens: List<Token> =
+            listOf(
+                Token(position, "let", TokenType.KEYWORD),
+                Token(position, "x", TokenType.SYMBOL),
+                Token(position, "=", TokenType.ASSIGNATION),
+                Token(position, "8", TokenType.SYMBOL),
+                Token(position, "", TokenType.SEMICOLON),
+            )
+        try {
+            parser.parse(tokens)
+        } catch (e: ParserError) {
+            assertEquals(
+                "error: to declare a variable, it's expected to do it by 'let <name of the variable>: <type of the variable>'",
+                e.localizedMessage,
+            )
+        }
     }
 }

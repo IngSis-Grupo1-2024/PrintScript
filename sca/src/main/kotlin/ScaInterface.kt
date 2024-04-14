@@ -1,5 +1,7 @@
-import components.ast.ASTInterface
+
+import components.statement.Statement
+import result.Result
 
 interface ScaInterface {
-    fun analyze(ast: ASTInterface): Boolean
+    fun analyze(statement: Statement): Result
 }

@@ -1,15 +1,24 @@
-package scan
+package ingsis.parser.scan
 
 import components.Token
 import components.TokenType
 import components.statement.*
-import error.ParserError
+import ingsis.parser.error.ParserError
 
 class ScanAssignation : ScanStatement {
     private val scanDeclaration = ScanDeclaration()
     private val scanValue = ScanValue()
 
     override fun canHandle(tokens: List<Token>): Boolean {
+        if (checkIfThereIsNoDelimiter(tokens)) {
+            throw ParserError("error: ';' expected  " + tokens.last().getPosition(), tokens.last())
+        }
+
+        val tokWODelimiter = tokens.subList(0, tokens.size - 1)
+        return canHandleWODelimiter(tokWODelimiter)
+    }
+
+    override fun canHandleWODelimiter(tokens: List<Token>): Boolean {
         if (tokens.size < 3) return false
         val assignIndex = findAssignIndex(tokens)
         if (assignIndex == -1) return false
@@ -39,7 +48,7 @@ class ScanAssignation : ScanStatement {
         assignIndex: Int,
     ): Statement {
         val decl: Declaration = scanDeclaration.makeAST(tokens.subList(0, assignIndex)) as Declaration
-        val value: Value = scanValue.makeValue(tokens.subList(assignIndex + 1, tokens.size))
+        val value: Value = scanValue.makeValue(tokens.subList(assignIndex + 1, tokens.size - 1))
         return CompoundAssignation(tokens[assignIndex].getPosition(), decl, value)
     }
 
@@ -68,7 +77,7 @@ class ScanAssignation : ScanStatement {
     private fun checkDeclaration(
         tokens: List<Token>,
         assignIndex: Int,
-    ) = scanDeclaration.canHandle(tokens.subList(0, assignIndex))
+    ) = scanDeclaration.canHandleWODelimiter(tokens.subList(0, assignIndex))
 
     private fun findAssignIndex(tokens: List<Token>): Int {
         for (i in tokens.indices)
@@ -83,4 +92,6 @@ class ScanAssignation : ScanStatement {
             tokens[0].getType() == TokenType.IDENTIFIER
         }
     }
+
+    private fun checkIfThereIsNoDelimiter(tokens: List<Token>) = tokens.last().getType() != TokenType.SEMICOLON
 }

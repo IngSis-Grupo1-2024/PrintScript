@@ -1,21 +1,29 @@
-package scan
+package ingsis.parser.scan
 
 import components.Position
 import components.Token
 import components.TokenType
 import components.statement.*
-import error.ParserError
+import ingsis.parser.error.ParserError
 
 class ScanDeclaration : ScanStatement {
     private val declarationTypes = listOf(TokenType.KEYWORD, TokenType.IDENTIFIER, TokenType.DECLARATION, TokenType.TYPE)
 
     override fun canHandle(tokens: List<Token>): Boolean {
-        return if (declarationTypes == getTokenTypes(tokens)) {
+        if (checkIfThereIsNoDelimiter(tokens)) {
+            throw ParserError("error: ';' expected  " + tokens.last().getPosition(), tokens.last())
+        }
+
+        val tokWODelimiter = tokens.subList(0, tokens.size - 1)
+        return canHandleWODelimiter(tokWODelimiter)
+    }
+
+    override fun canHandleWODelimiter(tokens: List<Token>): Boolean =
+        if (declarationTypes == getTokenTypes(tokens)) {
             true
         } else {
             checkIfDeclarationTypesMissing(tokens)
         }
-    }
 
     override fun makeAST(tokens: List<Token>): Statement {
         val keyword: Keyword = getKeyword(tokens[0])
@@ -23,18 +31,6 @@ class ScanDeclaration : ScanStatement {
         val declPosition: Position = getPosition(tokens[2])
         val type: Type = getType(tokens[3])
         return Declaration(keyword, variable, type, declPosition)
-    }
-
-    private fun checkCollections(
-        declarationTypesPresent: Set<TokenType>,
-        tokenTypes: List<TokenType>,
-    ): Boolean {
-        if (tokenTypes.size != declarationTypesPresent.size) return false
-        for ((i, type) in declarationTypesPresent.withIndex()) {
-            if (i >= tokenTypes.size) return false
-            if (tokenTypes[i] != type) return false
-        }
-        return true
     }
 
     private fun checkIfDeclarationTypesMissing(tokens: List<Token>): Boolean {
@@ -52,7 +48,7 @@ class ScanDeclaration : ScanStatement {
     private fun checkIfDeclarationTypesMissing(
         declarationTypesPresent: Set<TokenType>,
         tokens: List<Token>,
-    ) = declarationTypesPresent.size > 2 && checkCollections(declarationTypesPresent, getTokenTypes(tokens))
+    ) = declarationTypesPresent.size >= 2 && tokens.size == declarationTypesPresent.size
 
     private fun getTokenTypes(tokens: List<Token>): List<TokenType> = tokens.map { it.getType() }
 
@@ -62,9 +58,19 @@ class ScanDeclaration : ScanStatement {
         return Keyword(modifier, token.getValue(), token.getPosition())
     }
 
-    private fun getType(token: Token): Type = Type(token.getValue(), token.getPosition())
+    private fun getType(token: Token): Type {
+        val tokenType =
+            when (token.getValue()) {
+                "string" -> TokenType.STRING
+                "number" -> TokenType.INTEGER
+                else -> throw ParserError("error: invalid token", token)
+            }
+        return Type(tokenType, token.getPosition())
+    }
 
     private fun getPosition(token: Token): Position = token.getPosition()
 
     private fun getVariable(token: Token): Variable = Variable(token.getValue(), token.getPosition())
+
+    private fun checkIfThereIsNoDelimiter(tokens: List<Token>) = tokens.last().getType() != TokenType.SEMICOLON
 }

@@ -1,4 +1,4 @@
-package scan
+package ingsis.parser.scan
 
 import components.ComparatorTokenType
 import components.ComparatorTokenValue
@@ -8,7 +8,7 @@ import components.statement.EmptyValue
 import components.statement.Operator
 import components.statement.SingleValue
 import components.statement.Value
-import error.ParserError
+import ingsis.parser.error.ParserError
 import kotlin.math.abs
 
 class ScanValue {
@@ -23,7 +23,7 @@ class ScanValue {
 
         tokens
             .filter { it.getType() in invalidValueTypes }
-            .forEach { throw ParserError("Invalid value type ${it.getPosition()}", it) }
+            .forEach { throw ParserError("Invalid value type.", it) }
 
         return checkQtyOperatorsAndValues(getNumberOfOpp(tokens), getNumberOfValue(tokens), tokens.last())
     }
@@ -104,7 +104,7 @@ class ScanValue {
         ast: Value,
     ): Value {
         if (originalAST.isEmpty() || originalAST.isLeaf()) return originalAST.addChildren(ast)
-        if (originalAST.getChildrenAmount() < 2 && originalAST.getToken().getType() in twoChildrenType) {
+        if (newChildrenIsAvailable(originalAST)) {
             return originalAST.addChildren(ast)
         }
         if (originalAST is Operator) {
@@ -118,7 +118,7 @@ class ScanValue {
         ast: Value,
     ): Value {
         val compareTokens = compareValueAndType(token, ast.getToken())
-        if (ast.getChildrenAmount() < 2 && ast.getToken().getType() in twoChildrenType && rootIsBigger(compareTokens)) {
+        if (newChildrenIsAvailable(ast) && rootIsBigger(compareTokens)) {
             return ast.addChildren(SingleValue(token))
         }
         return if (rootIsBigger(compareTokens)) {
@@ -127,8 +127,8 @@ class ScanValue {
             Operator(token, ast)
         } else if (abs(compareTokens) == 2) {
             ast
-        } else if (ast is Operator) {
-            removeLastChild(ast, token)
+        } else if (!ast.isLeaf()) {
+            removeLastChild(ast as Operator, token)
         } else {
             ast.addChildren(SingleValue(token))
         }
@@ -189,14 +189,17 @@ class ScanValue {
                 1 -> return removeLastChild(ast, token)
             }
         }
-        return if (ast.getChildrenAmount() < 2 && ast.getToken().getType() in twoChildrenType) {
+        return if (newChildrenIsAvailable(ast)) {
             ast.addChildren(SingleValue(token))
-        } else if (ast is Operator) {
-            removeLastChild(ast, token)
+        } else if (ast.isLeaf()) {
+            removeLastChild(ast as Operator, token)
         } else {
             ast.addChildren(SingleValue(token))
         }
     }
+
+    private fun newChildrenIsAvailable(originalAST: Value) =
+        originalAST.getChildrenAmount() < 2 && originalAST.getToken().getType() in twoChildrenType
 
     private fun getCompLeft(
         token: Token,

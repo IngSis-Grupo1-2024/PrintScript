@@ -2,24 +2,18 @@ package components
 
 enum class TokenType {
     TYPE,
+    SEMICOLON,
     ASSIGNATION, // for the =
     DECLARATION, // for the :
+    OPERATOR,
     KEYWORD,
-
-    // when the lexer doesn't know what it is, then it's a SYMBOL.
-    // Later on, the parser can tell if it's an identifier for example
-    SYMBOL,
     IDENTIFIER, // in 'let x', x would be the identifier
-
+    COMMENT,
     VALUE,
     FUNCTION,
-
-    // Special characters
-    PARENTHESIS, // can be either ( open or ) closed
-    OPERATOR,
-    DELIMITER,
-
-    // Types
+    PARENTHESIS,
     STRING,
     INTEGER,
+    STRINGTYPE,
+    INTEGERTYPE,
 }

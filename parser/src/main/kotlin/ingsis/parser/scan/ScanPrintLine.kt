@@ -1,23 +1,31 @@
-package scan
+package ingsis.parser.scan
 
 import components.Position
 import components.Token
 import components.TokenType
 import components.statement.PrintLine
 import components.statement.Statement
-import error.ParserError
+import ingsis.parser.error.ParserError
 
 class ScanPrintLine : ScanStatement {
     private val scanValue = ScanValue()
     private val functionTypes = listOf(TokenType.FUNCTION, TokenType.PARENTHESIS)
 
     override fun canHandle(tokens: List<Token>): Boolean {
-        val tokenTypes = getTokenTypes(tokens)
+        if (checkIfThereIsNoDelimiter(tokens)) {
+            throw ParserError("error: ';' expected  " + tokens.last().getPosition(), tokens.last())
+        }
 
+        val tokensWODelimiter = tokens.subList(0, tokens.size - 1)
+        return canHandleWODelimiter(tokensWODelimiter)
+    }
+
+    override fun canHandleWODelimiter(tokens: List<Token>): Boolean {
+        val tokenTypes = getTokenTypes(tokens)
         if (hasFunctionTypes(tokenTypes)) {
-            if (hasLastParenthesis(tokenTypes)) {
+            if (!hasLastParenthesis(tokens)) {
                 throw ParserError(
-                    tokens.last().getPosition().startLine.toString() + ":error: ')' expected " + lastPosition(tokens),
+                    ":error: ')' expected.",
                     tokens.last(),
                 )
             } else if (emptyValue(tokens)) {
@@ -25,14 +33,22 @@ class ScanPrintLine : ScanStatement {
             }
             return valueCanHandle(tokens)
         }
+
         return false
+    }
+
+    override fun makeAST(tokens: List<Token>): Statement {
+        val printLinePosition = tokens[0].getPosition()
+        val value = scanValue.makeValue(tokens.subList(2, tokens.size - 2))
+        return PrintLine(printLinePosition, value)
     }
 
     private fun lastPosition(tokens: List<Token>): Position = tokens.last().getPosition()
 
     private fun valueCanHandle(tokens: List<Token>) = scanValue.canHandle(tokens.subList(functionTypes.size, tokens.size - 1))
 
-    private fun hasLastParenthesis(tokenTypes: List<TokenType>) = tokenTypes.last() != TokenType.PARENTHESIS
+    private fun hasLastParenthesis(tokenTypes: List<Token>) =
+        tokenTypes.last().getType() == TokenType.PARENTHESIS && tokenTypes.last().getValue() == ")"
 
     private fun hasFunctionTypes(tokenTypes: List<TokenType>) = tokenTypes.subList(0, functionTypes.size) == functionTypes
 
@@ -43,9 +59,5 @@ class ScanPrintLine : ScanStatement {
         return value.isEmpty()
     }
 
-    override fun makeAST(tokens: List<Token>): Statement {
-        val printLinePosition = tokens[0].getPosition()
-        val value = scanValue.makeValue(tokens.subList(2, tokens.size - 1))
-        return PrintLine(printLinePosition, value)
-    }
+    private fun checkIfThereIsNoDelimiter(tokens: List<Token>) = tokens.last().getType() != TokenType.SEMICOLON
 }
