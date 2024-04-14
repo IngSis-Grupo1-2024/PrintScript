@@ -1,11 +1,11 @@
-package scan
+package ingsis.formatter.scan
 
 import components.statement.Function
 import components.statement.Statement
 import components.statement.StatementType
-import extractor.ValueExtractor
-import new.line.counter.PrintNewLines
-import utils.FormatterRule
+import ingsis.formatter.extractor.ValueExtractor
+import ingsis.formatter.newLineCounter.PrintNewLines
+import ingsis.formatter.utils.FormatterRule
 
 class ScanFunction : ScanStatement {
     override fun canHandle(statement: Statement): Boolean {
@@ -28,6 +28,6 @@ class ScanFunction : ScanStatement {
         value: String,
         printLines: String,
     ): String {
-        return printLines + functionName + "(" + value + ")" + "\n"
+        return "$printLines$functionName($value);\n"
     }
 }

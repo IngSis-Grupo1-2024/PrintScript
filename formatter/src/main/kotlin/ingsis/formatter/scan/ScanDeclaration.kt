@@ -1,10 +1,12 @@
-package scan
+package ingsis.formatter.scan
 
+import components.TokenType
 import components.statement.Declaration
 import components.statement.Statement
 import components.statement.StatementType
-import spaces.counter.DeclarationSpaces
-import utils.FormatterRule
+import components.statement.Type
+import ingsis.formatter.spacesCounter.DeclarationSpaces
+import ingsis.formatter.utils.FormatterRule
 
 class ScanDeclaration : ScanStatement {
     override fun canHandle(statement: Statement): Boolean {
@@ -25,11 +27,18 @@ class ScanDeclaration : ScanStatement {
         return buildDeclarationString(
             keyword.getValue(),
             variable.getName(),
-            type.getValue().toString(),
+            getType(type),
             spacesBeforeDeclaration,
             spacesAfterDeclaration,
         )
     }
+
+    private fun getType(type: Type): String =
+        if (type.getValue() == TokenType.INTEGER) {
+            "number"
+        } else {
+            type.getValue().toString().lowercase()
+        }
 
     private fun buildDeclarationString(
         keywordValue: String,
@@ -38,8 +47,8 @@ class ScanDeclaration : ScanStatement {
         spacesBeforeDeclaration: String,
         spacesAfterDeclaration: String,
     ): String {
-        return keywordValue + " " + name + spacesBeforeDeclaration + ":" +
-            spacesAfterDeclaration +
-            type.lowercase() + ";" + "\n"
+        return "$keywordValue $name" +
+            "$spacesBeforeDeclaration:$spacesAfterDeclaration" +
+            "${type.lowercase()};\n"
     }
 }

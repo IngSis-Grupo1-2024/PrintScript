@@ -1,4 +1,4 @@
-package extractor
+package ingsis.formatter.extractor
 
 import components.Position
 import components.statement.Operator

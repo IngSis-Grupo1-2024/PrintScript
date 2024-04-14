@@ -1,4 +1,4 @@
-package utils
+package ingsis.formatter.utils
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue

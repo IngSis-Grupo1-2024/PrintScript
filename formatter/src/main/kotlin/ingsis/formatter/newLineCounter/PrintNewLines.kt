@@ -1,7 +1,7 @@
-package new.line.counter
+package ingsis.formatter.newLineCounter
 
-import utils.FormatterRule
-import utils.generateNewLines
+import ingsis.formatter.utils.FormatterRule
+import ingsis.formatter.utils.generateNewLines
 
 class PrintNewLines(
     private val ruleMap: Map<String, FormatterRule>,

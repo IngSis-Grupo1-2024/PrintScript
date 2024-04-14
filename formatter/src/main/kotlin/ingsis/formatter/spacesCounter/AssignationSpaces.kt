@@ -1,7 +1,7 @@
-package spaces.counter
+package ingsis.formatter.spacesCounter
 
-import utils.FormatterRule
-import utils.generateSpaces
+import ingsis.formatter.utils.FormatterRule
+import ingsis.formatter.utils.generateSpaces
 
 class AssignationSpaces(
     private val ruleMap: Map<String, FormatterRule>,

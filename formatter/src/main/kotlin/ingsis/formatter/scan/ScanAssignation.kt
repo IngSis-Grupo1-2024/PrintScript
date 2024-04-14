@@ -1,11 +1,11 @@
-package scan
+package ingsis.formatter.scan
 
 import components.statement.Assignation
 import components.statement.Statement
 import components.statement.StatementType
-import extractor.ValueExtractor
-import spaces.counter.AssignationSpaces
-import utils.FormatterRule
+import ingsis.formatter.extractor.ValueExtractor
+import ingsis.formatter.spacesCounter.AssignationSpaces
+import ingsis.formatter.utils.FormatterRule
 
 class ScanAssignation : ScanStatement {
     override fun canHandle(statement: Statement): Boolean {
@@ -34,6 +34,6 @@ class ScanAssignation : ScanStatement {
         spacesBetweenAssignation: String,
         valueAsString: String,
     ): String {
-        return variableName + spacesBetweenAssignation + "=" + spacesBetweenAssignation + valueAsString + ";" + "\n"
+        return "$variableName$spacesBetweenAssignation=$spacesBetweenAssignation$valueAsString;\n"
     }
 }

@@ -1,12 +1,13 @@
-package scan
+package ingsis.formatter.scan
 
 import components.statement.*
-import extractor.ValueExtractor
-import spaces.counter.AssignationSpaces
-import spaces.counter.DeclarationSpaces
-import utils.FormatterRule
+import ingsis.formatter.extractor.ValueExtractor
+import ingsis.formatter.spacesCounter.AssignationSpaces
+import ingsis.formatter.utils.FormatterRule
 
 class ScanCompoundAssignation : ScanStatement {
+    private val scanDeclaration = ScanDeclaration()
+
     override fun canHandle(statement: Statement): Boolean {
         return statement.getStatementType() == StatementType.COMPOUND_ASSIGNATION
     }
@@ -27,13 +28,8 @@ class ScanCompoundAssignation : ScanStatement {
         declaration: Declaration,
         ruleMap: Map<String, FormatterRule>,
     ): String {
-        val declarationSpaces = DeclarationSpaces(ruleMap)
-
-        return declaration.getKeyword()
-            .getValue() + " " + declaration.getVariable().getName() + declarationSpaces.getBeforeDeclarationSpaces() +
-            ":" + declarationSpaces.getAfterDeclarationSpaces() +
-            declaration.getType()
-                .getValue()
+        val declarationFormat = scanDeclaration.format(declaration, ruleMap)
+        return declarationFormat.substring(0, declarationFormat.length - 2)
     }
 
     private fun buildAssignationString(

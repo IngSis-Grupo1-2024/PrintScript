@@ -1,7 +1,7 @@
-package scan
+package ingsis.formatter.scan
 
 import components.statement.Statement
-import utils.FormatterRule
+import ingsis.formatter.utils.FormatterRule
 
 interface ScanStatement {
     fun canHandle(statement: Statement): Boolean

@@ -1,21 +1,26 @@
 package ingsis.formatter
 import components.statement.Statement
-import scan.ScanStatement
-import utils.readJsonAndStackMap
-import java.io.FileWriter
+import ingsis.formatter.scan.*
+import ingsis.formatter.utils.readJsonAndStackMap
+
+object PrintScriptFormatter {
+    fun createFormatter(version: String): Formatter {
+        return when (version) {
+            "VERSION_1" -> Formatter(listOf(ScanDeclaration(), ScanAssignation(), ScanFunction(), ScanCompoundAssignation()))
+            else -> Formatter(listOf(ScanDeclaration(), ScanAssignation(), ScanFunction(), ScanCompoundAssignation()))
+        }
+    }
+}
 
 class Formatter(private val scanners: List<ScanStatement>) {
-    fun format(
-        statement: Statement,
-        file: String,
-    ) {
+    fun format(statement: Statement): String {
         val ruleMap = readJsonAndStackMap("src/main/rules/rules.json")
-        val fileWriter = FileWriter(file, true)
+        val result = StringBuilder()
         for (scanner in scanners) {
             if (scanner.canHandle(statement)) {
-                fileWriter.write(scanner.format(statement, ruleMap))
+                result.append(scanner.format(statement, ruleMap))
             }
         }
-        fileWriter.close()
+        return result.toString()
     }
 }
