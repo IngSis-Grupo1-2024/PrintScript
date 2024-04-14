@@ -1,6 +1,6 @@
 {
   "println":{
-    "expression": true,
+    "expression": false,
     "identifier": true,
     "literal": true
   },

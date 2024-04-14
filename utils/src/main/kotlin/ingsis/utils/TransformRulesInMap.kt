@@ -6,7 +6,7 @@
 //
 
 class TransformRulesInMap {
-    // data class FormatterRule(
+// data class FormatterRule(
 //    val on: Boolean,
 //    val quantity: Int,
 // )
