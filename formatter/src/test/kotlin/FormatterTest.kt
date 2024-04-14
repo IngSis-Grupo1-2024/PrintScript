@@ -7,7 +7,7 @@ import ingsis.formatter.Formatter
 import ingsis.formatter.scan.ScanAssignation
 import ingsis.formatter.scan.ScanCompoundAssignation
 import ingsis.formatter.scan.ScanDeclaration
-import ingsis.formatter.scan.ScanFunction
+import ingsis.formatter.scan.ScanPrintLine
 import ingsis.formatter.utils.FormatterRule
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -84,7 +84,7 @@ class FormatterTest {
 
     @Test
     fun testFormatWithPrintFunction() {
-        val scanners = listOf(ScanFunction())
+        val scanners = listOf(ScanPrintLine())
         val formatter = Formatter(scanners)
         val token = Token(Position(8, 8, 1, 1, 8, 8), "4", TokenType.INTEGER)
         val value = SingleValue(token)
