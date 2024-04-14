@@ -4,253 +4,119 @@ import components.Position
 import components.Token
 import components.TokenType
 
-class Lexer(override val position: Position) : LexerInterface {
-    private val essentialStr =
-        mapOf(
-            "let" to TokenType.KEYWORD,
-            "number" to TokenType.TYPE,
-            "string" to TokenType.TYPE,
-            "println" to TokenType.FUNCTION,
-        )
-
-    private val operators = listOf('+', '-', '/', '*', '(', ')')
-
-    override fun tokenize(input: String): List<Token> {
-        var tokenList = ArrayList<Token>()
-        var isInsideString = false
-        val currentString = StringBuilder()
-        var isBeforeEqual = true
-        var isString = false
-//        val dictionary = mutableMapOf<String, Boolean>() This can be used to remove the isString variable and when new types like lists are added.
-
+class Lexer(
+    private val position: Position,
+    private val tokenAssignatorList: List<TokenAssignator>
+) {
+    fun tokenize(input: String): List<Token> {
+        val tokens = ArrayList<Token>()
         var currentPosition = position.copy()
+        var currentToken = ""
+        var i = 0
+        while (i < input.length) {
+            val nextChar = input[i]
+            if (currentToken.isEmpty() && nextChar == ' ') {
+                currentPosition = updatePosition(currentPosition, ' ')
+                currentPosition = previousEndToNewStart(currentPosition)
+                currentToken = ""
+                i++
+                continue
+            }
+//            if (currentToken.isNotEmpty() && currentToken.toCharArray()[0] == ' ') {
+//                currentPosition = previousEndToNewStart(currentPosition)
+//                if (nextChar != ' ') {currentPosition = updatePosition(currentPosition, nextChar)}
+//                currentToken = ""
+//            }
 
-        for (char in input) {
-            currentString.append(char)
-
-            when (char) {
-                '"' -> {
-                    isInsideString = !isInsideString
-                    isString = true
-                    if (!isInsideString) {
-                        currentPosition = changeEndOffsetAndColumn(currentPosition, 2)
-                    }
+            if (currentToken.isNotBlank()) {
+                if (canCreateToken(currentToken)) {
+                    tokens.add(createTokenIfValid(currentToken, currentPosition))
+                    currentToken = ""
+                    currentPosition = previousEndToNewStart(currentPosition)
                 }
-
-                in operators -> {
-                    when (isInsideString) {
-                        true -> {
-                            currentString.append(char)
-                        }
-
-                        false -> {
-                            tokenList.add(Token(currentPosition, currentString.toString(), TokenType.OPERATOR))
-                            currentPosition = previousEndToNewStart(currentPosition, 1)
-                            currentPosition = changeEndOffsetAndColumn(currentPosition, 1)
-                            currentString.clear()
-                        }
-                    }
+                if (nextChar == ' ' && currentToken.isNotEmpty()) { // current token is a symbol
+                    tokens.add(Token(currentPosition, currentToken, TokenType.SYMBOL))
+                    currentPosition = updatePosition(currentPosition, ' ')
+                    currentPosition = previousEndToNewStart(currentPosition)
+                    currentToken = ""
+                    i++
+                    continue
                 }
-
-                ';' -> {
-                    when (isInsideString) {
-                        true -> {
-                            currentString.append(char)
-                        }
-
-                        false -> {
-                            val tempString = currentString.deleteAt(currentString.length - 1)
-                            if (tempString.toString() != StringBuilder("").toString()) {
-                                var tokenValue = TokenType.INTEGER
-                                if (isString) {
-                                    tokenValue = TokenType.STRING
-                                    isString = false
-                                }
-                                tokenList.add(
-                                    Token(
-                                        currentPosition.copy(
-                                            endOffset = currentPosition.startOffset + currentString.length - 1,
-                                            endColumn = currentPosition.startColumn + currentString.length - 1,
-                                        ),
-                                        tempString.toString(),
-                                        tokenValue,
-                                    ),
-                                )
-                            }
-
-                            currentPosition = previousEndToNewStart(currentPosition, 0)
-
-                            tokenList.add(
-                                Token(
-                                    currentPosition,
-                                    ";",
-                                    TokenType.SEMICOLON,
-                                ),
-                            )
-                        }
-                    }
+                if (nextChar == ' ') {
+                    currentPosition = updatePosition(currentPosition, nextChar)
+                    currentPosition = previousEndToNewStart(currentPosition)
+                    i++
+                    continue
                 }
-
-                ':' -> {
-                    when (isInsideString) {
-                        true -> {
-                            currentString.append(char)
-                        }
-
-                        false -> {
-                            if (currentString.isNotEmpty() && currentString.length >= 2) {
-                                currentString.deleteAt(currentString.length - 1)
-                                tokenList.add(
-                                    Token(
-                                        changeEndOffsetAndColumn(currentPosition, -1),
-                                        currentString.toString(),
-                                        TokenType.IDENTIFIER,
-                                    ),
-                                )
-                            }
-                            if (currentString.toString() == ":") {
-                                tokenList.add(
-                                    Token(
-                                        currentPosition,
-                                        ":",
-                                        TokenType.DECLARATION,
-                                    ),
-                                )
-                            } else {
-                                tokenList.add(
-                                    Token(
-                                        currentPosition.copy(
-                                            startOffset = currentPosition.startOffset + currentString.length,
-                                            startColumn = currentPosition.startColumn + currentString.length,
-                                        ),
-                                        ":",
-                                        TokenType.DECLARATION,
-                                    ),
-                                )
-                            }
-                            currentPosition = previousEndToNewStart(currentPosition, 1)
-                            currentPosition = changeEndOffsetAndColumn(currentPosition, 1)
-                            currentString.clear()
-                        }
-                    }
-                }
-
-                '=' -> {
-                    when (isInsideString) {
-                        true -> {
-                            currentString.append(char)
-                        }
-
-                        false -> {
-                            tokenList.add(Token(currentPosition, "=", TokenType.ASSIGNATION))
-                            currentPosition = previousEndToNewStart(currentPosition, 1)
-                            currentPosition = changeEndOffsetAndColumn(currentPosition, 1)
-                            isBeforeEqual = false
-                            currentString.clear()
-                        }
-                    }
-                }
-
-                ' ' -> {
-                    when (isInsideString) {
-                        true -> {
-                            currentString.append(char)
-                        }
-
-                        false -> {
-                            if (currentString.toString() != StringBuilder(" ").toString()) {
-                                if (isBeforeEqual) {
-                                    tokenList.add(
-                                        Token(
-                                            changeEndOffsetAndColumn(currentPosition, -1),
-                                            value = currentString.deleteAt(currentString.length - 1).toString(),
-                                            type = TokenType.IDENTIFIER,
-                                        ),
-                                    )
-                                } else {
-                                    // This has to be changed because in case it is a list is different, there can be a switch or pattern matching then
-                                    var tokenValue = TokenType.INTEGER
-                                    if (isString) {
-                                        tokenValue = TokenType.STRING
-                                        isString = false
-                                    }
-                                    tokenList.add(
-                                        Token(
-                                            changeEndOffsetAndColumn(currentPosition, -1),
-                                            value = currentString.deleteAt(currentString.length - 1).toString(),
-                                            type = tokenValue,
-                                        ),
-                                    )
-                                }
-                            }
-                            currentPosition = previousEndToNewStart(currentPosition, 1)
-                            currentPosition = changeEndOffsetAndColumn(currentPosition, 1)
-                            currentString.clear()
-                        }
-                    }
-                }
-                '\n' -> {
-                    currentPosition = moveToNewLine(currentPosition)
-                    currentString.clear()
-                }
-
-                else -> {
-                    when (currentString.toString()) {
-                        in essentialStr -> {
-                            tokenList = addToken(tokenList, currentPosition, currentString)
-                            currentPosition = previousEndToNewStart(currentPosition, 1)
-                            currentString.clear()
-                        }
-                    }
-                    currentPosition = changeEndOffsetAndColumn(currentPosition, 1)
+                if (canCreateToken(nextChar.toString()) && currentToken.isNotEmpty()) { // current token is a symbol
+                    tokens.add(Token(currentPosition, currentToken, TokenType.SYMBOL))
+                    currentPosition = currentPosition.copy(
+                        startOffset = currentPosition.endOffset,
+                        endOffset = currentPosition.endOffset + 1,
+                        startColumn = currentPosition.endColumn,
+                        endColumn = currentPosition.endColumn + 1
+                    )
+                    tokens.add(createTokenIfValid(nextChar.toString(), currentPosition))
+                    currentPosition = previousEndToNewStart(currentPosition)
+                    currentToken = ""
+                    i++
+                    continue
                 }
             }
+//            if (nextChar == '\n') {
+//                currentPosition = currentPosition.copy(
+//                    startOffset = currentPosition.endOffset,
+//                    endOffset = currentPosition.endOffset,
+//                    startColumn = 1,
+//                    endColumn = 1,
+//                    startLine = currentPosition.endLine + 1,
+//                    endLine = currentPosition.endLine + 1
+//                )
+//                i++
+//                continue
+//            }
+            if (nextChar != ' ') {
+                currentToken = currentToken.plus(nextChar)
+                currentPosition = updatePosition(currentPosition, nextChar)
+            }
+            i++
         }
-        return tokenList
+        if (currentToken.isNotBlank()) {
+            tokens.add(createTokenIfValid(currentToken, currentPosition))
+        }
+        return tokens
     }
 
-    private fun moveToNewLine(currentPosition: Position): Position {
-        var currentPosition1 = currentPosition
-        currentPosition1 =
-            Position(
-                currentPosition1.startOffset + 1,
-                currentPosition1.endOffset + 1,
-                currentPosition1.startLine + 1,
-                currentPosition1.endLine + 1,
-                1,
-                1,
-            )
-        return currentPosition1
-    }
-
-    private fun changeEndOffsetAndColumn(
-        currentPosition: Position,
-        value: Int,
-    ) = currentPosition.copy(
-        endOffset = currentPosition.endOffset + value,
-        endColumn = currentPosition.endColumn + value,
-    )
-
-    private fun previousEndToNewStart(
-        currentPosition: Position,
-        value: Int,
-    ) = currentPosition.copy(
-        startOffset = currentPosition.endOffset + value,
-        startColumn = currentPosition.endColumn + value,
-    )
-
-    private fun addToken(
-        tokenList: ArrayList<Token>,
-        currentPosition: Position,
-        currentString: StringBuilder,
-    ): ArrayList<Token> {
-        tokenList.add(
-            Token(
-                currentPosition.copy(endOffset = currentPosition.endOffset),
-                currentString.toString(),
-                essentialStr.get(currentString.toString())!!,
-            ),
+    private fun updatePosition(position: Position, char: Char): Position {
+        val newEndOffset = position.endOffset + 1
+        val newEndColumn = if (char == '\n') 1 else position.endColumn + 1
+        val newEndLine = if (char == '\n') position.endLine + 1 else position.endLine
+        val newStartLine = if (char == '\n') newEndLine else position.startLine
+        val newStartColumn = if (char == '\n') 1 else position.startColumn
+        return position.copy(
+            startColumn = newStartColumn,
+            startLine = newStartLine,
+            endOffset = newEndOffset,
+            endColumn = newEndColumn,
+            endLine = newEndLine
         )
-        return tokenList
+    }
+
+    private fun canCreateToken(string: String): Boolean {
+        return tokenAssignatorList.any { it.isInsideValidatedString(string) }
+    }
+
+    private fun createTokenIfValid(string: String, position: Position): Token {
+        var assignator = TokenAssignator(TokenType.TYPE, listOf())
+        tokenAssignatorList.forEach {
+            if (it.isInsideValidatedString(string)) {
+                assignator = it
+            }
+        }
+        return assignator.assignToken(string, position)
+    }
+
+    private fun previousEndToNewStart(currentPosition: Position): Position {
+        return currentPosition.copy(startOffset = currentPosition.endOffset, startColumn = currentPosition.endColumn)
     }
 }

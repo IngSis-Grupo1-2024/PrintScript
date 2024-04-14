@@ -3,7 +3,7 @@ package components.statement
 import components.Position
 import components.TokenType
 
-interface Value {
+interface Value<T> {
 
     fun getValue(): String
     fun getPosition(): Position

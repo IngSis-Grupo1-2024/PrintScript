@@ -1,179 +1,364 @@
-
 import components.Position
+import components.Token
 import components.TokenType
 import ingsis.lexer.Lexer
+import ingsis.lexer.TokenAssignator
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class LexerTest {
-    // Test tokenizing of "let a:number = 12";
-    @Test
-    fun testNumberVariableTokenizePositionAndSize() {
-        val lexer = Lexer(Position())
-        val tokenList = lexer.tokenize("let a:number = 12;")
 
-        assertEquals(7, tokenList.size)
-        assertEquals(Position(1, 3, 1, 1, 1, 3), tokenList[0].getPosition())
-        assertEquals(Position(5, 5, 1, 1, 5, 5), tokenList[1].getPosition())
-        assertEquals(Position(6, 6, 1, 1, 6, 6), tokenList[2].getPosition())
-        assertEquals(Position(7, 12, 1, 1, 7, 12), tokenList[3].getPosition())
-        assertEquals(Position(14, 14, 1, 1, 14, 14), tokenList[4].getPosition())
-        assertEquals(Position(16, 17, 1, 1, 16, 17), tokenList[5].getPosition())
-        assertEquals(Position(18, 18, 1, 1, 18, 18), tokenList[6].getPosition())
+    val lexer = Lexer(
+        Position(),
+        listOf(TokenAssignator(TokenType.KEYWORD, listOf("let")),
+            TokenAssignator(TokenType.FUNCTION, listOf("println")),
+            TokenAssignator(TokenType.TYPE, listOf("number", "string", "boolean")),
+            TokenAssignator(TokenType.OPERATOR, listOf("+", "-", "/", "*")),
+            TokenAssignator(TokenType.DELIMITER, listOf(";")),
+            TokenAssignator(TokenType.PARENTHESIS, listOf("(", ")")),
+            TokenAssignator(TokenType.DECLARATION, listOf(":")),
+            TokenAssignator(TokenType.ASSIGNATION, listOf("=")),
+            )
+    )
+
+    @Test
+    fun testTokenizeADeclaration() {
+        val input = "let a:string;"
+        val tokenList = listOf(Token(Position(1,4,1,1,1,4), "let", TokenType.KEYWORD),
+                                Token(Position(5,6,1,1,5,6), "a", TokenType.SYMBOL),
+                                Token(Position(6,7,1,1,6,7), ":", TokenType.DECLARATION),
+                                Token(Position(7,13,1,1,7,13), "string", TokenType.TYPE),
+                                Token(Position(13,14,1,1,13,14), ";", TokenType.DELIMITER),
+            )
+        val result = lexer.tokenize(input)
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
     }
 
     @Test
-    fun testNumberVariableTokenizeValue() {
-        val lexer = Lexer(Position())
-        val tokenList = lexer.tokenize("let a:number = 12;")
-
-        assertEquals("let", tokenList[0].getValue())
-        assertEquals("a", tokenList[1].getValue())
-        assertEquals(":", tokenList[2].getValue())
-        assertEquals("number", tokenList[3].getValue())
-        assertEquals("=", tokenList[4].getValue())
-        assertEquals("12", tokenList[5].getValue())
-        assertEquals(";", tokenList[6].getValue())
+    fun testTokenizeAnAssignation() {
+        val input = "a = 5;"
+        val tokenList = listOf(Token(Position(1,2,1,1,1,2), "a", TokenType.SYMBOL),
+                                Token(Position(3,4,1,1,3,4), "=", TokenType.ASSIGNATION),
+                                Token(Position(5,6,1,1,5,6), "5", TokenType.SYMBOL),
+                                Token(Position(6,7,1,1,6,7), ";", TokenType.DELIMITER),
+            )
+        val result = lexer.tokenize(input)
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
     }
 
     @Test
-    fun testNumberVariableTokenizeTokenType() {
-        val lexer = Lexer(Position())
-        val tokenList = lexer.tokenize("let a:number = \"12\";")
-
-        assertEquals(TokenType.KEYWORD, tokenList[0].getType())
-        assertEquals(TokenType.IDENTIFIER, tokenList[1].getType())
-        assertEquals(TokenType.DECLARATION, tokenList[2].getType())
-        assertEquals(TokenType.TYPE, tokenList[3].getType())
-        assertEquals(TokenType.ASSIGNATION, tokenList[4].getType()) // There are two different assignations token types
-        assertEquals(TokenType.STRING, tokenList[5].getType())
-        assertEquals(TokenType.SEMICOLON, tokenList[6].getType())
-    }
-
-    // Test tokenizing of "let a:number = 12 + 4;"
-    @Test
-    fun testVariableCreationWithOperatorPosition() {
-        val lexer = Lexer(Position())
-        val tokenList = lexer.tokenize("let a:number = 12 + 4;")
-
-        assertEquals(Position(1, 3, 1, 1, 1, 3), tokenList[0].getPosition())
-        assertEquals(Position(5, 5, 1, 1, 5, 5), tokenList[1].getPosition())
-        assertEquals(Position(6, 6, 1, 1, 6, 6), tokenList[2].getPosition())
-        assertEquals(Position(7, 12, 1, 1, 7, 12), tokenList[3].getPosition())
-        assertEquals(Position(14, 14, 1, 1, 14, 14), tokenList[4].getPosition())
-        assertEquals(Position(16, 17, 1, 1, 16, 17), tokenList[5].getPosition())
-        assertEquals(Position(19, 19, 1, 1, 19, 19), tokenList[6].getPosition())
-        assertEquals(Position(21, 21, 1, 1, 21, 21), tokenList[7].getPosition())
-        assertEquals(Position(22, 22, 1, 1, 22, 22), tokenList[8].getPosition())
+    fun testTokenizeAnAssignationWithMultipleSpaces() {
+        val input = "a  = 5;"
+        val tokenList = listOf(Token(Position(1,2,1,1,1,2), "a", TokenType.SYMBOL),
+            Token(Position(4,5,1,1,4,5), "=", TokenType.ASSIGNATION),
+            Token(Position(6,7,1,1,6,7), "5", TokenType.SYMBOL),
+            Token(Position(7,8,1,1,7,8), ";", TokenType.DELIMITER),
+        )
+        val result = lexer.tokenize(input)
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
     }
 
     @Test
-    fun testVariableCreationWithOperatorValue() {
-        val lexer = Lexer(Position())
-        val tokenList = lexer.tokenize("let a:number = 12 + 4;")
-
-        assertEquals("let", tokenList[0].getValue())
-        assertEquals("a", tokenList[1].getValue())
-        assertEquals(":", tokenList[2].getValue())
-        assertEquals("number", tokenList[3].getValue())
-        assertEquals("=", tokenList[4].getValue())
-        assertEquals("12", tokenList[5].getValue())
-        assertEquals("+", tokenList[6].getValue())
-        assertEquals("4", tokenList[7].getValue())
-        assertEquals(";", tokenList[8].getValue())
+    fun testTokenizeAnAssignationWithMultipleSpaces2() {
+        val input = " a  = 5  ;"
+        val tokenList = listOf(Token(Position(2,3,1,1,2,3), "a", TokenType.SYMBOL),
+            Token(Position(5,6,1,1,5,6), "=", TokenType.ASSIGNATION),
+            Token(Position(7,8,1,1,7,8), "5", TokenType.SYMBOL),
+            Token(Position(10,11,1,1,10,11), ";", TokenType.DELIMITER),
+        )
+        val result = lexer.tokenize(input)
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
     }
 
     @Test
-    fun testVariableCreationWithOperatorType() {
-        val lexer = Lexer(Position())
-        val tokenList = lexer.tokenize("let a:number = 12 + 4;")
+    fun testDeclareAndAssignANumericVariable(){
+        val input = "let a:number = 8;"
+        val tokenList = listOf(Token(Position(1,4,1,1,1,4), "let", TokenType.KEYWORD),
+            Token(Position(5,6,1,1,5,6), "a", TokenType.SYMBOL),
+            Token(Position(6,7,1,1,6,7), ":", TokenType.DECLARATION),
+            Token(Position(7,13,1,1,7,13), "number", TokenType.TYPE),
+            Token(Position(14, 15, 1,1, 14, 15), "=", TokenType.ASSIGNATION),
+            Token(Position(16, 17, 1,1, 16, 17), "8", TokenType.SYMBOL),
+            Token(Position(17, 18, 1,1, 17, 18), ";", TokenType.DELIMITER),
 
-        assertEquals(TokenType.KEYWORD, tokenList[0].getType())
-        assertEquals(TokenType.IDENTIFIER, tokenList[1].getType())
-        assertEquals(TokenType.DECLARATION, tokenList[2].getType()) // Is it weird that it is assignation?
-        assertEquals(TokenType.TYPE, tokenList[3].getType())
-        assertEquals(TokenType.ASSIGNATION, tokenList[4].getType()) // There are two different assignations token types
-        assertEquals(TokenType.INTEGER, tokenList[5].getType())
-        assertEquals(TokenType.OPERATOR, tokenList[6].getType())
-        assertEquals(TokenType.INTEGER, tokenList[7].getType())
-        assertEquals(TokenType.SEMICOLON, tokenList[8].getType())
+
+        )
+        val result = lexer.tokenize(input)
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
     }
 
     @Test
-    fun testNumberVariableTokenizePositionAndSizeWithMultipleSpaces() {
-        val lexer = Lexer(Position())
-        val tokenList = lexer.tokenize("let   a  : number   = 1   ;")
-
-        assertEquals(7, tokenList.size)
-        assertEquals(Position(1, 3, 1, 1, 1, 3), tokenList[0].getPosition())
-        assertEquals(Position(7, 7, 1, 1, 7, 7), tokenList[1].getPosition())
-        assertEquals(Position(10, 10, 1, 1, 10, 10), tokenList[2].getPosition())
-        assertEquals(Position(12, 17, 1, 1, 12, 17), tokenList[3].getPosition())
-        assertEquals(Position(21, 21, 1, 1, 21, 21), tokenList[4].getPosition())
-        assertEquals(Position(23, 23, 1, 1, 23, 23), tokenList[5].getPosition())
-        assertEquals(Position(27, 27, 1, 1, 27, 27), tokenList[6].getPosition())
+    fun testDeclareAndAssignAStringVariable(){
+        val input = "let a:string = \"hello\";"
+        val tokenList = listOf(Token(Position(1,4,1,1,1,4), "let", TokenType.KEYWORD),
+            Token(Position(5,6,1,1,5,6), "a", TokenType.SYMBOL),
+            Token(Position(6,7,1,1,6,7), ":", TokenType.DECLARATION),
+            Token(Position(7,13,1,1,7,13), "string", TokenType.TYPE),
+            Token(Position(14, 15, 1,1, 14, 15), "=", TokenType.ASSIGNATION),
+            Token(Position(16, 23, 1,1, 16, 23), "\"hello\"", TokenType.SYMBOL),
+            Token(Position(23, 24, 1,1, 23, 24), ";", TokenType.DELIMITER),
+            )
+        val result = lexer.tokenize(input)
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
     }
 
     @Test
-    fun testTokenizeTwoLines() {
-        val lexer = Lexer(Position())
-        val tokenList = lexer.tokenize("let a: number = 1;\nlet b: number = 2;")
-
-        assertEquals("let", tokenList[0].getValue())
-        assertEquals("a", tokenList[1].getValue())
-        assertEquals(":", tokenList[2].getValue())
-        assertEquals("number", tokenList[3].getValue())
-        assertEquals("=", tokenList[4].getValue())
-        assertEquals("1", tokenList[5].getValue())
-        assertEquals(";", tokenList[6].getValue())
-        assertEquals("let", tokenList[7].getValue())
-        assertEquals("b", tokenList[8].getValue())
-        assertEquals(":", tokenList[9].getValue())
-        assertEquals("number", tokenList[10].getValue())
-        assertEquals("=", tokenList[11].getValue())
-        assertEquals("2", tokenList[12].getValue())
-        assertEquals(";", tokenList[13].getValue())
+    fun declareAndAssignStringAndNumberOperation() {
+        val input = "let a : string = \"hello\" + 8 ;"
+        val tokenList = listOf(Token(Position(1,4,1,1,1,4), "let", TokenType.KEYWORD),
+            Token(Position(5,6,1,1,5,6), "a", TokenType.SYMBOL),
+            Token(Position(7,8,1,1,7,8), ":", TokenType.DECLARATION),
+            Token(Position(9,15,1,1,9,15), "string", TokenType.TYPE),
+            Token(Position(16, 17, 1,1, 16, 17), "=", TokenType.ASSIGNATION),
+            Token(Position(18, 25, 1,1, 18, 25), "\"hello\"", TokenType.SYMBOL),
+            Token(Position(26, 27, 1,1, 26, 27), "+", TokenType.OPERATOR),
+            Token(Position(28, 29, 1,1, 28, 29), "8", TokenType.SYMBOL),
+            Token(Position(30, 31, 1,1, 30, 31), ";", TokenType.DELIMITER)
+        )
+        val result = lexer.tokenize(input)
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
     }
 
     @Test
-    fun testTokenizeTwoLinesPosition() {
-        val lexer = Lexer(Position())
-        val tokenList = lexer.tokenize("let a: number = 1;\nlet b: number = 2;")
-
-        assertEquals(Position(1, 3, 1, 1, 1, 3), tokenList[0].getPosition())
-        assertEquals(Position(5, 5, 1, 1, 5, 5), tokenList[1].getPosition())
-        assertEquals(Position(6, 6, 1, 1, 6, 6), tokenList[2].getPosition())
-        assertEquals(Position(8, 13, 1, 1, 8, 13), tokenList[3].getPosition())
-        assertEquals(Position(15, 15, 1, 1, 15, 15), tokenList[4].getPosition())
-        assertEquals(Position(17, 17, 1, 1, 17, 17), tokenList[5].getPosition())
-        assertEquals(Position(18, 18, 1, 1, 18, 18), tokenList[6].getPosition())
-        assertEquals(Position(19, 21, 2, 2, 1, 3), tokenList[7].getPosition())
-        assertEquals(Position(23, 23, 2, 2, 5, 5), tokenList[8].getPosition())
-        assertEquals(Position(24, 24, 2, 2, 6, 6), tokenList[9].getPosition())
-        assertEquals(Position(26, 31, 2, 2, 8, 13), tokenList[10].getPosition())
-        assertEquals(Position(33, 33, 2, 2, 15, 15), tokenList[11].getPosition())
-        assertEquals(Position(35, 35, 2, 2, 17, 17), tokenList[12].getPosition())
-        assertEquals(Position(36, 36, 2, 2, 18, 18), tokenList[13].getPosition())
+    fun testPrintlnFunctionWithNumber() {
+        val input = "println(8);"
+        val tokenList = listOf(
+            Token(Position(1, 8, 1, 1, 1, 8), "println", TokenType.FUNCTION),
+            Token(Position(8, 9, 1, 1, 8, 9), "(", TokenType.PARENTHESIS),
+            Token(Position(9, 10, 1, 1, 9, 10), "8", TokenType.SYMBOL),
+            Token(Position(10, 11, 1, 1, 10, 11), ")", TokenType.PARENTHESIS),
+            Token(Position(11, 12, 1, 1, 11, 12), ";", TokenType.DELIMITER)
+        )
+        val result = lexer.tokenize(input)
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
     }
 
     @Test
-    fun testTokenizeTwoLinesType() {
-        val lexer = Lexer(Position())
-        val tokenList = lexer.tokenize("let a: number = 1;\nlet b: number = 2;")
+    fun testPrintlnFunctionWithOperationAndSpaces() {
+        val input = "println(8 + 9)  ;"
+        val tokenList = listOf(
+            Token(Position(1, 8, 1, 1, 1, 8), "println", TokenType.FUNCTION),
+            Token(Position(8, 9, 1, 1, 8, 9), "(", TokenType.PARENTHESIS),
+            Token(Position(9, 10, 1, 1, 9, 10), "8", TokenType.SYMBOL),
+            Token(Position(11, 12, 1, 1, 11, 12), "+", TokenType.OPERATOR),
+            Token(Position(13, 14, 1, 1, 13, 14), "9", TokenType.SYMBOL),
+            Token(Position(14, 15, 1, 1, 14, 15), ")", TokenType.PARENTHESIS),
+            Token(Position(17, 18, 1, 1, 17, 18), ";", TokenType.DELIMITER)
 
-        assertEquals(TokenType.KEYWORD, tokenList[0].getType())
-        assertEquals(TokenType.IDENTIFIER, tokenList[1].getType())
-        assertEquals(TokenType.DECLARATION, tokenList[2].getType())
-        assertEquals(TokenType.TYPE, tokenList[3].getType())
-        assertEquals(TokenType.ASSIGNATION, tokenList[4].getType())
-        assertEquals(TokenType.INTEGER, tokenList[5].getType())
-        assertEquals(TokenType.SEMICOLON, tokenList[6].getType())
-        assertEquals(TokenType.KEYWORD, tokenList[7].getType())
-        assertEquals(TokenType.IDENTIFIER, tokenList[8].getType())
-        assertEquals(TokenType.DECLARATION, tokenList[9].getType())
-        assertEquals(TokenType.TYPE, tokenList[10].getType())
-        assertEquals(TokenType.ASSIGNATION, tokenList[11].getType())
-        assertEquals(TokenType.INTEGER, tokenList[12].getType())
-        assertEquals(TokenType.SEMICOLON, tokenList[13].getType())
+        )
+        val result = lexer.tokenize(input)
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
     }
+
+    @Test
+    fun testPrintlnFunctionWithOperationAndSpaces2() {
+        val input = " println ( 8 + 9 )  ;"
+        val tokenList = listOf(
+            Token(Position(2, 9, 1, 1, 2, 9), "println", TokenType.FUNCTION),
+            Token(Position(10, 11, 1, 1, 10, 11), "(", TokenType.PARENTHESIS),
+            Token(Position(12, 13, 1, 1, 12, 13), "8", TokenType.SYMBOL),
+            Token(Position(14, 15, 1, 1, 14, 15), "+", TokenType.OPERATOR),
+            Token(Position(16, 17, 1, 1, 16, 17), "9", TokenType.SYMBOL),
+            Token(Position(18, 19, 1, 1, 18, 19), ")", TokenType.PARENTHESIS),
+            Token(Position(21, 22, 1, 1, 21, 22), ";", TokenType.DELIMITER)
+
+        )
+        val result = lexer.tokenize(input)
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
+    }
+
+    @Test
+    fun testPrintlnFunctionWithOperationAndSpaces3() {
+        val input = " println ( 8 * 9 )  ;"
+        val tokenList = listOf(
+            Token(Position(2, 9, 1, 1, 2, 9), "println", TokenType.FUNCTION),
+            Token(Position(10, 11, 1, 1, 10, 11), "(", TokenType.PARENTHESIS),
+            Token(Position(12, 13, 1, 1, 12, 13), "8", TokenType.SYMBOL),
+            Token(Position(14, 15, 1, 1, 14, 15), "*", TokenType.OPERATOR),
+            Token(Position(16, 17, 1, 1, 16, 17), "9", TokenType.SYMBOL),
+            Token(Position(18, 19, 1, 1, 18, 19), ")", TokenType.PARENTHESIS),
+            Token(Position(21, 22, 1, 1, 21, 22), ";", TokenType.DELIMITER)
+
+        )
+        val result = lexer.tokenize(input)
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
+    }
+
+    @Test
+    fun testPrintlnFunctionWithOperationAndSpaces4() {
+        val input = " println ( 8 / 9 )  ;"
+        val tokenList = listOf(
+            Token(Position(2, 9, 1, 1, 2, 9), "println", TokenType.FUNCTION),
+            Token(Position(10, 11, 1, 1, 10, 11), "(", TokenType.PARENTHESIS),
+            Token(Position(12, 13, 1, 1, 12, 13), "8", TokenType.SYMBOL),
+            Token(Position(14, 15, 1, 1, 14, 15), "/", TokenType.OPERATOR),
+            Token(Position(16, 17, 1, 1, 16, 17), "9", TokenType.SYMBOL),
+            Token(Position(18, 19, 1, 1, 18, 19), ")", TokenType.PARENTHESIS),
+            Token(Position(21, 22, 1, 1, 21, 22), ";", TokenType.DELIMITER)
+
+        )
+        val result = lexer.tokenize(input)
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
+    }
+
+    @Test
+    fun testPrintlnFunctionWithOperationAndSpaces5() {
+        val input = " println ( 8 - 9 )  ;"
+        val tokenList = listOf(
+            Token(Position(2, 9, 1, 1, 2, 9), "println", TokenType.FUNCTION),
+            Token(Position(10, 11, 1, 1, 10, 11), "(", TokenType.PARENTHESIS),
+            Token(Position(12, 13, 1, 1, 12, 13), "8", TokenType.SYMBOL),
+            Token(Position(14, 15, 1, 1, 14, 15), "-", TokenType.OPERATOR),
+            Token(Position(16, 17, 1, 1, 16, 17), "9", TokenType.SYMBOL),
+            Token(Position(18, 19, 1, 1, 18, 19), ")", TokenType.PARENTHESIS),
+            Token(Position(21, 22, 1, 1, 21, 22), ";", TokenType.DELIMITER)
+
+        )
+        val result = lexer.tokenize(input)
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
+    }
+
+    @Test
+    fun testPrintlnFunctionWithString() {
+        val input = "println(\"hello\" + \"world\");"
+        val tokenList = listOf(
+            Token(Position(1, 8, 1, 1, 1, 8), "println", TokenType.FUNCTION),
+            Token(Position(8, 9, 1, 1, 8, 9), "(", TokenType.PARENTHESIS),
+            Token(Position(9, 16, 1, 1, 9, 16), "\"hello\"", TokenType.SYMBOL),
+            Token(Position(17, 18, 1, 1, 17, 18), "+", TokenType.OPERATOR),
+            Token(Position(19, 26, 1, 1, 19, 26), "\"world\"", TokenType.SYMBOL),
+            Token(Position(26, 27, 1, 1, 26, 27), ")", TokenType.PARENTHESIS),
+            Token(Position(27, 28, 1, 1, 27, 28), ";", TokenType.DELIMITER)
+        )
+        val result = lexer.tokenize(input)
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
+    }
+
+    @Test
+    fun testPrintlnFunctionWithVariable() {
+        val input = "println(x);"
+        val tokenList = listOf(
+            Token(Position(1, 8, 1, 1, 1, 8), "println", TokenType.FUNCTION),
+            Token(Position(8, 9, 1, 1, 8, 9), "(", TokenType.PARENTHESIS),
+            Token(Position(9, 10, 1, 1, 9, 10), "x", TokenType.SYMBOL),
+            Token(Position(10, 11, 1, 1, 10, 11), ")", TokenType.PARENTHESIS),
+            Token(Position(11, 12, 1, 1, 11, 12), ";", TokenType.DELIMITER)
+        )
+        val result = lexer.tokenize(input)
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
+    }
+
+    @Test
+    fun testAssignationAndDeclarationInDifferentLines() {
+        val input = "let\na\n:\nnumber\n=\n8\n;"
+        val tokenList = listOf(
+            Token(Position(1,4,1,1,1,4), "let", TokenType.KEYWORD),
+            Token(Position(4,5,2,2,4,5), "a", TokenType.SYMBOL),
+            Token(Position(5,6,3,3,5,6), ":", TokenType.DECLARATION),
+            Token(Position(6,12,4,4,6,12), "number", TokenType.TYPE),
+            Token(Position(12, 13, 5,5, 12, 13), "=", TokenType.ASSIGNATION),
+            Token(Position(13, 14, 6,6, 13, 14), "8", TokenType.SYMBOL),
+            Token(Position(14, 15, 7,7, 14, 15), ";", TokenType.DELIMITER),
+            )
+        val result = lexer.tokenize(input)
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
+    }
+
+
 }
