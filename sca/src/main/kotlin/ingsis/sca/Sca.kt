@@ -6,7 +6,6 @@ import ingsis.sca.scan.ScanIdentifierCase
 import ingsis.sca.scan.ScanPrintLine
 import ingsis.sca.scan.ScanStatement
 import ingsis.utils.ReadScaRulesFile
-import java.io.FileWriter
 
 object PrintScriptSca {
     fun createSCA(version: String): Sca {
@@ -36,22 +35,22 @@ class Sca(private val scanners: List<ScanStatement>) {
 
     fun analyze(
         statement: Statement,
-        reportFileName: String,
-    ) {
-        val fileWriter = FileWriter(reportFileName, true)
-        val jsonReader = ReadScaRulesFile("src/main/kotlin/ingsis/sca/rules/rules.json")
+        jsonPath: String
+    ) : String{
+        val result = StringBuilder()
+        val jsonReader = ReadScaRulesFile(jsonPath)
         for (scan in scanners) {
             if (scan.canHandle(statement)) {
-                when (val result = scan.analyze(statement, jsonReader)) {
+                when (val scanResult = scan.analyze(statement, jsonReader)) {
                     is InvalidResult -> {
-                        fileWriter.write(
-                            "${result.getMessage()} at line " +
-                                    "${result.getPosition().startLine} and column ${result.getPosition().startColumn}\n",
+                        result.append(
+                            "${scanResult.getMessage()} at line " +
+                                    "${scanResult.getPosition().startLine} and column ${scanResult.getPosition().startColumn}\n",
                         )
                     }
                 }
             }
         }
-        fileWriter.close()
+        return result.toString()
     }
 }

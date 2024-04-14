@@ -14,7 +14,7 @@ class ScaTest {
         val printLine = PrintLine(Position(), SingleValue(Token(Position(), "a", TokenType.IDENTIFIER)))
         val scanPrintLine = ScanPrintLine(arrayListOf(TokenType.IDENTIFIER))
         val sca = Sca(listOf(scanPrintLine))
-        sca.analyze(printLine, "src/test/kotlin/reportFileName.txt")
+        sca.analyze(printLine, "src/main/kotlin/ingsis/sca/rules/rules.json")
     }
 
     @Test
@@ -22,7 +22,7 @@ class ScaTest {
         val printLine = PrintLine(Position(), SingleValue(Token(Position(), "1", TokenType.INTEGER)))
         val scanPrintLine = ScanPrintLine(arrayListOf(TokenType.INTEGER))
         val sca = Sca(listOf(scanPrintLine))
-        sca.analyze(printLine, "src/test/kotlin/reportFileName.txt")
+        sca.analyze(printLine, "src/main/kotlin/ingsis/sca/rules/rules.json")
     }
 
     @Test
@@ -30,7 +30,7 @@ class ScaTest {
         val printLine = PrintLine(Position(), SingleValue(Token(Position(), "hello world", TokenType.STRING)))
         val scanPrintLine = ScanPrintLine(arrayListOf(TokenType.STRING))
         val sca = Sca(listOf(scanPrintLine))
-        sca.analyze(printLine, "src/test/kotlin/reportFileName.txt")
+        sca.analyze(printLine, "src/main/kotlin/ingsis/sca/rules/rules.json")
     }
 
     @Test
@@ -48,7 +48,7 @@ class ScaTest {
             )
         val scanPrintLine = ScanPrintLine(arrayListOf(TokenType.OPERATOR))
         val sca = Sca(listOf(scanPrintLine))
-        sca.analyze(printLine, "src/test/kotlin/reportFileName.txt")
+        sca.analyze(printLine, "src/main/kotlin/ingsis/sca/rules/rules.json")
     }
 
     @Test
@@ -59,7 +59,7 @@ class ScaTest {
         val declaration = Declaration(keyword, variable, type, Position())
         val scanIdentifierCase = ScanIdentifierCase()
         val sca = Sca(listOf(scanIdentifierCase))
-        sca.analyze(declaration, "src/test/kotlin/reportFileName.txt")
+        sca.analyze(declaration, "src/main/kotlin/ingsis/sca/rules/rules.json")
     }
 
     @Test
@@ -70,7 +70,7 @@ class ScaTest {
         val declaration = Declaration(keyword, variable, type, Position())
         val scanIdentifierCase = ScanIdentifierCase()
         val sca = Sca(listOf(scanIdentifierCase))
-        sca.analyze(declaration, "src/test/kotlin/reportFileName.txt")
+        sca.analyze(declaration, "src/main/kotlin/ingsis/sca/rules/rules.json")
     }
 
     @Test
@@ -81,7 +81,7 @@ class ScaTest {
         val declaration = Declaration(keyword, variable, type, Position())
         val scanIdentifierCase = ScanIdentifierCase()
         val sca = Sca(listOf(scanIdentifierCase))
-        sca.analyze(declaration, "src/test/kotlin/reportFileName.txt")
+        sca.analyze(declaration, "src/main/kotlin/ingsis/sca/rules/rules.json")
     }
 
     @Test
@@ -92,6 +92,6 @@ class ScaTest {
         val declaration = Declaration(keyword, variable, type, Position())
         val scanIdentifierCase = ScanIdentifierCase()
         val sca = Sca(listOf(scanIdentifierCase))
-        sca.analyze(declaration, "src/test/kotlin/reportFileName.txt")
+        sca.analyze(declaration, "src/main/kotlin/ingsis/sca/rules/rules.json")
     }
 }
