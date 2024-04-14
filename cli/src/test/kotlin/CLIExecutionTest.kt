@@ -150,4 +150,73 @@ class CLIExecutionTest {
                 "Can't do division using no integer types in line 1 at position 11"
         assertEquals(expected, result)
     }
+
+    @Test
+    fun `v1 - test 01 - print line with huge file`() {
+        val result = cliV1.startCli(readFile("src/test/resources/hugeExecutableFile"))
+        val expected =
+            "\n" +
+                    "statement of line 0 -> name: x1 \t  value: type: INTEGER, value: 5\n" +
+                    "\n" +
+                    "statement of line 1 -> name: y1 \t  value: type: INTEGER, value: 5\n" +
+                    "\n" +
+                    "statement of line 2 -> name: y2 \t  value: type: INTEGER, value: 5\n" +
+                    "\n" +
+                    "statement of line 3 -> name: x2 \t  value: type: INTEGER, value: 5\n" +
+                    "\n" +
+                    "statement of line 4 -> PrintLine(value=\n" +
+                    "\tOperator(\n" +
+                    "\ttoken=type: OPERATOR, value: *, \n" +
+                    "\tleftOperator=SingleValue(token=type: IDENTIFIER, value: x1), \n" +
+                    "\trightOperator=SingleValue(token=type: IDENTIFIER, value: y1)), statementType=PRINT_LINE)\n" +
+                    "25\n" +
+                    "statement of line 5 -> PrintLine(value=\n" +
+                    "\tOperator(\n" +
+                    "\ttoken=type: OPERATOR, value: /, \n" +
+                    "\tleftOperator=SingleValue(token=type: IDENTIFIER, value: x2), \n" +
+                    "\trightOperator=SingleValue(token=type: IDENTIFIER, value: y2)), statementType=PRINT_LINE)\n" +
+                    "1\n" +
+                    "statement of line 6 -> name: x1 \t  value: SingleValue(token=type: INTEGER, value: 10)\n" +
+                    "\n" +
+                    "statement of line 7 -> name: y1 \t  value: SingleValue(token=type: INTEGER, value: 10)\n" +
+                    "\n" +
+                    "statement of line 8 -> name: y2 \t  value: SingleValue(token=type: INTEGER, value: 10)\n" +
+                    "\n" +
+                    "statement of line 9 -> name: x2 \t  value: SingleValue(token=type: INTEGER, value: 10)\n" +
+                    "\n" +
+                    "statement of line 10 -> PrintLine(value=\n" +
+                    "\tOperator(\n" +
+                    "\ttoken=type: OPERATOR, value: +, \n" +
+                    "\tleftOperator=SingleValue(token=type: IDENTIFIER, value: x1), \n" +
+                    "\trightOperator=SingleValue(token=type: IDENTIFIER, value: y1)), statementType=PRINT_LINE)\n" +
+                    "20\n" +
+                    "statement of line 11 -> PrintLine(value=\n" +
+                    "\tOperator(\n" +
+                    "\ttoken=type: OPERATOR, value: -, \n" +
+                    "\tleftOperator=SingleValue(token=type: IDENTIFIER, value: x2), \n" +
+                    "\trightOperator=SingleValue(token=type: IDENTIFIER, value: y2)), statementType=PRINT_LINE)\n" +
+                    "0\n" +
+                    "statement of line 12 -> name: x1 \t  value: SingleValue(token=type: INTEGER, value: 15)\n" +
+                    "\n" +
+                    "statement of line 13 -> name: y1 \t  value: SingleValue(token=type: INTEGER, value: 15)\n" +
+                    "\n" +
+                    "statement of line 14 -> name: y2 \t  value: SingleValue(token=type: INTEGER, value: 15)\n" +
+                    "\n" +
+                    "statement of line 15 -> name: x2 \t  value: SingleValue(token=type: INTEGER, value: 15)\n" +
+                    "\n" +
+                    "statement of line 16 -> PrintLine(value=\n" +
+                    "\tOperator(\n" +
+                    "\ttoken=type: OPERATOR, value: +, \n" +
+                    "\tleftOperator=SingleValue(token=type: IDENTIFIER, value: x1), \n" +
+                    "\trightOperator=SingleValue(token=type: IDENTIFIER, value: y1)), statementType=PRINT_LINE)\n" +
+                    "30\n" +
+                    "statement of line 17 -> PrintLine(value=\n" +
+                    "\tOperator(\n" +
+                    "\ttoken=type: OPERATOR, value: +, \n" +
+                    "\tleftOperator=SingleValue(token=type: IDENTIFIER, value: x2), \n" +
+                    "\trightOperator=SingleValue(token=type: IDENTIFIER, value: y2)), statementType=PRINT_LINE)\n" +
+                    "30"
+        assertEquals(expected, result)
+    }
+
 }

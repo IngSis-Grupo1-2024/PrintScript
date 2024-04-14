@@ -50,7 +50,7 @@ class Cli(version: Version) {
             incrementOneLine()
             return tokenizeWithLexer(line.substring(1))
         }
-        return lexer.tokenize(line)
+        return lexer.tokenize(line, position)
     }
 
     private fun incrementOneLine() {
