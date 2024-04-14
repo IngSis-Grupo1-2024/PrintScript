@@ -59,5 +59,5 @@ class ScanPrintLine : ScanStatement {
         return value.isEmpty()
     }
 
-    private fun checkIfThereIsNoDelimiter(tokens: List<Token>) = tokens.last().getType() != TokenType.SEMICOLON
+    private fun checkIfThereIsNoDelimiter(tokens: List<Token>) = tokens.last().getType() != TokenType.DELIMITER
 }

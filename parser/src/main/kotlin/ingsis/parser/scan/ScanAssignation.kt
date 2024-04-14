@@ -93,5 +93,5 @@ class ScanAssignation : ScanStatement {
         }
     }
 
-    private fun checkIfThereIsNoDelimiter(tokens: List<Token>) = tokens.last().getType() != TokenType.SEMICOLON
+    private fun checkIfThereIsNoDelimiter(tokens: List<Token>) = tokens.last().getType() != TokenType.DELIMITER
 }

@@ -25,11 +25,13 @@ class ScanSumOperator : ScanOperatorType {
         if (firstValue.getType().getValue() == TokenType.STRING || secondValue.getType().getValue() == TokenType.STRING) {
             val finalValue = firstValue.getValue() + secondValue.getValue()
             return SingleValue(token = Token(Position(), finalValue, TokenType.STRING))
-        }
-        else if (firstValue.getType().getValue() != TokenType.INTEGER ||
-            secondValue.getType().getValue() != TokenType.INTEGER) {
+        } else if (firstValue.getType().getValue() != TokenType.INTEGER ||
+            secondValue.getType().getValue() != TokenType.INTEGER
+        ) {
             throw Error(
-                "Can't do addition using no integer types or string types in line " + operatorPosition.startLine + "at position " + operatorPosition.startColumn,
+                "Can't do addition using no integer types or string types in line " +
+                    operatorPosition.startLine + "at position " +
+                    operatorPosition.startColumn,
             )
         }
         val finalValue = firstValue.getValue()!!.toInt() + secondValue.getValue()!!.toInt()

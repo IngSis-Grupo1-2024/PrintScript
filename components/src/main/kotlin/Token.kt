@@ -13,7 +13,5 @@ class Token(private val position: Position, private val value: String, private v
         position: Position = this.position,
         value: String = this.value,
         type: TokenType = this.type,
-    ): Token {
-        return Token(position, value, type)
-    }
+    ): Token = Token(position, value, type)
 }

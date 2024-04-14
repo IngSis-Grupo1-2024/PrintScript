@@ -16,7 +16,7 @@ class ComparatorTokenType : Comparator<TokenType> {
     ): Int {
         return when (o1) {
             o2 -> 0
-            TokenType.SEMICOLON -> 2
+            TokenType.DELIMITER -> 2
             TokenType.KEYWORD -> -2
             in rootTypes -> 1
             TokenType.PARENTHESIS -> -2

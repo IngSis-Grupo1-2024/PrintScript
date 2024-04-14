@@ -19,7 +19,7 @@ class ScanValue {
 
     fun canHandle(tokens: List<Token>): Boolean {
         val invalidValueTypes =
-            listOf(TokenType.TYPE, TokenType.DECLARATION, TokenType.ASSIGNATION, TokenType.SEMICOLON, TokenType.KEYWORD)
+            listOf(TokenType.TYPE, TokenType.DECLARATION, TokenType.ASSIGNATION, TokenType.DELIMITER, TokenType.KEYWORD)
 
         tokens
             .filter { it.getType() in invalidValueTypes }

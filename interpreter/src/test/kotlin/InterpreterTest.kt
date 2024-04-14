@@ -7,14 +7,14 @@ import ingsis.interpreter.interpretStatement.AssignationInterpreter
 import ingsis.interpreter.interpretStatement.CompoundAssignationInterpreter
 import ingsis.interpreter.interpretStatement.DeclarationInterpreter
 import ingsis.interpreter.interpretStatement.PrintLineInterpreter
-import ingsis.utils.Result
 import ingsis.interpreter.operatorScanner.ScanDivOperator
+import ingsis.interpreter.operatorScanner.ScanMulOperator
 import ingsis.interpreter.operatorScanner.ScanSubOperator
+import ingsis.interpreter.operatorScanner.ScanSumOperator
+import ingsis.utils.Result
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import ingsis.interpreter.operatorScanner.ScanMulOperator
-import ingsis.interpreter.operatorScanner.ScanSumOperator
 
 class InterpreterTest {
     @Test

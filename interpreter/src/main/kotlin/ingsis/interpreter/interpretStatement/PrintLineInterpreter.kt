@@ -5,9 +5,9 @@ import components.TokenType
 import components.statement.PrintLine
 import components.statement.Statement
 import components.statement.StatementType
-import ingsis.utils.Result
 import ingsis.interpreter.operatorScanner.ScanOperatorType
 import ingsis.interpreter.valueAnalyzer.ValueAnalyzer
+import ingsis.utils.Result
 
 class PrintLineInterpreter(private val scanners: List<ScanOperatorType>) : StatementInterpreter {
 //    private val functions = InterpreterFunctions()

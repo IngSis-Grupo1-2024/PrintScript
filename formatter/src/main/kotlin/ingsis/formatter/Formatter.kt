@@ -13,7 +13,10 @@ object PrintScriptFormatter {
 }
 
 class Formatter(private val scanners: List<ScanStatement>) {
-    fun format(statement: Statement, rulePath: String): String {
+    fun format(
+        statement: Statement,
+        rulePath: String,
+    ): String {
         val ruleMap = readJsonAndStackMap(rulePath)
         val result = StringBuilder()
         for (scanner in scanners) {

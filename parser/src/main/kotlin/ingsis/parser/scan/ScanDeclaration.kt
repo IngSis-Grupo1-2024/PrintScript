@@ -72,5 +72,5 @@ class ScanDeclaration : ScanStatement {
 
     private fun getVariable(token: Token): Variable = Variable(token.getValue(), token.getPosition())
 
-    private fun checkIfThereIsNoDelimiter(tokens: List<Token>) = tokens.last().getType() != TokenType.SEMICOLON
+    private fun checkIfThereIsNoDelimiter(tokens: List<Token>) = tokens.last().getType() != TokenType.DELIMITER
 }

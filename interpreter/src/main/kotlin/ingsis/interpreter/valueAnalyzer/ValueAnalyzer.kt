@@ -5,8 +5,8 @@ import components.statement.Operator
 import components.statement.SingleValue
 import components.statement.Type
 import components.statement.Value
-import ingsis.utils.Result
 import ingsis.interpreter.operatorScanner.ScanOperatorType
+import ingsis.utils.Result
 
 class ValueAnalyzer(private val scanners: List<ScanOperatorType>) {
     fun analyze(

@@ -21,14 +21,14 @@ class CLIValidationTest {
         val result = cliV1.validate(readFile("src/test/resources/declaration/WithEqualsSign"))
         val expected =
             "\n" +
-                "error: to declare a variable, it's expected to do it by" +
-                " 'let <name of the variable>: <type of the variable>' in position :{\n" +
-                "\tstartOffset: 0,\n" +
-                "\tendOffset: 2,\n" +
+                "error: to declare a variable, it's expected to do " +
+                "it by 'let <name of the variable>: <type of the variable>' in position :{\n" +
+                "\tstartOffset: 1,\n" +
+                "\tendOffset: 4,\n" +
                 "\tstartLine: 1,\n" +
                 "\tendLine: 1,\n" +
                 "\tstartColumn: 1,\n" +
-                "\tendColumn: 3}"
+                "\tendColumn: 4}"
         assertEquals(expected, result)
     }
 
@@ -44,12 +44,12 @@ class CLIValidationTest {
         val result = cliV1.validate(readFile("src/test/resources/simpleAssignation/SingleValueAndOneOperator"))
         val expected =
             "\nerror: wrong number of values and operators in position :{\n" +
-                "\tstartOffset: 6,\n" +
-                "\tendOffset: 6,\n" +
+                "\tstartOffset: 7,\n" +
+                "\tendOffset: 8,\n" +
                 "\tstartLine: 1,\n" +
                 "\tendLine: 1,\n" +
                 "\tstartColumn: 7,\n" +
-                "\tendColumn: 7}"
+                "\tendColumn: 8}"
         assertEquals(expected, result)
     }
 
@@ -87,12 +87,12 @@ class CLIValidationTest {
         val expected =
             "\n" +
                 "error: wrong number of values and operators in position :{\n" +
-                "\tstartOffset: 18,\n" +
-                "\tendOffset: 18,\n" +
+                "\tstartOffset: 19,\n" +
+                "\tendOffset: 20,\n" +
                 "\tstartLine: 1,\n" +
                 "\tendLine: 1,\n" +
                 "\tstartColumn: 19,\n" +
-                "\tendColumn: 19}"
+                "\tendColumn: 20}"
         assertEquals(expected, result)
     }
 
@@ -130,12 +130,12 @@ class CLIValidationTest {
         val expected =
             "\n" +
                 "error: wrong number of values and operators in position :{\n" +
-                "\tstartOffset: 11,\n" +
-                "\tendOffset: 11,\n" +
+                "\tstartOffset: 12,\n" +
+                "\tendOffset: 13,\n" +
                 "\tstartLine: 1,\n" +
                 "\tendLine: 1,\n" +
                 "\tstartColumn: 12,\n" +
-                "\tendColumn: 12}"
+                "\tendColumn: 13}"
         assertEquals(expected, result)
     }
 
@@ -166,12 +166,12 @@ class CLIValidationTest {
         val expected =
             "\n" +
                 "error: expected ')' in position :{\n" +
-                "\tstartOffset: 21,\n" +
-                "\tendOffset: 21,\n" +
+                "\tstartOffset: 22,\n" +
+                "\tendOffset: 23,\n" +
                 "\tstartLine: 1,\n" +
                 "\tendLine: 1,\n" +
                 "\tstartColumn: 22,\n" +
-                "\tendColumn: 22}"
+                "\tendColumn: 23}"
         assertEquals(expected, result)
     }
 
@@ -181,26 +181,26 @@ class CLIValidationTest {
         val expected =
             "\n" +
                 "error: wrong number of values and operators in position :{\n" +
-                "\tstartOffset: 18,\n" +
-                "\tendOffset: 18,\n" +
+                "\tstartOffset: 19,\n" +
+                "\tendOffset: 20,\n" +
                 "\tstartLine: 1,\n" +
                 "\tendLine: 1,\n" +
                 "\tstartColumn: 19,\n" +
-                "\tendColumn: 19}\n" +
+                "\tendColumn: 20}\n" +
                 "error: wrong number of values and operators in position :{\n" +
-                "\tstartOffset: 11,\n" +
-                "\tendOffset: 11,\n" +
+                "\tstartOffset: 12,\n" +
+                "\tendOffset: 13,\n" +
                 "\tstartLine: 1,\n" +
                 "\tendLine: 1,\n" +
                 "\tstartColumn: 12,\n" +
-                "\tendColumn: 12}\n" +
+                "\tendColumn: 13}\n" +
                 "error: expected ')' in position :{\n" +
-                "\tstartOffset: 21,\n" +
-                "\tendOffset: 21,\n" +
+                "\tstartOffset: 22,\n" +
+                "\tendOffset: 23,\n" +
                 "\tstartLine: 1,\n" +
                 "\tendLine: 1,\n" +
                 "\tstartColumn: 22,\n" +
-                "\tendColumn: 22}"
+                "\tendColumn: 23}"
         assertEquals(expected, result)
     }
 
