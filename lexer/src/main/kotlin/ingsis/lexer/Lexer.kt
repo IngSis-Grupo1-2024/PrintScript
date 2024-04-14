@@ -135,7 +135,7 @@ class Lexer(
             startLine = newEndLine,
             endOffset = newEndOffset,
             endColumn = newEndColumn,
-            endLine = newEndLine
+            endLine = newEndLine,
         )
     }
 
