@@ -910,4 +910,113 @@ class InterpreterTest {
         println()
         println()
     }
+
+    @Test
+    fun testErrorWhenAssigningAStringToANumericVariable(){
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
+        val interpreter = Interpreter(
+            listOf(
+                AssignationInterpreter(scanners),
+                DeclarationInterpreter(),
+                CompoundAssignationInterpreter(scanners),
+            ),
+        )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.INTEGER, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation = CompoundAssignation(
+            position,
+            declarationStatement,
+            SingleValue(Token(position, "8", TokenType.INTEGER)),
+        )
+        interpreter.interpret(compoundAssignation, HashMap())
+        val assignation = Assignation(position, variable, SingleValue(Token(position, "Hello", TokenType.STRING)))
+        val exception = assertThrows<Exception> { interpreter.interpret(assignation, HashMap()) }
+        assertEquals(
+            "Type mismatch", exception.message
+        )
+    }
+
+    @Test
+    fun testErrorWhenAssigningANumberToAStringVariable(){
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
+        val interpreter = Interpreter(
+            listOf(
+                AssignationInterpreter(scanners),
+                DeclarationInterpreter(),
+                CompoundAssignationInterpreter(scanners),
+            ),
+        )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.STRING, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation = CompoundAssignation(
+            position,
+            declarationStatement,
+            SingleValue(Token(position, "hello world", TokenType.STRING)),
+        )
+        interpreter.interpret(compoundAssignation, HashMap())
+        val assignation = Assignation(position, variable, SingleValue(Token(position, "8", TokenType.INTEGER)))
+        val exception = assertThrows<Exception> { interpreter.interpret(assignation, HashMap()) }
+        assertEquals(
+            "Type mismatch", exception.message
+        )
+    }
+
+    @Test
+    fun testCompoundAssignationNumericTypeDoesNotMatchStringVariableType(){
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
+        val interpreter = Interpreter(
+            listOf(
+                AssignationInterpreter(scanners),
+                DeclarationInterpreter(),
+                CompoundAssignationInterpreter(scanners),
+            ),
+        )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.INTEGER, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation = CompoundAssignation(
+            position,
+            declarationStatement,
+            SingleValue(Token(position, "hello world", TokenType.STRING)),
+        )
+        val exception = assertThrows<Exception> { interpreter.interpret(compoundAssignation, HashMap()) }
+        assertEquals(
+            "Type mismatch", exception.message
+        )
+    }
+
+    @Test
+    fun testCompoundAssignationStringTypeDoesNotMatchNumericVariableType(){
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
+        val interpreter = Interpreter(
+            listOf(
+                AssignationInterpreter(scanners),
+                DeclarationInterpreter(),
+                CompoundAssignationInterpreter(scanners),
+            ),
+        )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.STRING, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation = CompoundAssignation(
+            position,
+            declarationStatement,
+            SingleValue(Token(position, "8", TokenType.INTEGER)),
+        )
+        val exception = assertThrows<Exception> { interpreter.interpret(compoundAssignation, HashMap()) }
+        assertEquals(
+            "Type mismatch", exception.message
+        )
+    }
+
 }

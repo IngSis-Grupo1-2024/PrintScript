@@ -1,8 +1,6 @@
 package ingsis.interpreter.interpretStatement
 
-import components.statement.CompoundAssignation
-import components.statement.Statement
-import components.statement.StatementType
+import components.statement.*
 import ingsis.utils.Result
 import ingsis.interpreter.operatorScanner.ScanOperatorType
 import ingsis.interpreter.valueAnalyzer.ValueAnalyzer
@@ -18,8 +16,20 @@ class CompoundAssignationInterpreter(private val scanners: List<ScanOperatorType
         val variable = compoundAssignation.getDeclaration().getVariable()
         val value = compoundAssignation.getValue()
         val result = ValueAnalyzer(scanners).analyze(value, previousState)
-        previousState[variable.getName()] = result
+        if (checkIfNewValueTypeMatchesType(compoundAssignation.getDeclaration(), result)) {
+            previousState[variable.getName()] = result
+        }
+        else {
+            throw Exception("Type mismatch")
+        }
 
         return previousState
+    }
+
+    private fun checkIfNewValueTypeMatchesType(
+        declaration: Declaration,
+        result: Result,
+    ): Boolean {
+        return declaration.getType().getValue() == result.getType().getValue()
     }
 }
