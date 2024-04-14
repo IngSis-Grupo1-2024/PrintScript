@@ -19,8 +19,7 @@ class AssignationInterpreter(private val scanners: List<ScanOperatorType>) : Sta
         val result = ValueAnalyzer(scanners).analyze(value, previousState)
         if (checkIfNewValueTypeMatchesType(variable, result, previousState)) {
             previousState[variable.getName()] = result
-        }
-        else {
+        } else {
             throw Exception("Type mismatch")
         }
 

@@ -106,7 +106,7 @@ class App : CliktCommand() {
 }
 
 fun main(args: Array<String>) {
-    test1WOoutput()
+    App().main(args)
 }
 
 fun test1WOoutput() =
