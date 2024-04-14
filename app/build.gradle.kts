@@ -3,14 +3,16 @@
  */
 
 plugins {
+    application
     id("PrintScript.kotlin-application-conventions")
 }
 
 dependencies {
-    implementation("org.apache.commons:commons-text")
+    api(project(":cli"))
+    implementation("com.github.ajalt.clikt:clikt:4.3.0")
 }
 
 application {
     // Define the main class for the application.
-    mainClass.set("PrintScript.app.AppKt")
+    mainClass = "app.AppKt"
 }

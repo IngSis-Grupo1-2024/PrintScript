@@ -12,4 +12,5 @@ dependencies {
     api(project(":lexer"))
     api(project(":parser"))
     api(project(":interpreter"))
+    api(project(":formatter"))
 }

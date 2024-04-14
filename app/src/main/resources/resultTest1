@@ -1,0 +1,8 @@
+
+statement of line 0 -> PrintLine(position={
+	startOffset: 0,
+	endOffset: 6,
+	startLine: 1,
+	endLine: 1,
+	startColumn: 1,
+	endColumn: 7}, value=SingleValue(token=type: INTEGER, value: 2), statementType=PRINT_LINE)

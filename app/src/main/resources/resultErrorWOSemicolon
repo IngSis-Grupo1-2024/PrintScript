@@ -1,0 +1,14 @@
+
+error: ';' expected  {
+	startOffset: 15,
+	endOffset: 15,
+	startLine: 1,
+	endLine: 1,
+	startColumn: 16,
+	endColumn: 16} in position :{
+	startOffset: 15,
+	endOffset: 15,
+	startLine: 1,
+	endLine: 1,
+	startColumn: 16,
+	endColumn: 16}

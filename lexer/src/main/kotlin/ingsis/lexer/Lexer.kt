@@ -1,12 +1,36 @@
 package ingsis.lexer
 
-import components.Position
-import components.Token
-import components.TokenType
+import ingsis.components.Position
+import ingsis.components.Token
+import ingsis.components.TokenType
+
+object PrintScriptLexer {
+    fun createLexer(version: String): Lexer {
+        return when (version) {
+            "VERSION_1" -> version1()
+            else -> version1()
+        }
+    }
+
+    private fun version1() =
+        Lexer(
+            Position(),
+            listOf(
+                TokenAssignator(TokenType.KEYWORD, listOf("let")),
+                TokenAssignator(TokenType.FUNCTION, listOf("println")),
+                TokenAssignator(TokenType.TYPE, listOf("number", "string", "boolean")),
+                TokenAssignator(TokenType.OPERATOR, listOf("+", "-", "/", "*")),
+                TokenAssignator(TokenType.DELIMITER, listOf(";")),
+                TokenAssignator(TokenType.PARENTHESIS, listOf("(", ")")),
+                TokenAssignator(TokenType.DECLARATION, listOf(":")),
+                TokenAssignator(TokenType.ASSIGNATION, listOf("=")),
+            ),
+        )
+}
 
 class Lexer(
     private val position: Position,
-    private val tokenAssignatorList: List<TokenAssignator>
+    private val tokenAssignatorList: List<TokenAssignator>,
 ) {
     fun tokenize(input: String): List<Token> {
         val tokens = ArrayList<Token>()
@@ -52,12 +76,13 @@ class Lexer(
                 }
                 if (canCreateToken(nextChar.toString()) && currentToken.isNotEmpty()) { // current token is a symbol
                     tokens.add(Token(currentPosition, currentToken, TokenType.SYMBOL))
-                    currentPosition = currentPosition.copy(
-                        startOffset = currentPosition.endOffset,
-                        endOffset = currentPosition.endOffset + 1,
-                        startColumn = currentPosition.endColumn,
-                        endColumn = currentPosition.endColumn + 1
-                    )
+                    currentPosition =
+                        currentPosition.copy(
+                            startOffset = currentPosition.endOffset,
+                            endOffset = currentPosition.endOffset + 1,
+                            startColumn = currentPosition.endColumn,
+                            endColumn = currentPosition.endColumn + 1,
+                        )
                     tokens.add(createTokenIfValid(nextChar.toString(), currentPosition))
                     currentPosition = previousEndToNewStart(currentPosition)
                     currentToken = ""
@@ -82,7 +107,10 @@ class Lexer(
         return tokens
     }
 
-    private fun updatePosition(position: Position, char: Char): Position {
+    private fun updatePosition(
+        position: Position,
+        char: Char,
+    ): Position {
         val newEndOffset = position.endOffset + 1
         val newEndColumn = if (char == '\n') 1 else position.endColumn + 1
         val newEndLine = if (char == '\n') position.endLine + 1 else position.endLine
@@ -93,7 +121,7 @@ class Lexer(
             startLine = newStartLine,
             endOffset = newEndOffset,
             endColumn = newEndColumn,
-            endLine = newEndLine
+            endLine = newEndLine,
         )
     }
 
@@ -115,7 +143,10 @@ class Lexer(
         return tokenAssignatorList.any { it.isInsideValidatedString(string) }
     }
 
-    private fun createTokenIfValid(string: String, position: Position): Token {
+    private fun createTokenIfValid(
+        string: String,
+        position: Position,
+    ): Token {
         var assignator = TokenAssignator(TokenType.TYPE, listOf())
         tokenAssignatorList.forEach {
             if (it.isInsideValidatedString(string)) {

@@ -1,0 +1,15 @@
+Variable name is_this_test_valid is not in camelCase format at line 1 and column 1
+Variable name isThisTestValid is not in snake_case format at line 1 and column 1
+Println with expression is not allowed at line 1 and column 1
+Variable name is_this_test_valid is not in camelCase format at line 1 and column 1
+Variable name isThisTestValid is not in snake_case format at line 1 and column 1
+Println with expression is not allowed at line 1 and column 1
+Variable name is_this_test_valid is not in camelCase format at line 1 and column 1
+Variable name isThisTestValid is not in snake_case format at line 1 and column 1
+Println with expression is not allowed at line 1 and column 1
+Variable name is_this_test_valid is not in camelCase format at line 1 and column 1
+Variable name isThisTestValid is not in snake_case format at line 1 and column 1
+Println with expression is not allowed at line 1 and column 1
+Variable name is_this_test_valid is not in camelCase format at line 1 and column 1
+Variable name isThisTestValid is not in snake_case format at line 1 and column 1
+Println with expression is not allowed at line 1 and column 1
