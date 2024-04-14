@@ -1,6 +1,5 @@
 package ingsis.parser.scan
 
-import ingsis.components.Position
 import ingsis.components.Token
 import ingsis.components.TokenType
 import ingsis.components.statement.PrintLine
@@ -43,8 +42,6 @@ class ScanPrintLine : ScanStatement {
         val value = scanValue.makeValue(tokens.subList(2, tokens.size - 2))
         return PrintLine(printLinePosition, value)
     }
-
-    private fun lastPosition(tokens: List<Token>): Position = tokens.last().getPosition()
 
     private fun valueCanHandle(tokens: List<Token>) = scanValue.canHandle(tokens.subList(functionTypes.size, tokens.size - 1))
 
