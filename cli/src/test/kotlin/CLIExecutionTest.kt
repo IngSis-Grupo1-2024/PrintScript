@@ -84,7 +84,8 @@ class CLIExecutionTest {
     @Test
     fun `v1 - test 06 - print a variable`() {
         val result = cliV1.startCli(readFile("src/test/resources/printLine/variable"))
-        val expected = "\n" +
+        val expected =
+            "\n" +
                 "statement of line 0 -> name: x \t  value: type: INTEGER, value: 10\n" +
                 "\n" +
                 "statement of line 1 -> PrintLine(value=SingleValue(token=type: IDENTIFIER, value: x), statementType=PRINT_LINE)\n" +
@@ -99,7 +100,8 @@ class CLIExecutionTest {
     @Test
     fun `v1 - test 07 - sum of variables`() {
         val result = cliV1.startCli(readFile("src/test/resources/printLine/sumOfVariables"))
-        val expected = "\n" +
+        val expected =
+            "\n" +
                 "statement of line 0 -> name: x \t  value: type: INTEGER, value: 10\n" +
                 "\n" +
                 "statement of line 1 -> name: y \t  value: type: INTEGER, value: 20\n" +
@@ -126,7 +128,8 @@ class CLIExecutionTest {
     @Test
     fun `v1 - test 08 - division of variables`() {
         val result = cliV1.startCli(readFile("src/test/resources/printLine/divisionOfVariables"))
-        val expected = "\n" +
+        val expected =
+            "\n" +
                 "statement of line 0 -> name: x \t  value: type: INTEGER, value: 10\n" +
                 "\n" +
                 "statement of line 1 -> name: y \t  value: type: INTEGER, value: 20\n" +

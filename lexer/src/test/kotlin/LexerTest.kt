@@ -343,14 +343,15 @@ class LexerTest {
     @Test
     fun testAssignationAndDeclarationInDifferentLines() {
         val input = "let\na\n:\nnumber\n=\n8\n;"
-        val tokenList = listOf(
-            Token(Position(1,4,1,1,1,4), "let", TokenType.KEYWORD),
-            Token(Position(4,5,2,2,1,2), "a", TokenType.SYMBOL),
-            Token(Position(5,6,3,3,1,2), ":", TokenType.DECLARATION),
-            Token(Position(6,12,4,4,1,7), "number", TokenType.TYPE),
-            Token(Position(12, 13, 5,5, 1, 2), "=", TokenType.ASSIGNATION),
-            Token(Position(13, 14, 6,6, 1, 2), "8", TokenType.SYMBOL),
-            Token(Position(14, 15, 7,7, 1, 2), ";", TokenType.DELIMITER),
+        val tokenList =
+            listOf(
+                Token(Position(1, 4, 1, 1, 1, 4), "let", TokenType.KEYWORD),
+                Token(Position(4, 5, 2, 2, 1, 2), "a", TokenType.SYMBOL),
+                Token(Position(5, 6, 3, 3, 1, 2), ":", TokenType.DECLARATION),
+                Token(Position(6, 12, 4, 4, 1, 7), "number", TokenType.TYPE),
+                Token(Position(12, 13, 5, 5, 1, 2), "=", TokenType.ASSIGNATION),
+                Token(Position(13, 14, 6, 6, 1, 2), "8", TokenType.SYMBOL),
+                Token(Position(14, 15, 7, 7, 1, 2), ";", TokenType.DELIMITER),
             )
         val result = lexer.tokenize(input)
         var i = 0
@@ -365,21 +366,22 @@ class LexerTest {
     @Test
     fun testSameLineAssignationAndDeclaration() {
         val input = "let a:number = 8;let b:number = 9;"
-        val tokenList = listOf(
-            Token(Position(1,4,1,1,1,4), "let", TokenType.KEYWORD),
-            Token(Position(5,6,1,1,5,6), "a", TokenType.SYMBOL),
-            Token(Position(6,7,1,1,6,7), ":", TokenType.DECLARATION),
-            Token(Position(7,13,1,1,7,13), "number", TokenType.TYPE),
-            Token(Position(14, 15, 1,1, 14, 15), "=", TokenType.ASSIGNATION),
-            Token(Position(16, 17, 1,1, 16, 17), "8", TokenType.SYMBOL),
-            Token(Position(17, 18, 1,1, 17, 18), ";", TokenType.DELIMITER),
-            Token(Position(18,21,1,1,18,21), "let", TokenType.KEYWORD),
-            Token(Position(22,23,1,1,22,23), "b", TokenType.SYMBOL),
-            Token(Position(23,24,1,1,23,24), ":", TokenType.DECLARATION),
-            Token(Position(24,30,1,1,24,30), "number", TokenType.TYPE),
-            Token(Position(31, 32, 1,1, 31, 32), "=", TokenType.ASSIGNATION),
-            Token(Position(33, 34, 1,1, 33, 34), "9", TokenType.SYMBOL),
-            Token(Position(34, 35, 1,1, 34, 35), ";", TokenType.DELIMITER),
+        val tokenList =
+            listOf(
+                Token(Position(1, 4, 1, 1, 1, 4), "let", TokenType.KEYWORD),
+                Token(Position(5, 6, 1, 1, 5, 6), "a", TokenType.SYMBOL),
+                Token(Position(6, 7, 1, 1, 6, 7), ":", TokenType.DECLARATION),
+                Token(Position(7, 13, 1, 1, 7, 13), "number", TokenType.TYPE),
+                Token(Position(14, 15, 1, 1, 14, 15), "=", TokenType.ASSIGNATION),
+                Token(Position(16, 17, 1, 1, 16, 17), "8", TokenType.SYMBOL),
+                Token(Position(17, 18, 1, 1, 17, 18), ";", TokenType.DELIMITER),
+                Token(Position(18, 21, 1, 1, 18, 21), "let", TokenType.KEYWORD),
+                Token(Position(22, 23, 1, 1, 22, 23), "b", TokenType.SYMBOL),
+                Token(Position(23, 24, 1, 1, 23, 24), ":", TokenType.DECLARATION),
+                Token(Position(24, 30, 1, 1, 24, 30), "number", TokenType.TYPE),
+                Token(Position(31, 32, 1, 1, 31, 32), "=", TokenType.ASSIGNATION),
+                Token(Position(33, 34, 1, 1, 33, 34), "9", TokenType.SYMBOL),
+                Token(Position(34, 35, 1, 1, 34, 35), ";", TokenType.DELIMITER),
             )
         val result = lexer.tokenize(input)
         var i = 0
