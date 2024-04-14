@@ -23,7 +23,7 @@ class Cli(version: Version) {
 
     fun startCli(codeLines: String): String {
         val lines = splitLines(codeLines)
-        if(lines.isEmpty()) return "empty file"
+        if (lines.isEmpty()) return "empty file"
         var tokens: List<Token>
         var statement: Statement
         val string = StringBuilder()
@@ -45,10 +45,10 @@ class Cli(version: Version) {
     }
 
     private fun tokenizeWithLexer(line: String): List<Token> {
-        if(line.isEmpty() || line == ";"){
+        if (line.isEmpty() || line == ";") {
             return emptyList()
         }
-        if(line[0] == '\n'){
+        if (line[0] == '\n') {
             incrementOneLine()
             return tokenizeWithLexer(line.substring(1))
         }
@@ -56,10 +56,11 @@ class Cli(version: Version) {
     }
 
     private fun incrementOneLine() {
-        position = position.copy(
-            startLine = position.startLine + 1,
-            endLine = position.startLine + 1
-        )
+        position =
+            position.copy(
+                startLine = position.startLine + 1,
+                endLine = position.startLine + 1,
+            )
     }
 
     private fun parse(tokens: List<Token>): Statement = parser.parse(tokens)
@@ -117,7 +118,7 @@ class Cli(version: Version) {
         var tokens: List<Token>
         var statement: Statement
         val result = StringBuilder()
-        if(lines.isEmpty()) return writeInFile(file.toString(),"empty file")
+        if (lines.isEmpty()) return writeInFile(file.toString(), "empty file")
         for (line in lines) {
             tokens = tokenizeWithLexer(line)
             if (tokens.isEmpty()) continue
@@ -131,7 +132,10 @@ class Cli(version: Version) {
         writeInFile(file.toString(), result.toString())
     }
 
-    fun analyzeFileInFileOutput(codeLines: String, path: String) {
+    fun analyzeFileInFileOutput(
+        codeLines: String,
+        path: String,
+    ) {
         writeInFile(path, analyzeFile(codeLines))
     }
 

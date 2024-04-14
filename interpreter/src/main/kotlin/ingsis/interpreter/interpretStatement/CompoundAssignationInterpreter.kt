@@ -18,8 +18,7 @@ class CompoundAssignationInterpreter(private val scanners: List<ScanOperatorType
         val result = ValueAnalyzer(scanners).analyze(value, previousState)
         if (checkIfNewValueTypeMatchesType(compoundAssignation.getDeclaration(), result)) {
             previousState[variable.getName()] = result
-        }
-        else {
+        } else {
             throw Exception("Type mismatch")
         }
 
