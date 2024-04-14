@@ -1,0 +1,12 @@
+
+tokens of line 0: [type: KEYWORD, value: let, type: IDENTIFIER, value: x, type: DECLARATION, value: :, type: TYPE, value: number, type: ASSIGNATION, value: =, type: INTEGER, value: 8, type: SEMICOLON, value: ;]
+statement of line 0 -> name: x 	  value: type: INTEGER, value: 8
+
+tokens of line 1: [type: KEYWORD, value: let, type: IDENTIFIER, value: y, type: DECLARATION, value: :, type: TYPE, value: number, type: ASSIGNATION, value: =]
+error: ';' expected  {
+	startOffset: 15,
+	endOffset: 15,
+	startLine: 1,
+	endLine: 1,
+	startColumn: 16,
+	endColumn: 16}

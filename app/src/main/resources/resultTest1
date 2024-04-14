@@ -1,0 +1,9 @@
+
+tokens of line 0: [type: FUNCTION, value: println, type: PARENTHESIS, value: (, type: INTEGER, value: 2, type: PARENTHESIS, value: ), type: SEMICOLON, value: ;]
+statement of line 0 -> PrintLine(position={
+	startOffset: 0,
+	endOffset: 6,
+	startLine: 1,
+	endLine: 1,
+	startColumn: 1,
+	endColumn: 7}, value=SingleValue(token=type: INTEGER, value: 2), statementType=PRINT_LINE)

@@ -1,11 +1,15 @@
 package components.statement
 
-import components.Position
-import components.TokenType
+import components.Token
 
-interface Value<T> {
+interface Value {
+    fun isEmpty(): Boolean
 
-    fun getValue(): String
-    fun getPosition(): Position
-    fun getType() : TokenType
+    fun getToken(): Token
+
+    fun getChildrenAmount(): Int
+
+    fun isLeaf(): Boolean
+
+    fun addChildren(ast: Value): Value
 }

@@ -7,7 +7,7 @@ repositories {
 }
 
 dependencies {
-    jacocoAggregation(project(":engine"))
+    jacocoAggregation(project(":cli"))
     jacocoAggregation(project(":formatter"))
 }
 

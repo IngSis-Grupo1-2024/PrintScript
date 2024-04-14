@@ -1,15 +1,17 @@
 package components.statement
 
-class Assignation<T>(private val variable: Variable, private val value:Value<T>) : Statement {
+import components.Position
 
-    val statementType = StatementType.ASSIGNATION
+class Assignation(private val position: Position, private val variable: Variable, private val value: Value) : Statement {
+    private val statementType = StatementType.ASSIGNATION
 
     fun getVariable(): Variable = variable
 
-    fun getValue(): Value<T> = value
+    fun getValue(): Value = value
 
-    override fun toString(): String = "name: ${variable.getName()} \t  value: ${value.getValue()}"
+    fun getPosition(): Position = position
 
-    // 3 * 8
+    override fun getStatementType(): StatementType = statementType
 
+    override fun toString(): String = "name: ${variable.getName()} \t  value: $value"
 }
