@@ -8,6 +8,7 @@ import ingsis.interpreter.PrintScriptInterpreter
 import ingsis.lexer.PrintScriptLexer
 import ingsis.parser.PrintScriptParser
 import ingsis.parser.error.ParserError
+import ingsis.sca.PrintScriptSca
 import ingsis.utils.Result
 import java.io.PrintWriter
 import java.nio.file.Path
@@ -17,6 +18,7 @@ class Cli(version: Version) {
     private val parser = PrintScriptParser.createParser(version.toString())
     private val interpreter = PrintScriptInterpreter.createInterpreter(version.toString())
     private val formatter = PrintScriptFormatter.createFormatter(version.toString())
+    private val sca = PrintScriptSca.createSCA(version.toString())
     private var position = Position()
 
     fun startCli(codeLines: String): String {
@@ -115,6 +117,7 @@ class Cli(version: Version) {
         var tokens: List<Token>
         var statement: Statement
         val result = StringBuilder()
+        if(lines.isEmpty()) return writeInFile(file.toString(),"empty file")
         for (line in lines) {
             tokens = tokenizeWithLexer(line)
             if (tokens.isEmpty()) continue
@@ -126,5 +129,27 @@ class Cli(version: Version) {
             }
         }
         writeInFile(file.toString(), result.toString())
+    }
+
+    fun analyzeFileInFileOutput(codeLines: String, path: String) {
+        writeInFile(path, analyzeFile(codeLines))
+    }
+
+    fun analyzeFile(codeLines: String): String {
+        val lines = splitLines(codeLines)
+        var tokens: List<Token>
+        var statement: Statement
+        val result = StringBuilder()
+        for (line in lines) {
+            tokens = tokenizeWithLexer(line)
+            if (tokens.isEmpty()) continue
+            try {
+                statement = parse(tokens)
+                result.append(sca.analyze(statement, "sca/src/test/kotlin/reportFileName.txt"))
+            } catch (e: ParserError) {
+                result.append("\n" + e.localizedMessage + " in position :" + e.getTokenPosition())
+            }
+        }
+        return result.toString()
     }
 }

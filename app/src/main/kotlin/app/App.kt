@@ -73,7 +73,11 @@ class App : CliktCommand() {
     private fun doAnalyze() {
         echo("analyzing...")
         echo("rules for SCA: $rules")
-        TODO("Not yet implemented")
+        if (outputPresent()) {
+            cli.analyzeFileInFileOutput(fileInput.readText(), fileOutput!!.toString())
+        } else {
+            print(cli.analyzeFile(fileInput.readText()))
+        }
     }
 
     private fun doFormatting() {
