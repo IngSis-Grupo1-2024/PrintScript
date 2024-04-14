@@ -22,12 +22,6 @@ class Lexer(
                 i++
                 continue
             }
-//            if (currentToken.isNotEmpty() && currentToken.toCharArray()[0] == ' ') {
-//                currentPosition = previousEndToNewStart(currentPosition)
-//                if (nextChar != ' ') {currentPosition = updatePosition(currentPosition, nextChar)}
-//                currentToken = ""
-//            }
-
             if (currentToken.isNotBlank()) {
                 if (canCreateToken(currentToken)) {
                     tokens.add(createTokenIfValid(currentToken, currentPosition))
@@ -37,6 +31,14 @@ class Lexer(
                 if (nextChar == ' ' && currentToken.isNotEmpty()) { // current token is a symbol
                     tokens.add(Token(currentPosition, currentToken, TokenType.SYMBOL))
                     currentPosition = updatePosition(currentPosition, ' ')
+                    currentPosition = previousEndToNewStart(currentPosition)
+                    currentToken = ""
+                    i++
+                    continue
+                }
+                if (nextChar == '\n' && currentToken.isNotEmpty()) {
+                    tokens.add(Token(currentPosition, currentToken, TokenType.SYMBOL))
+                    currentPosition = newLineUpdatePosition(currentPosition)
                     currentPosition = previousEndToNewStart(currentPosition)
                     currentToken = ""
                     i++
@@ -63,19 +65,12 @@ class Lexer(
                     continue
                 }
             }
-//            if (nextChar == '\n') {
-//                currentPosition = currentPosition.copy(
-//                    startOffset = currentPosition.endOffset,
-//                    endOffset = currentPosition.endOffset,
-//                    startColumn = 1,
-//                    endColumn = 1,
-//                    startLine = currentPosition.endLine + 1,
-//                    endLine = currentPosition.endLine + 1
-//                )
-//                i++
-//                continue
-//            }
             if (nextChar != ' ') {
+                if (nextChar == '\n') {
+                    currentPosition = newLineUpdatePosition(currentPosition)
+                    i++
+                    continue
+                }
                 currentToken = currentToken.plus(nextChar)
                 currentPosition = updatePosition(currentPosition, nextChar)
             }
@@ -96,6 +91,20 @@ class Lexer(
         return position.copy(
             startColumn = newStartColumn,
             startLine = newStartLine,
+            endOffset = newEndOffset,
+            endColumn = newEndColumn,
+            endLine = newEndLine
+        )
+    }
+
+    private fun newLineUpdatePosition(position: Position): Position {
+        val newEndOffset = position.endOffset
+        val newEndColumn = 1
+        val newEndLine = position.endLine + 1
+        val newStartColumn = 1
+        return position.copy(
+            startColumn = newStartColumn,
+            startLine = newEndLine,
             endOffset = newEndOffset,
             endColumn = newEndColumn,
             endLine = newEndLine
