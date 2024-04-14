@@ -21,6 +21,7 @@ class ScanPrintLine : ScanStatement {
     }
 
     override fun canHandleWODelimiter(tokens: List<Token>): Boolean {
+        if(tokens.size < functionTypes.size + 1) return false
         val tokenTypes = getTokenTypes(tokens)
         if (hasFunctionTypes(tokenTypes)) {
             if (!hasLastParenthesis(tokens)) {

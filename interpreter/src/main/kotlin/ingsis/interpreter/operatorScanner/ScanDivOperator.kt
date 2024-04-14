@@ -1,5 +1,6 @@
 package ingsis.interpreter.operatorScanner
 
+import com.sun.jdi.InvalidTypeException
 import ingsis.components.Position
 import ingsis.components.Token
 import ingsis.components.TokenType
@@ -25,7 +26,7 @@ class ScanDivOperator : ScanOperatorType {
         if (firstValue.getType().getValue() != TokenType.INTEGER ||
             secondValue.getType().getValue() != TokenType.INTEGER
         ) {
-            throw Error(
+            throw InvalidTypeException(
                 "Can't do division using no integer types in line " +
                     operatorPosition.startLine + " at position " +
                     operatorPosition.startColumn,

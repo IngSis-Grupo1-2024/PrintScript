@@ -1,5 +1,6 @@
 package cli
 
+import ingsis.components.Position
 import ingsis.components.Token
 import ingsis.components.statement.Statement
 import ingsis.formatter.PrintScriptFormatter
@@ -16,9 +17,11 @@ class Cli(version: Version) {
     private val parser = PrintScriptParser.createParser(version.toString())
     private val interpreter = PrintScriptInterpreter.createInterpreter(version.toString())
     private val formatter = PrintScriptFormatter.createFormatter(version.toString())
+    private var position = Position()
 
     fun startCli(codeLines: String): String {
         val lines = splitLines(codeLines)
+        if(lines.isEmpty()) return "empty file"
         var tokens: List<Token>
         var statement: Statement
         val string = StringBuilder()
@@ -39,12 +42,31 @@ class Cli(version: Version) {
         return string.toString()
     }
 
-    private fun tokenizeWithLexer(line: String): List<Token> = lexer.tokenize(line)
+    private fun tokenizeWithLexer(line: String): List<Token> {
+        if(line.isEmpty() || line == ";"){
+            return emptyList()
+        }
+        if(line[0] == '\n'){
+            incrementOneLine()
+            return tokenizeWithLexer(line.substring(1))
+        }
+        return lexer.tokenize(line)
+    }
+
+    private fun incrementOneLine() {
+        position = position.copy(
+            startLine = position.startLine + 1,
+            endLine = position.startLine + 1
+        )
+    }
 
     private fun parse(tokens: List<Token>): Statement = parser.parse(tokens)
 
     private fun splitLines(codeLines: String): List<String> {
-        return codeLines.split("\n")
+        return codeLines.split(";")
+            .filter { it.isNotEmpty() }
+            .map { "$it;" }
+            .toList()
     }
 
     fun startCliResultInFile(
