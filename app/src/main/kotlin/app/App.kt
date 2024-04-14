@@ -24,7 +24,6 @@ class App : CliktCommand() {
 
     private val fileInput by argument()
         .path(canBeDir = false, mustExist = true, mustBeReadable = true)
-        .convert { it.readText() }
         .help { "the file path for the PrintScript code" }
 
     private val fileOutput by argument()
@@ -61,9 +60,9 @@ class App : CliktCommand() {
         echo("execution in progress...")
         echo("rules for SCA: $rules")
         if (outputPresent()) {
-            cli.startCliResultInFile(fileInput, fileOutput!!.toString())
+            cli.startCliResultInFile(fileInput.readText(), fileOutput!!.toString())
         } else {
-            print(cli.startCli(fileInput))
+            print(cli.startCli(fileInput.readText()))
         }
     }
 
@@ -78,9 +77,9 @@ class App : CliktCommand() {
     private fun doFormatting() {
         echo("formatting...")
         if (outputPresent()) {
-            TODO("Format with output not yet implemented")
+            cli.format(fileInput.readText(), fileOutput!!)
         } else {
-            TODO("Format not yet implemented")
+            cli.format(fileInput.readText(), fileInput)
         }
     }
 
@@ -89,9 +88,9 @@ class App : CliktCommand() {
     private fun doValidation() {
         echo("validation in progress...")
         if (outputPresent()) {
-            cli.validateResultInFile(fileInput, fileOutput.toString())
+            cli.validateResultInFile(fileInput.readText(), fileOutput.toString())
         } else {
-            cli.validate(fileInput)
+            cli.validate(fileInput.readText())
         }
     }
 
@@ -101,12 +100,12 @@ class App : CliktCommand() {
 }
 
 fun main(args: Array<String>) {
-    App().main(args)
+    test1WOoutput()
 }
 
 fun test1WOoutput() =
     App()
-        .main(listOf("v1", "validation", "app/src/main/resources/test1"))
+        .main(listOf("v1", "formatting", "app/src/main/resources/test1"))
 
 fun test1Woutput() = App().main(listOf("v1", "execution", "app/src/main/resources/test1", "app/src/main/resources/resultTest1"))
 
