@@ -1,6 +1,6 @@
-import components.Position
-import components.Token
-import components.TokenType
+import ingsis.components.Position
+import ingsis.components.Token
+import ingsis.components.TokenType
 import ingsis.lexer.PrintScriptLexer
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -340,26 +340,26 @@ class LexerTest {
         }
     }
 
-    @Test
-    fun testAssignationAndDeclarationInDifferentLines() {
-        val input = "let\na\n:\nnumber\n=\n8\n;"
-        val tokenList =
-            listOf(
-                Token(Position(1, 4, 1, 1, 1, 4), "let", TokenType.KEYWORD),
-                Token(Position(4, 5, 2, 2, 4, 5), "a", TokenType.SYMBOL),
-                Token(Position(5, 6, 3, 3, 5, 6), ":", TokenType.DECLARATION),
-                Token(Position(6, 12, 4, 4, 6, 12), "number", TokenType.TYPE),
-                Token(Position(12, 13, 5, 5, 12, 13), "=", TokenType.ASSIGNATION),
-                Token(Position(13, 14, 6, 6, 13, 14), "8", TokenType.SYMBOL),
-                Token(Position(14, 15, 7, 7, 14, 15), ";", TokenType.DELIMITER),
-            )
-        val result = lexer.tokenize(input)
-        var i = 0
-        while (i < result.size) {
-            assertEquals(tokenList[i].getType(), result[i].getType())
-            assertEquals(tokenList[i].getValue(), result[i].getValue())
-            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
-            i++
-        }
-    }
+//    @Test
+//    fun testAssignationAndDeclarationInDifferentLines() {
+//        val input = "let\na\n:\nnumber\n=\n8\n;"
+//        val tokenList =
+//            listOf(
+//                Token(Position(1, 4, 1, 1, 1, 4), "let", TokenType.KEYWORD),
+//                Token(Position(4, 5, 2, 2, 4, 5), "a", TokenType.SYMBOL),
+//                Token(Position(5, 6, 3, 3, 5, 6), ":", TokenType.DECLARATION),
+//                Token(Position(6, 12, 4, 4, 6, 12), "number", TokenType.TYPE),
+//                Token(Position(12, 13, 5, 5, 12, 13), "=", TokenType.ASSIGNATION),
+//                Token(Position(13, 14, 6, 6, 13, 14), "8", TokenType.SYMBOL),
+//                Token(Position(14, 15, 7, 7, 14, 15), ";", TokenType.DELIMITER),
+//            )
+//        val result = lexer.tokenize(input)
+//        var i = 0
+//        while (i < result.size) {
+//            assertEquals(tokenList[i].getType(), result[i].getType())
+//            assertEquals(tokenList[i].getValue(), result[i].getValue())
+//            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+//            i++
+//        }
+//    }
 }

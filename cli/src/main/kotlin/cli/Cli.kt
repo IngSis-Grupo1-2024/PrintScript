@@ -1,11 +1,10 @@
 package cli
 
-import ingsis.components.Position
 import ingsis.components.Token
 import ingsis.components.statement.Statement
 import ingsis.formatter.PrintScriptFormatter
 import ingsis.interpreter.PrintScriptInterpreter
-import ingsis.lexer.Lexer
+import ingsis.lexer.PrintScriptLexer
 import ingsis.parser.PrintScriptParser
 import ingsis.parser.error.ParserError
 import ingsis.utils.Result
@@ -13,7 +12,7 @@ import java.io.PrintWriter
 import java.nio.file.Path
 
 class Cli(version: Version) {
-    private val lexer = Lexer(Position(0, 0))
+    private val lexer = PrintScriptLexer.createLexer(version.toString())
     private val parser = PrintScriptParser.createParser(version.toString())
     private val interpreter = PrintScriptInterpreter.createInterpreter(version.toString())
     private val formatter = PrintScriptFormatter.createFormatter(version.toString())

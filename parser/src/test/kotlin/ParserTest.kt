@@ -22,7 +22,7 @@ class ParserTest {
                 Token(position, "x", TokenType.SYMBOL),
                 Token(position, ":", TokenType.DECLARATION),
                 Token(position, "string", TokenType.TYPE),
-                Token(position, "", TokenType.SEMICOLON),
+                Token(position, "", TokenType.DELIMITER),
             )
         val astExpected: Statement =
             Declaration(
@@ -42,7 +42,7 @@ class ParserTest {
                 Token(position, "x", TokenType.SYMBOL),
                 Token(position, ":", TokenType.DECLARATION),
                 Token(position, "string", TokenType.TYPE),
-                Token(position, "", TokenType.SEMICOLON),
+                Token(position, "", TokenType.DELIMITER),
             )
         assertThrows(ParserError::class.java) {
             parser.parse(tokens)
@@ -56,7 +56,7 @@ class ParserTest {
                 Token(position, "let", TokenType.KEYWORD),
                 Token(position, ":", TokenType.DECLARATION),
                 Token(position, "string", TokenType.TYPE),
-                Token(position, "", TokenType.SEMICOLON),
+                Token(position, "", TokenType.DELIMITER),
             )
         assertThrows(ParserError::class.java) {
             parser.parse(tokens)
@@ -70,7 +70,7 @@ class ParserTest {
                 Token(position, "let", TokenType.KEYWORD),
                 Token(position, "x", TokenType.SYMBOL),
                 Token(position, "string", TokenType.TYPE),
-                Token(position, "", TokenType.SEMICOLON),
+                Token(position, "", TokenType.DELIMITER),
             )
         assertThrows(ParserError::class.java) {
             parser.parse(tokens)
@@ -84,7 +84,7 @@ class ParserTest {
                 Token(position, "let", TokenType.KEYWORD),
                 Token(position, "x", TokenType.SYMBOL),
                 Token(position, ":", TokenType.DECLARATION),
-                Token(position, "", TokenType.SEMICOLON),
+                Token(position, "", TokenType.DELIMITER),
             )
         assertThrows(ParserError::class.java) {
             parser.parse(tokens)
@@ -97,7 +97,7 @@ class ParserTest {
             listOf(
                 Token(position, "let", TokenType.KEYWORD),
                 Token(position, "x", TokenType.SYMBOL),
-                Token(position, "", TokenType.SEMICOLON),
+                Token(position, "", TokenType.DELIMITER),
             )
         assertThrows(ParserError::class.java) {
             parser.parse(tokens)
@@ -111,7 +111,7 @@ class ParserTest {
                 Token(position, "x", TokenType.SYMBOL),
                 Token(position, "=", TokenType.ASSIGNATION),
                 Token(position, "8", TokenType.SYMBOL),
-                Token(position, "", TokenType.SEMICOLON),
+                Token(position, "", TokenType.DELIMITER),
             )
         val astExpected: Statement =
             Assignation(
@@ -133,7 +133,7 @@ class ParserTest {
                 Token(position, "8", TokenType.SYMBOL),
                 Token(position, "+", TokenType.OPERATOR),
                 Token(position, "3", TokenType.SYMBOL),
-                Token(position, ";", TokenType.SEMICOLON),
+                Token(position, ";", TokenType.DELIMITER),
             )
         val astExpected: Statement =
             Assignation(
@@ -158,7 +158,7 @@ class ParserTest {
                 Token(position, "number", TokenType.TYPE),
                 Token(position, "=", TokenType.ASSIGNATION),
                 Token(position, "8", TokenType.SYMBOL),
-                Token(position, ";", TokenType.SEMICOLON),
+                Token(position, ";", TokenType.DELIMITER),
             )
         val astExpected: Statement =
             CompoundAssignation(
@@ -187,7 +187,7 @@ class ParserTest {
                 Token(position, "3", TokenType.SYMBOL),
                 Token(position, "*", TokenType.OPERATOR),
                 Token(position, "2", TokenType.SYMBOL),
-                Token(position, "x", TokenType.SEMICOLON),
+                Token(position, "x", TokenType.DELIMITER),
             )
         val astExpected: Statement =
             Assignation(
@@ -219,7 +219,7 @@ class ParserTest {
                 Token(position, "3", TokenType.SYMBOL),
                 Token(position, "+", TokenType.OPERATOR),
                 Token(position, "2", TokenType.SYMBOL),
-                Token(position, ";", TokenType.SEMICOLON),
+                Token(position, ";", TokenType.DELIMITER),
             )
         val astExpected: Statement =
             Assignation(
@@ -254,7 +254,7 @@ class ParserTest {
                 Token(position, "3", TokenType.SYMBOL),
                 Token(position, "*", TokenType.OPERATOR),
                 Token(position, "2", TokenType.SYMBOL),
-                Token(position, "", TokenType.SEMICOLON),
+                Token(position, "", TokenType.DELIMITER),
             )
         val astExpected: Statement =
             CompoundAssignation(
@@ -280,7 +280,7 @@ class ParserTest {
     }
 
     @Test
-    fun `test 013 - declaration And Assignation With Semicolon In The Middle Of Value`() {
+    fun `test 013 - declaration And Assignation With DELIMITER In The Middle Of Value`() {
         val tokens: List<Token> =
             listOf(
                 Token(position, "let", TokenType.KEYWORD),
@@ -288,11 +288,11 @@ class ParserTest {
                 Token(position, ":", TokenType.DECLARATION),
                 Token(position, "string", TokenType.TYPE),
                 Token(position, "=", TokenType.ASSIGNATION),
-                Token(position, ";", TokenType.SEMICOLON),
+                Token(position, ";", TokenType.DELIMITER),
                 Token(position, "'hello'", TokenType.SYMBOL),
                 Token(position, "+", TokenType.OPERATOR),
                 Token(position, "'bye'", TokenType.SYMBOL),
-                Token(position, ";", TokenType.SEMICOLON),
+                Token(position, ";", TokenType.DELIMITER),
             )
         assertThrows(ParserError::class.java) {
             parser.parse(tokens)
@@ -306,7 +306,7 @@ class ParserTest {
                 Token(position, "println", TokenType.FUNCTION),
                 Token(position, "(", TokenType.PARENTHESIS),
                 Token(position, "\"hello\"", TokenType.SYMBOL),
-                Token(position, "", TokenType.SEMICOLON),
+                Token(position, "", TokenType.DELIMITER),
             )
         assertThrows(ParserError::class.java) {
             parser.parse(tokens)
@@ -314,7 +314,7 @@ class ParserTest {
     }
 
     @Test
-    fun `test 015 - is Calling Println Method without semicolon`() {
+    fun `test 015 - is Calling Println Method without DELIMITER`() {
         val tokens: List<Token> =
             listOf(
                 Token(position, "println", TokenType.FUNCTION),
@@ -343,7 +343,7 @@ class ParserTest {
                 Token(position, "3", TokenType.SYMBOL),
                 Token(position, "*", TokenType.OPERATOR),
                 Token(position, "2", TokenType.SYMBOL),
-                Token(position, "", TokenType.SEMICOLON),
+                Token(position, "", TokenType.DELIMITER),
             )
         val astExpected: Statement =
             CompoundAssignation(
@@ -387,7 +387,7 @@ class ParserTest {
                 Token(position, "+", TokenType.OPERATOR),
                 Token(position, "3", TokenType.SYMBOL),
                 Token(position, ")", TokenType.PARENTHESIS),
-                Token(position, "", TokenType.SEMICOLON),
+                Token(position, "", TokenType.DELIMITER),
             )
         val astExpected: Statement =
             CompoundAssignation(
@@ -438,7 +438,7 @@ class ParserTest {
                 Token(position, ")", TokenType.PARENTHESIS),
                 Token(position, ")", TokenType.PARENTHESIS),
                 Token(position, ")", TokenType.PARENTHESIS),
-                Token(position, "", TokenType.SEMICOLON),
+                Token(position, "", TokenType.DELIMITER),
             )
         val astExpected: Statement =
             CompoundAssignation(
@@ -483,7 +483,7 @@ class ParserTest {
                 Token(position, "(", TokenType.PARENTHESIS),
                 Token(position, "c", TokenType.SYMBOL),
                 Token(position, ")", TokenType.PARENTHESIS),
-                Token(position, "", TokenType.SEMICOLON),
+                Token(position, "", TokenType.DELIMITER),
             )
         val astExpected: Statement =
             PrintLine(
@@ -503,7 +503,7 @@ class ParserTest {
                 Token(position, "+", TokenType.OPERATOR),
                 Token(position, "c", TokenType.SYMBOL),
                 Token(position, ")", TokenType.PARENTHESIS),
-                Token(position, "", TokenType.SEMICOLON),
+                Token(position, "", TokenType.DELIMITER),
             )
         val astExpected: Statement =
             PrintLine(
@@ -531,7 +531,7 @@ class ParserTest {
                 Token(position, "3", TokenType.SYMBOL),
                 Token(position, ")", TokenType.PARENTHESIS),
                 Token(position, ")", TokenType.PARENTHESIS),
-                Token(position, "", TokenType.SEMICOLON),
+                Token(position, "", TokenType.DELIMITER),
             )
         val astExpected: Statement =
             PrintLine(
@@ -562,7 +562,7 @@ class ParserTest {
                 Token(position, "*", TokenType.OPERATOR),
                 Token(position, "3", TokenType.SYMBOL),
                 Token(position, ")", TokenType.PARENTHESIS),
-                Token(position, "", TokenType.SEMICOLON),
+                Token(position, "", TokenType.DELIMITER),
             )
         assertThrows(ParserError::class.java) {
             parser.parse(tokens)
@@ -578,7 +578,7 @@ class ParserTest {
                 Token(position, ":", TokenType.DECLARATION),
                 Token(position, "string", TokenType.TYPE),
                 Token(position, "=", TokenType.ASSIGNATION),
-                Token(position, "", TokenType.SEMICOLON),
+                Token(position, "", TokenType.DELIMITER),
             )
         assertThrows(ParserError::class.java) {
             parser.parse(tokens)
@@ -596,7 +596,7 @@ class ParserTest {
                 Token(position, "=", TokenType.ASSIGNATION),
                 Token(position, "c", TokenType.SYMBOL),
                 Token(position, "\"3\"", TokenType.SYMBOL),
-                Token(position, "", TokenType.SEMICOLON),
+                Token(position, "", TokenType.DELIMITER),
             )
         assertThrows(ParserError::class.java) {
             parser.parse(tokens)
@@ -613,7 +613,7 @@ class ParserTest {
                 Token(position, "+", TokenType.OPERATOR),
                 Token(position, "'3'", TokenType.SYMBOL),
                 Token(position, ")", TokenType.PARENTHESIS),
-                Token(position, "", TokenType.SEMICOLON),
+                Token(position, "", TokenType.DELIMITER),
             )
         assertThrows(ParserError::class.java) {
             parser.parse(tokens)
@@ -633,7 +633,7 @@ class ParserTest {
                 Token(position, "*", TokenType.OPERATOR),
                 Token(position, "2", TokenType.SYMBOL),
                 Token(position, ")", TokenType.PARENTHESIS),
-                Token(position, "", TokenType.SEMICOLON),
+                Token(position, "", TokenType.DELIMITER),
             )
         val astExpected: Statement =
             Assignation(
@@ -662,7 +662,7 @@ class ParserTest {
                 Token(position, "x", TokenType.SYMBOL),
                 Token(position, "=", TokenType.ASSIGNATION),
                 Token(position, "string", TokenType.TYPE),
-                Token(position, "", TokenType.SEMICOLON),
+                Token(position, "", TokenType.DELIMITER),
             )
         assertThrows(ParserError::class.java) {
             parser.parse(tokens)
@@ -677,7 +677,7 @@ class ParserTest {
                 Token(position, "x", TokenType.SYMBOL),
                 Token(position, "string", TokenType.TYPE),
                 Token(position, "=", TokenType.ASSIGNATION),
-                Token(position, "", TokenType.SEMICOLON),
+                Token(position, "", TokenType.DELIMITER),
             )
         try {
             parser.parse(tokens)
@@ -697,7 +697,7 @@ class ParserTest {
                 Token(position, "x", TokenType.SYMBOL),
                 Token(position, "=", TokenType.ASSIGNATION),
                 Token(position, "8", TokenType.SYMBOL),
-                Token(position, "", TokenType.SEMICOLON),
+                Token(position, "", TokenType.DELIMITER),
             )
         try {
             parser.parse(tokens)
