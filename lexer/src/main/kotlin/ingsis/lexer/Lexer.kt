@@ -17,7 +17,7 @@ object PrintScriptLexer {
             listOf(
                 TokenAssignator(TokenType.KEYWORD, listOf("let")),
                 TokenAssignator(TokenType.FUNCTION, listOf("println")),
-                TokenAssignator(TokenType.TYPE, listOf("number", "string", "boolean")),
+                TokenAssignator(TokenType.TYPE, listOf("number", "string")),
                 TokenAssignator(TokenType.OPERATOR, listOf("+", "-", "/", "*")),
                 TokenAssignator(TokenType.DELIMITER, listOf(";")),
                 TokenAssignator(TokenType.PARENTHESIS, listOf("(", ")")),
