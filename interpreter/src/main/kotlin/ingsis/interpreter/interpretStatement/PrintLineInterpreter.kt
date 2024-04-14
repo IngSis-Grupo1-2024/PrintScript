@@ -1,10 +1,10 @@
 package ingsis.interpreter.interpretStatement
 
-import components.Token
-import components.TokenType
-import components.statement.PrintLine
-import components.statement.Statement
-import components.statement.StatementType
+import ingsis.components.Token
+import ingsis.components.TokenType
+import ingsis.components.statement.PrintLine
+import ingsis.components.statement.Statement
+import ingsis.components.statement.StatementType
 import ingsis.interpreter.operatorScanner.ScanOperatorType
 import ingsis.interpreter.valueAnalyzer.ValueAnalyzer
 import ingsis.utils.Result

@@ -1,10 +1,10 @@
 package ingsis.formatter.scan
 
-import components.TokenType
-import components.statement.Declaration
-import components.statement.Statement
-import components.statement.StatementType
-import components.statement.Type
+import ingsis.components.TokenType
+import ingsis.components.statement.Declaration
+import ingsis.components.statement.Statement
+import ingsis.components.statement.StatementType
+import ingsis.components.statement.Type
 import ingsis.formatter.spacesCounter.DeclarationSpaces
 import ingsis.formatter.utils.FormatterRule
 

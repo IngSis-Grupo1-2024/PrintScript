@@ -1,7 +1,7 @@
 package ingsis.parser.error
 
-import components.Position
-import components.Token
+import ingsis.components.Position
+import ingsis.components.Token
 
 class ParserError(message: String, private val token: Token) : Exception(message) {
     fun getTokenPosition(): Position {

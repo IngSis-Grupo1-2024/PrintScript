@@ -1,5 +1,5 @@
 package ingsis.formatter
-import components.statement.Statement
+import ingsis.components.statement.Statement
 import ingsis.formatter.scan.*
 import ingsis.formatter.utils.readJsonAndStackMap
 

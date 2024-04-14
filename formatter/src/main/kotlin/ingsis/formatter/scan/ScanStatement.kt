@@ -1,6 +1,6 @@
 package ingsis.formatter.scan
 
-import components.statement.Statement
+import ingsis.components.statement.Statement
 import ingsis.formatter.utils.FormatterRule
 
 interface ScanStatement {

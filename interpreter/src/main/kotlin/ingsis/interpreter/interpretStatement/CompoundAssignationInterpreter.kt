@@ -1,8 +1,8 @@
 package ingsis.interpreter.interpretStatement
 
-import components.statement.CompoundAssignation
-import components.statement.Statement
-import components.statement.StatementType
+import ingsis.components.statement.CompoundAssignation
+import ingsis.components.statement.Statement
+import ingsis.components.statement.StatementType
 import ingsis.interpreter.operatorScanner.ScanOperatorType
 import ingsis.interpreter.valueAnalyzer.ValueAnalyzer
 import ingsis.utils.Result

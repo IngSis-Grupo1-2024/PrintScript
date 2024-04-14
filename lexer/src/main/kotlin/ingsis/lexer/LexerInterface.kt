@@ -1,7 +1,7 @@
 package ingsis.lexer
 
-import components.Position
-import components.Token
+import ingsis.components.Position
+import ingsis.components.Token
 
 interface LexerInterface {
     val position: Position

@@ -1,6 +1,6 @@
 package ingsis.interpreter
 
-import components.statement.Statement
+import ingsis.components.statement.Statement
 import ingsis.interpreter.interpretStatement.*
 import ingsis.interpreter.operatorScanner.ScanDivOperator
 import ingsis.interpreter.operatorScanner.ScanMulOperator

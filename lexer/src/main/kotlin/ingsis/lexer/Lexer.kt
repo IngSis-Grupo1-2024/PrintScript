@@ -1,8 +1,8 @@
 package ingsis.lexer
 
-import components.Position
-import components.Token
-import components.TokenType
+import ingsis.components.Position
+import ingsis.components.Token
+import ingsis.components.TokenType
 
 object PrintScriptLexer {
     fun createLexer(version: String): Lexer {

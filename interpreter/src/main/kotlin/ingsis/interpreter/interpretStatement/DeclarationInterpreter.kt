@@ -1,8 +1,8 @@
 package ingsis.interpreter.interpretStatement
 
-import components.statement.Declaration
-import components.statement.Statement
-import components.statement.StatementType
+import ingsis.components.statement.Declaration
+import ingsis.components.statement.Statement
+import ingsis.components.statement.StatementType
 import ingsis.utils.Result
 
 class DeclarationInterpreter : StatementInterpreter {

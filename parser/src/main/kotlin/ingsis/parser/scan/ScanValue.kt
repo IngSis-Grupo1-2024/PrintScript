@@ -1,13 +1,13 @@
 package ingsis.parser.scan
 
-import components.ComparatorTokenType
-import components.ComparatorTokenValue
-import components.Token
-import components.TokenType
-import components.statement.EmptyValue
-import components.statement.Operator
-import components.statement.SingleValue
-import components.statement.Value
+import ingsis.components.ComparatorTokenType
+import ingsis.components.ComparatorTokenValue
+import ingsis.components.Token
+import ingsis.components.TokenType
+import ingsis.components.statement.EmptyValue
+import ingsis.components.statement.Operator
+import ingsis.components.statement.SingleValue
+import ingsis.components.statement.Value
 import ingsis.parser.error.ParserError
 import kotlin.math.abs
 

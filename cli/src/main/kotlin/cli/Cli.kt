@@ -1,19 +1,19 @@
 package cli
 
-import components.Token
-import components.statement.Statement
+import ingsis.components.Position
+import ingsis.components.Token
+import ingsis.components.statement.Statement
 import ingsis.formatter.PrintScriptFormatter
 import ingsis.interpreter.PrintScriptInterpreter
-import ingsis.lexer.PrintScriptLexer
+import ingsis.lexer.Lexer
 import ingsis.parser.PrintScriptParser
 import ingsis.parser.error.ParserError
 import ingsis.utils.Result
-import scaRules.Rule
 import java.io.PrintWriter
 import java.nio.file.Path
 
-class Cli(private val scaRules: ArrayList<Rule>, version: Version) {
-    private val lexer = PrintScriptLexer.createLexer(version.toString())
+class Cli(version: Version) {
+    private val lexer = Lexer(Position(0, 0))
     private val parser = PrintScriptParser.createParser(version.toString())
     private val interpreter = PrintScriptInterpreter.createInterpreter(version.toString())
     private val formatter = PrintScriptFormatter.createFormatter(version.toString())
@@ -43,7 +43,7 @@ class Cli(private val scaRules: ArrayList<Rule>, version: Version) {
     private fun parse(tokens: List<Token>): Statement = parser.parse(tokens)
 
 //    private fun interpret(statement: Statement, map: ArrayList<Map<String, Variable>>): ArrayList<Map<String, Variable>> {
-//        val sca = Sca(scaRules)
+//        val sca = ingsis.sca.Sca(scaRules)
 //        if (sca.analyze(statement)) {
 //            map.add(interpreter.interpret(statement))
 //        }

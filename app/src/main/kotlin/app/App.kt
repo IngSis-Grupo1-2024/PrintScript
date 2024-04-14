@@ -3,13 +3,15 @@ package app
 import cli.Cli
 import cli.Version
 import com.github.ajalt.clikt.core.CliktCommand
-import com.github.ajalt.clikt.parameters.arguments.*
+import com.github.ajalt.clikt.parameters.arguments.argument
+import com.github.ajalt.clikt.parameters.arguments.default
+import com.github.ajalt.clikt.parameters.arguments.help
+import com.github.ajalt.clikt.parameters.arguments.optional
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.help
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.clikt.parameters.types.path
-import kotlin.collections.ArrayList
 import kotlin.io.path.readText
 
 class App : CliktCommand() {
@@ -52,7 +54,7 @@ class App : CliktCommand() {
 
     private fun startCli() {
         if (version == "v1") {
-            cli = Cli(ArrayList(), Version.VERSION_1)
+            cli = Cli(Version.VERSION_1)
         }
     }
 

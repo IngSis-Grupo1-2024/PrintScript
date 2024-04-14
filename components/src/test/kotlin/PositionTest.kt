@@ -1,6 +1,6 @@
 package componentsTest
 
-import components.Position
+import ingsis.components.Position
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

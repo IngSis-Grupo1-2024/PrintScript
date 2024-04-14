@@ -1,6 +1,6 @@
 package ingsis.formatter.scan
 
-import components.statement.*
+import ingsis.components.statement.*
 import ingsis.formatter.extractor.ValueExtractor
 import ingsis.formatter.spacesCounter.AssignationSpaces
 import ingsis.formatter.utils.FormatterRule

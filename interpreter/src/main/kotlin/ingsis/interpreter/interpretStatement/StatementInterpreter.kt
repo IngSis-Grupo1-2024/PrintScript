@@ -1,6 +1,6 @@
 package ingsis.interpreter.interpretStatement
 
-import components.statement.Statement
+import ingsis.components.statement.Statement
 import ingsis.utils.Result
 
 interface StatementInterpreter {

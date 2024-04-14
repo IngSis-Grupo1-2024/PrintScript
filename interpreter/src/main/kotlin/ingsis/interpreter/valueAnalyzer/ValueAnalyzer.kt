@@ -1,10 +1,10 @@
 package ingsis.interpreter.valueAnalyzer
 
-import components.TokenType
-import components.statement.Operator
-import components.statement.SingleValue
-import components.statement.Type
-import components.statement.Value
+import ingsis.components.TokenType
+import ingsis.components.statement.Operator
+import ingsis.components.statement.SingleValue
+import ingsis.components.statement.Type
+import ingsis.components.statement.Value
 import ingsis.interpreter.operatorScanner.ScanOperatorType
 import ingsis.utils.Result
 

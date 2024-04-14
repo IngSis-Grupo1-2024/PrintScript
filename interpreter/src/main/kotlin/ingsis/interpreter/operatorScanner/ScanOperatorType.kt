@@ -1,8 +1,8 @@
 package ingsis.interpreter.operatorScanner
 
-import components.Position
-import components.statement.SingleValue
-import components.statement.Value
+import ingsis.components.Position
+import ingsis.components.statement.SingleValue
+import ingsis.components.statement.Value
 import ingsis.utils.Result
 
 interface ScanOperatorType {
