@@ -92,6 +92,11 @@ class CLIExecutionTest {
                 "statement of line 2 -> name: x \t  value: SingleValue(token=type: INTEGER, value: 8)\n" +
                 "\n" +
                 "statement of line 3 -> PrintLine(value=SingleValue(token=type: IDENTIFIER, value: x), statementType=PRINT_LINE)\n" +
+                "8\n" +
+                "statement of line 4 -> name: x \t  value: SingleValue(token=type: STRING, value: hola)\n" +
+                "\n" +
+                "Type mismatch\n" +
+                "statement of line 5 -> PrintLine(value=SingleValue(token=type: IDENTIFIER, value: x), statementType=PRINT_LINE)\n" +
                 "8"
         assertEquals(expected, result)
     }
