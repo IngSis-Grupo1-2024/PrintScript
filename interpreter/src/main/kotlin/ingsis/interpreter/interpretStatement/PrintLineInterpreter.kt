@@ -17,14 +17,12 @@ class PrintLineInterpreter(private val scanners: List<ScanOperatorType>) : State
     override fun interpret(
         statement: Statement,
         previousState: HashMap<String, Result>,
-    ): HashMap<String, Result> {
+    ): Pair<HashMap<String, Result>, String?> {
         val printLine = statement as PrintLine
         val valueToken = printLine.getValue().getToken()
         val result: String = getResult(valueToken, previousState, printLine)
 
-        println(result)
-
-        return previousState
+        return Pair(previousState, result)
     }
 
     private fun getResult(

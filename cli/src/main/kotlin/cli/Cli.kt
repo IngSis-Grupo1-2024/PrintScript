@@ -22,14 +22,16 @@ class Cli(version: Version) {
         var tokens: List<Token>
         var statement: Statement
         val string = StringBuilder()
-        val variableMap = HashMap<String, Result>()
+        var variableMap = HashMap<String, Result>()
         for ((i, line) in lines.withIndex()) {
             tokens = tokenizeWithLexer(line)
             if (tokens.isEmpty()) continue
             try {
                 statement = parse(tokens)
                 string.append("\nstatement of line $i -> $statement\n")
-                interpreter.interpret(statement, variableMap)
+                val pair = interpreter.interpret(statement, variableMap)
+                variableMap = pair.first
+                if (pair.second != null) string.append(pair.second)
             } catch (e: Exception) {
                 string.append("\n" + e.localizedMessage)
             }
@@ -40,14 +42,6 @@ class Cli(version: Version) {
     private fun tokenizeWithLexer(line: String): List<Token> = lexer.tokenize(line)
 
     private fun parse(tokens: List<Token>): Statement = parser.parse(tokens)
-
-//    private fun interpret(statement: Statement, map: ArrayList<Map<String, Variable>>): ArrayList<Map<String, Variable>> {
-//        val sca = ingsis.sca.Sca(scaRules)
-//        if (sca.analyze(statement)) {
-//            map.add(interpreter.interpret(statement))
-//        }
-//        return map
-//    }
 
     private fun splitLines(codeLines: String): List<String> {
         return codeLines.split("\n")

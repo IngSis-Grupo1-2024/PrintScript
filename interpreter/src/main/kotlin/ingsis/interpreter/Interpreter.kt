@@ -45,7 +45,7 @@ class Interpreter(private val interpreters: List<StatementInterpreter>) {
     fun interpret(
         statement: Statement,
         variableMap: HashMap<String, Result>,
-    ): HashMap<String, Result> {
+    ): Pair<HashMap<String, Result>, String?> {
         interpreters.forEach {
             if (it.canHandle(statement)) return it.interpret(statement, variableMap)
         }

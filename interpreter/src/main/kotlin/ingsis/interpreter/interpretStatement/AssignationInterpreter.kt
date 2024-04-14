@@ -13,7 +13,7 @@ class AssignationInterpreter(private val scanners: List<ScanOperatorType>) : Sta
     override fun interpret(
         statement: Statement,
         previousState: HashMap<String, Result>,
-    ): HashMap<String, Result> {
+    ): Pair<HashMap<String, Result>, String?> {
         val assignation = statement as Assignation
         val variable = assignation.getVariable()
         val value = assignation.getValue()
@@ -21,6 +21,6 @@ class AssignationInterpreter(private val scanners: List<ScanOperatorType>) : Sta
         val result = ValueAnalyzer(scanners).analyze(value, previousState)
         previousState[variable.getName()] = result
 
-        return previousState
+        return Pair(previousState, null)
     }
 }
