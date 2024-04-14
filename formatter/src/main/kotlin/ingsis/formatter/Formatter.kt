@@ -1,5 +1,5 @@
 package ingsis.formatter
-import components.statement.Statement
+import ingsis.components.statement.Statement
 import ingsis.formatter.scan.*
 import ingsis.formatter.utils.readJsonAndStackMap
 
@@ -13,7 +13,10 @@ object PrintScriptFormatter {
 }
 
 class Formatter(private val scanners: List<ScanStatement>) {
-    fun format(statement: Statement, rulePath: String): String {
+    fun format(
+        statement: Statement,
+        rulePath: String,
+    ): String {
         val ruleMap = readJsonAndStackMap(rulePath)
         val result = StringBuilder()
         for (scanner in scanners) {

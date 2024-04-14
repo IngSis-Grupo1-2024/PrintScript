@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test
 import java.io.File
 
 class CLIValidationTest {
-    private val cliV1 = Cli(ArrayList(), Version.VERSION_1)
+    private val cliV1 = Cli(Version.VERSION_1)
 
     private fun readFile(fileName: String): String = File(fileName).readText(Charsets.UTF_8)
 

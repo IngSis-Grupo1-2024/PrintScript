@@ -1,8 +1,7 @@
 package ingsis.formatter.extractor
 
-import components.Position
-import components.statement.Operator
-import components.statement.Value
+import ingsis.components.statement.Operator
+import ingsis.components.statement.Value
 
 class ValueExtractor(private val value: Value) {
     fun getValue(): String {
@@ -24,16 +23,5 @@ class ValueExtractor(private val value: Value) {
         } else {
             stringBuilder.append((value.getToken()).getValue()).append(" ")
         }
-    }
-
-    fun getLeftestValuePosition(): Position {
-        if (value.isLeaf()) {
-            return value.getToken().getPosition()
-        }
-        var current = value
-        while (!current.isLeaf()) {
-            current = (current as Operator).getLeftOperator()
-        }
-        return current.getToken().getPosition()
     }
 }

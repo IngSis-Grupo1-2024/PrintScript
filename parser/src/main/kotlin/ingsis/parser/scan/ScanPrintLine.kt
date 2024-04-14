@@ -1,10 +1,10 @@
 package ingsis.parser.scan
 
-import components.Position
-import components.Token
-import components.TokenType
-import components.statement.PrintLine
-import components.statement.Statement
+import ingsis.components.Position
+import ingsis.components.Token
+import ingsis.components.TokenType
+import ingsis.components.statement.PrintLine
+import ingsis.components.statement.Statement
 import ingsis.parser.error.ParserError
 
 class ScanPrintLine : ScanStatement {

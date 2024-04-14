@@ -1,8 +1,8 @@
 package ingsis.formatter.scan
 
-import components.statement.PrintLine
-import components.statement.Statement
-import components.statement.StatementType
+import ingsis.components.statement.PrintLine
+import ingsis.components.statement.Statement
+import ingsis.components.statement.StatementType
 import ingsis.formatter.extractor.ValueExtractor
 import ingsis.formatter.newLineCounter.PrintNewLines
 import ingsis.formatter.utils.FormatterRule

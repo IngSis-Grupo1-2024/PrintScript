@@ -1,10 +1,10 @@
 package ingsis.interpreter.operatorScanner
 
-import components.Position
-import components.Token
-import components.TokenType
-import components.statement.SingleValue
-import components.statement.Value
+import ingsis.components.Position
+import ingsis.components.Token
+import ingsis.components.TokenType
+import ingsis.components.statement.SingleValue
+import ingsis.components.statement.Value
 import ingsis.utils.Result
 import ingsis.utils.checkIfVariableDefined
 
@@ -25,11 +25,12 @@ class ScanSumOperator : ScanOperatorType {
         if (firstValue.getType().getValue() == TokenType.STRING || secondValue.getType().getValue() == TokenType.STRING) {
             val finalValue = firstValue.getValue() + secondValue.getValue()
             return SingleValue(token = Token(Position(), finalValue, TokenType.STRING))
-        }
-        else if (firstValue.getType().getValue() != TokenType.INTEGER ||
-            secondValue.getType().getValue() != TokenType.INTEGER) {
+        } else if (firstValue.getType().getValue() != TokenType.INTEGER ||
+            secondValue.getType().getValue() != TokenType.INTEGER
+        ) {
             throw Error(
-                "Can't do addition using no integer types or string types in line " + operatorPosition.startLine + "at position " + operatorPosition.startColumn,
+                "Can't do addition using no integer types or string types in line " +
+                    operatorPosition.startLine + "at position " + operatorPosition.startColumn,
             )
         }
         val finalValue = firstValue.getValue()!!.toInt() + secondValue.getValue()!!.toInt()

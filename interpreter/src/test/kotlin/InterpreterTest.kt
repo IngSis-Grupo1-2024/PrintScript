@@ -1,20 +1,21 @@
-import components.Position
-import components.Token
-import components.TokenType
-import components.statement.*
+
+import ingsis.components.Position
+import ingsis.components.Token
+import ingsis.components.TokenType
+import ingsis.components.statement.*
 import ingsis.interpreter.Interpreter
 import ingsis.interpreter.interpretStatement.AssignationInterpreter
 import ingsis.interpreter.interpretStatement.CompoundAssignationInterpreter
 import ingsis.interpreter.interpretStatement.DeclarationInterpreter
 import ingsis.interpreter.interpretStatement.PrintLineInterpreter
-import ingsis.utils.Result
 import ingsis.interpreter.operatorScanner.ScanDivOperator
+import ingsis.interpreter.operatorScanner.ScanMulOperator
 import ingsis.interpreter.operatorScanner.ScanSubOperator
+import ingsis.interpreter.operatorScanner.ScanSumOperator
+import ingsis.utils.Result
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import ingsis.interpreter.operatorScanner.ScanMulOperator
-import ingsis.interpreter.operatorScanner.ScanSumOperator
 
 class InterpreterTest {
     @Test
@@ -195,7 +196,7 @@ class InterpreterTest {
             )
         val exception = assertThrows<Error> { interpreter.interpret(compoundAssignation, HashMap()) }
         assertEquals(
-            "Can't do subtraction using strings in line " + position.startLine + "at position " + position.startColumn,
+            "Can't do subtraction using no integer types in line " + position.startLine + " at position " + position.startColumn,
             exception.message,
         )
     }
@@ -260,7 +261,7 @@ class InterpreterTest {
 
         val exception = assertThrows<Error> { interpreter.interpret(compoundAssignation, HashMap()) }
         assertEquals(
-            "Can't do multiplication using strings in line " + position.startLine + "at position " + position.startColumn,
+            "Can't do multiplication using no integer types in line " + position.startLine + " at position " + position.startColumn,
             exception.message,
         )
     }
@@ -325,7 +326,7 @@ class InterpreterTest {
 
         val exception = assertThrows<Error> { interpreter.interpret(compoundAssignation, HashMap()) }
         assertEquals(
-            "Can't do division using strings in line " + position.startLine + "at position " + position.startColumn,
+            "Can't do division using no integer types in line " + position.startLine + " at position " + position.startColumn,
             exception.message,
         )
     }

@@ -1,9 +1,9 @@
 package modules.parser
 
-import components.Position
-import components.Token
-import components.TokenType
-import components.statement.*
+import ingsis.components.Position
+import ingsis.components.Token
+import ingsis.components.TokenType
+import ingsis.components.statement.*
 import ingsis.parser.PrintScriptParser
 import ingsis.parser.error.ParserError
 import org.junit.jupiter.api.Assertions.assertEquals

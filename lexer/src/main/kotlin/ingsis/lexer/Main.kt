@@ -1,7 +1,7 @@
 package ingsis.lexer
 
-import components.Position
-import components.Token
+import ingsis.components.Position
+import ingsis.components.Token
 
 fun main() {
 //    val lexer1 = Lexer(Position(1, 1,1, 1, 1, 1))

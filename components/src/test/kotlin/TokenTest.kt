@@ -1,7 +1,7 @@
 package componentsTest
-import components.Position
-import components.Token
-import components.TokenType
+import ingsis.components.Position
+import ingsis.components.Token
+import ingsis.components.TokenType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

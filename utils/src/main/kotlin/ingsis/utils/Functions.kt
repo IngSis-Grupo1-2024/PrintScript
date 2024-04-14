@@ -1,8 +1,8 @@
 package ingsis.utils
 
-import components.TokenType
-import components.statement.Type
-import components.statement.Value
+import ingsis.components.TokenType
+import ingsis.components.statement.Type
+import ingsis.components.statement.Value
 
 fun checkIfVariableDefined(
     value: Value,

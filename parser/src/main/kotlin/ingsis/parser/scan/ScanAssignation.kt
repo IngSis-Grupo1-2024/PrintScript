@@ -1,8 +1,8 @@
 package ingsis.parser.scan
 
-import components.Token
-import components.TokenType
-import components.statement.*
+import ingsis.components.Token
+import ingsis.components.TokenType
+import ingsis.components.statement.*
 import ingsis.parser.error.ParserError
 
 class ScanAssignation : ScanStatement {

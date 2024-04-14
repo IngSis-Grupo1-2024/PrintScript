@@ -1,7 +1,7 @@
 package ingsis.parser.scan
 
-import components.Token
-import components.statement.Statement
+import ingsis.components.Token
+import ingsis.components.statement.Statement
 
 interface ScanStatement {
     fun canHandle(tokens: List<Token>): Boolean

@@ -1,12 +1,12 @@
 package ingsis.interpreter
 
-import components.statement.Statement
+import ingsis.components.statement.Statement
 import ingsis.interpreter.interpretStatement.*
-import ingsis.utils.Result
 import ingsis.interpreter.operatorScanner.ScanDivOperator
-import ingsis.interpreter.operatorScanner.ScanSubOperator
 import ingsis.interpreter.operatorScanner.ScanMulOperator
+import ingsis.interpreter.operatorScanner.ScanSubOperator
 import ingsis.interpreter.operatorScanner.ScanSumOperator
+import ingsis.utils.Result
 
 object PrintScriptInterpreter {
     fun createInterpreter(version: String): Interpreter {

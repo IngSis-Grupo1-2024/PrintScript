@@ -1,6 +1,6 @@
 
-import components.Position
-import components.TokenType
+import ingsis.components.Position
+import ingsis.components.TokenType
 import ingsis.lexer.Lexer
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

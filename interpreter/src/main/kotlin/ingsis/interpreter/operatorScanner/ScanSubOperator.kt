@@ -1,10 +1,10 @@
 package ingsis.interpreter.operatorScanner
 
-import components.Position
-import components.Token
-import components.TokenType
-import components.statement.SingleValue
-import components.statement.Value
+import ingsis.components.Position
+import ingsis.components.Token
+import ingsis.components.TokenType
+import ingsis.components.statement.SingleValue
+import ingsis.components.statement.Value
 import ingsis.utils.Result
 import ingsis.utils.checkIfVariableDefined
 
@@ -23,9 +23,11 @@ class ScanSubOperator : ScanOperatorType {
         val secondValue = checkIfVariableDefined(right, map)
 
         if (firstValue.getType().getValue() != TokenType.INTEGER ||
-            secondValue.getType().getValue() != TokenType.INTEGER) {
+            secondValue.getType().getValue() != TokenType.INTEGER
+        ) {
             throw Error(
-                "Can't do subtraction using no integer types in line " + operatorPosition.startLine + "at position " + operatorPosition.startColumn,
+                "Can't do subtraction using no integer types in line " + operatorPosition.startLine +
+                    " at position " + operatorPosition.startColumn,
             )
         }
         val finalValue = firstValue.getValue()!!.toInt() - secondValue.getValue()!!.toInt()

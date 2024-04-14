@@ -5,15 +5,12 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import java.io.File
 
 class ReadScaRulesFile(private val jsonPath: String) {
-
     private var printLnRuleMap = HashMap<String, Boolean>()
     private var identifierFormat = String()
-
 
     init {
         readSCARulesAndStackMap(jsonPath)
     }
-
 
     private fun readSCARulesAndStackMap(jsonPath: String) {
         val objectMapper = jacksonObjectMapper()
@@ -31,7 +28,6 @@ class ReadScaRulesFile(private val jsonPath: String) {
         identifierFormat = identifierProps["format"] as String
     }
 
-
     private fun handlePrintln(printLnOptions: Map<String, Any>) {
         val printLnMap = HashMap<String, Boolean>()
         for (value in printLnOptions.keys) {
@@ -47,5 +43,4 @@ class ReadScaRulesFile(private val jsonPath: String) {
     fun getIdentifierFormat(): String {
         return identifierFormat
     }
-
 }
