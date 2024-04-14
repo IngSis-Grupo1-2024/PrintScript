@@ -2,7 +2,6 @@ import components.Position
 import components.Token
 import components.TokenType
 import components.statement.*
-import components.statement.Function
 import ingsis.formatter.Formatter
 import ingsis.formatter.scan.ScanAssignation
 import ingsis.formatter.scan.ScanCompoundAssignation
@@ -29,7 +28,7 @@ class FormatterTest {
         val type = Type(TokenType.INTEGER, Position(14, 14, 1, 1, 14, 14))
         val position = Position(8, 8, 1, 1, 8, 8)
         val declaration = Declaration(keyword, variable, type, position)
-        val result = formatter.format(declaration)
+        val result = formatter.format(declaration, "src/main/kotlin/ingsis/formatter/rules/rules.json")
         val expected = "let x: number;\n"
         assertEquals(expected, result)
     }
@@ -43,7 +42,7 @@ class FormatterTest {
         val value = SingleValue(token)
         val position = Position(2, 2, 1, 1, 2, 2)
         val assignation = Assignation(position, variable, value)
-        val result = formatter.format(assignation)
+        val result = formatter.format(assignation, "src/main/kotlin/ingsis/formatter/rules/rules.json")
         val expected = "x  =  4;\n"
         assertEquals(expected, result)
     }
@@ -59,7 +58,7 @@ class FormatterTest {
         val value = Operator(plus, Operator(four), Operator(five))
         val position = Position(2, 2, 1, 1, 2, 2)
         val assignation = Assignation(position, variable, value)
-        val result = formatter.format(assignation)
+        val result = formatter.format(assignation, "src/main/kotlin/ingsis/formatter/rules/rules.json")
         val expected = "x  =  4 + 5;\n"
         assertEquals(expected, result)
     }
@@ -77,7 +76,7 @@ class FormatterTest {
         val declaration = Declaration(keyword, variable, type, declarationPosition)
         val assignationPosition = Position(15, 15, 1, 1, 14, 14)
         val compoundAssignation = CompoundAssignation(assignationPosition, declaration, value)
-        val result = formatter.format(compoundAssignation)
+        val result = formatter.format(compoundAssignation, "src/main/kotlin/ingsis/formatter/rules/rules.json")
         val expected = "let x: number  =  4;\n"
         assertEquals(expected, result)
     }
@@ -88,8 +87,8 @@ class FormatterTest {
         val formatter = Formatter(scanners)
         val token = Token(Position(8, 8, 1, 1, 8, 8), "4", TokenType.INTEGER)
         val value = SingleValue(token)
-        val function = Function(Token(Position(0, 6, 1, 1, 0, 6), "println", TokenType.FUNCTION), value)
-        val result = formatter.format(function)
+        val function = PrintLine(Position(0, 6, 1, 1, 0, 6), value)
+        val result = formatter.format(function, "src/main/kotlin/ingsis/formatter/rules/rules.json")
         val expected =
             "\n" +
                 "\n" +

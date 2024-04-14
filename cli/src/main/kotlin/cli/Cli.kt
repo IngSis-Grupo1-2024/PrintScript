@@ -103,7 +103,7 @@ class Cli(private val scaRules: ArrayList<Rule>, version: Version) {
             if(tokens.isEmpty()) continue
             try {
                 statement = parse(tokens)
-                result.append(formatter.format(statement))
+                result.append(formatter.format(statement, "formatter/src/main/kotlin/ingsis/formatter/rules/rules.json"))
             } catch (e: ParserError) {
                 result.append("\n" + e.localizedMessage + " in position :" + e.getTokenPosition())
             }

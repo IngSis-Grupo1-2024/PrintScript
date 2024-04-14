@@ -13,8 +13,8 @@ object PrintScriptFormatter {
 }
 
 class Formatter(private val scanners: List<ScanStatement>) {
-    fun format(statement: Statement): String {
-        val ruleMap = readJsonAndStackMap("formatter/src/main/kotlin/ingsis/formatter/rules/rules.json")
+    fun format(statement: Statement, rulePath: String): String {
+        val ruleMap = readJsonAndStackMap(rulePath)
         val result = StringBuilder()
         for (scanner in scanners) {
             if (scanner.canHandle(statement)) {

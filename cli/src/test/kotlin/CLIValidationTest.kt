@@ -211,10 +211,10 @@ class CLIValidationTest {
         assertEquals(expected, result)
     }
 
-//    @Test
-//    fun `v1 - test 21 - empty file`() {
-//        val result = cliV1.validate(readFile("src/test/resources/emptyFile"))
-//        val expected = "VALIDATION SUCCESSFUL"
-//        assertEquals(expected, result)
-//    }
+    @Test
+    fun `v1 - test 21 - empty file`() {
+        val result = cliV1.validate(readFile("src/test/resources/emptyFIle"))
+        val expected = "VALIDATION SUCCESSFUL"
+        assertEquals(expected, result)
+    }
 }
