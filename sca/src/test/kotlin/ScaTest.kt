@@ -6,7 +6,6 @@ import ingsis.components.statement.*
 import ingsis.sca.Sca
 import ingsis.sca.scan.ScanIdentifierCase
 import ingsis.sca.scan.ScanPrintLine
-import ingsis.sca.scan.cases.ScanSnakeCase
 import org.junit.jupiter.api.Test
 
 class ScaTest {
@@ -80,7 +79,7 @@ class ScaTest {
         val variable = Variable("is_this_test_valid", Position())
         val type = Type(TokenType.INTEGER, Position())
         val declaration = Declaration(keyword, variable, type, Position())
-        val scanIdentifierCase = ScanIdentifierCase(ScanSnakeCase())
+        val scanIdentifierCase = ScanIdentifierCase()
         val sca = Sca(listOf(scanIdentifierCase))
         sca.analyze(declaration, "src/test/kotlin/reportFileName.txt")
     }
@@ -91,7 +90,7 @@ class ScaTest {
         val variable = Variable("isThisTestValid", Position())
         val type = Type(TokenType.INTEGER, Position())
         val declaration = Declaration(keyword, variable, type, Position())
-        val scanIdentifierCase = ScanIdentifierCase(ScanSnakeCase())
+        val scanIdentifierCase = ScanIdentifierCase()
         val sca = Sca(listOf(scanIdentifierCase))
         sca.analyze(declaration, "src/test/kotlin/reportFileName.txt")
     }

@@ -37,7 +37,7 @@ class Sca(private val scanners: List<ScanStatement>) {
                     is InvalidResult -> {
                         fileWriter.write(
                             "${result.getMessage()} at line " +
-                                "${result.getPosition().startLine} and column ${result.getPosition().startColumn}\n",
+                                    "${result.getPosition().startLine} and column ${result.getPosition().startColumn}\n",
                         )
                     }
                 }
