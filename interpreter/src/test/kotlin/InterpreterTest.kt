@@ -1,5 +1,3 @@
-
-import com.sun.jdi.InvalidTypeException
 import ingsis.components.Position
 import ingsis.components.Token
 import ingsis.components.TokenType
@@ -35,7 +33,7 @@ class InterpreterTest {
         val pair = interpreter.interpret(declarationStatement, HashMap())
         val variableMap = pair.first
         assertEquals(1, variableMap.size)
-        assertEquals(Result(type, null), variableMap["a"])
+        assertEquals(Result(type, Modifier.MUTABLE, null), variableMap["a"])
     }
 
     @Test
@@ -60,7 +58,7 @@ class InterpreterTest {
         val pair1 = interpreter.interpret(assignationStatement, variableMap1)
         val variableMap2 = pair1.first
         assertEquals(1, variableMap2.size)
-        assertEquals(Result(type, "5"), variableMap2["a"])
+        assertEquals(Result(type, Modifier.MUTABLE, "5"), variableMap2["a"])
     }
 
     @Test
@@ -82,7 +80,7 @@ class InterpreterTest {
         val pair = interpreter.interpret(declarationStatement, HashMap())
         val variableMap = pair.first
         assertEquals(1, variableMap.size)
-        assertEquals(Result(type, null), variableMap["a"])
+        assertEquals(Result(type, Modifier.MUTABLE, null), variableMap["a"])
     }
 
     @Test
@@ -106,7 +104,7 @@ class InterpreterTest {
         val pair = interpreter.interpret(compoundAssignation, HashMap())
         val variableMap = pair.first
         assertEquals(1, variableMap.size)
-        assertEquals(Result(type, "5"), variableMap["a"])
+        assertEquals(Result(type, Modifier.MUTABLE, "5"), variableMap["a"])
     }
 
     @Test
@@ -138,7 +136,7 @@ class InterpreterTest {
         val pair = interpreter.interpret(compoundAssignation, HashMap())
         val variableMap = pair.first
         assertEquals(1, variableMap.size)
-        assertEquals(Result(type, "8"), variableMap["a"])
+        assertEquals(Result(type, Modifier.MUTABLE, "8"), variableMap["a"])
     }
 
     @Test
@@ -170,7 +168,7 @@ class InterpreterTest {
         val pair = interpreter.interpret(compoundAssignation, HashMap())
         val variableMap = pair.first
         assertEquals(1, variableMap.size)
-        assertEquals(Result(type, "2"), variableMap["a"])
+        assertEquals(Result(type, Modifier.MUTABLE, "2"), variableMap["a"])
     }
 
     @Test
@@ -199,7 +197,7 @@ class InterpreterTest {
                     SingleValue(Token(position, "3", TokenType.STRING)),
                 ),
             )
-        val exception = assertThrows<Error> { interpreter.interpret(compoundAssignation, HashMap()) }
+        val exception = assertThrows<Exception> { interpreter.interpret(compoundAssignation, HashMap()) }
         assertEquals(
             "Can't do subtraction using no integer types in line " + position.startLine + " at position " + position.startColumn,
             exception.message,
@@ -235,7 +233,7 @@ class InterpreterTest {
         val pair = interpreter.interpret(compoundAssignation, HashMap())
         val variableMap = pair.first
         assertEquals(1, variableMap.size)
-        assertEquals(Result(type, "15"), variableMap["a"])
+        assertEquals(Result(type, Modifier.MUTABLE, "15"), variableMap["a"])
     }
 
     @Test
@@ -265,7 +263,7 @@ class InterpreterTest {
                 ),
             )
 
-        val exception = assertThrows<Error> { interpreter.interpret(compoundAssignation, HashMap()) }
+        val exception = assertThrows<Exception> { interpreter.interpret(compoundAssignation, HashMap()) }
         assertEquals(
             "Can't do multiplication using no integer types in line " + position.startLine + " at position " + position.startColumn,
             exception.message,
@@ -301,7 +299,7 @@ class InterpreterTest {
         val pair = interpreter.interpret(compoundAssignation, HashMap())
         val variableMap = pair.first
         assertEquals(1, variableMap.size)
-        assertEquals(Result(type, "5"), variableMap["a"])
+        assertEquals(Result(type, Modifier.MUTABLE, "5"), variableMap["a"])
     }
 
     @Test
@@ -331,7 +329,7 @@ class InterpreterTest {
                 ),
             )
 
-        val exception = assertThrows<InvalidTypeException> { interpreter.interpret(compoundAssignation, HashMap()) }
+        val exception = assertThrows<Exception> { interpreter.interpret(compoundAssignation, HashMap()) }
         assertEquals(
             "Can't do division using no integer types in line " + position.startLine + " at position " + position.startColumn,
             exception.message,
@@ -371,7 +369,7 @@ class InterpreterTest {
         val pair = interpreter.interpret(compoundAssignation, HashMap())
         val variableMap = pair.first
         assertEquals(1, variableMap.size)
-        assertEquals(Result(type, "13"), variableMap["a"])
+        assertEquals(Result(type, Modifier.MUTABLE, "13"), variableMap["a"])
     }
 
     @Test
@@ -407,7 +405,7 @@ class InterpreterTest {
         val pair = interpreter.interpret(compoundAssignation, HashMap())
         val variableMap = pair.first
         assertEquals(1, variableMap.size)
-        assertEquals(Result(type, "20"), variableMap["a"])
+        assertEquals(Result(type, Modifier.MUTABLE, "20"), variableMap["a"])
     }
 
     @Test
@@ -443,7 +441,7 @@ class InterpreterTest {
         val pair = interpreter.interpret(compoundAssignation, HashMap())
         val variableMap = pair.first
         assertEquals(1, variableMap.size)
-        assertEquals(Result(type, "7"), variableMap["a"])
+        assertEquals(Result(type, Modifier.MUTABLE, "7"), variableMap["a"])
     }
 
     @Test
@@ -483,7 +481,7 @@ class InterpreterTest {
         val pair = interpreter.interpret(compoundAssignation, HashMap())
         val variableMap = pair.first
         assertEquals(1, variableMap.size)
-        assertEquals(Result(type, "15"), variableMap["a"])
+        assertEquals(Result(type, Modifier.MUTABLE, "15"), variableMap["a"])
     }
 
     @Test
@@ -523,7 +521,7 @@ class InterpreterTest {
         val pair = interpreter.interpret(compoundAssignation, HashMap())
         val variableMap = pair.first
         assertEquals(1, variableMap.size)
-        assertEquals(Result(type, "25"), variableMap["a"])
+        assertEquals(Result(type, Modifier.MUTABLE, "25"), variableMap["a"])
     }
 
     @Test
@@ -555,7 +553,7 @@ class InterpreterTest {
         val pair = interpreter.interpret(compoundAssignation, HashMap())
         val variableMap = pair.first
         assertEquals(1, variableMap.size)
-        assertEquals(Result(type, "Hello5"), variableMap["a"])
+        assertEquals(Result(type, Modifier.MUTABLE, "Hello5"), variableMap["a"])
     }
 
     @Test
@@ -587,7 +585,7 @@ class InterpreterTest {
         val pair = interpreter.interpret(compoundAssignation, HashMap())
         val variableMap = pair.first
         assertEquals(1, variableMap.size)
-        assertEquals(Result(type, "HelloWorld"), variableMap["a"])
+        assertEquals(Result(type, Modifier.MUTABLE, "HelloWorld"), variableMap["a"])
     }
 
     @Test
@@ -1049,7 +1047,8 @@ class InterpreterTest {
 
     @Test
     fun testEqualsEquals() {
-        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanEqualsOperator())
+        val scanners =
+            listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanEqualsOperator())
         val interpreter =
             Interpreter(
                 listOf(
@@ -1076,12 +1075,13 @@ class InterpreterTest {
         val pair = interpreter.interpret(compoundAssignation, HashMap())
         val variableMap = pair.first
         assertEquals(1, variableMap.size)
-        assertEquals(Result(type, "true"), variableMap["a"])
+        assertEquals(Result(type, Modifier.MUTABLE, "true"), variableMap["a"])
     }
 
     @Test
     fun testNotEquals() {
-        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanNotEqualsOperator())
+        val scanners =
+            listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanNotEqualsOperator())
         val interpreter =
             Interpreter(
                 listOf(
@@ -1108,12 +1108,18 @@ class InterpreterTest {
         val pair = interpreter.interpret(compoundAssignation, HashMap())
         val variableMap = pair.first
         assertEquals(1, variableMap.size)
-        assertEquals(Result(type, "true"), variableMap["a"])
+        assertEquals(Result(type, Modifier.MUTABLE, "true"), variableMap["a"])
     }
 
     @Test
     fun testGreaterThan() {
-        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanGreaterThanOperator())
+        val scanners = listOf(
+            ScanMulOperator(),
+            ScanSumOperator(),
+            ScanDivOperator(),
+            ScanSubOperator(),
+            ScanGreaterThanOperator()
+        )
         val interpreter =
             Interpreter(
                 listOf(
@@ -1140,12 +1146,18 @@ class InterpreterTest {
         val pair = interpreter.interpret(compoundAssignation, HashMap())
         val variableMap = pair.first
         assertEquals(1, variableMap.size)
-        assertEquals(Result(type, "true"), variableMap["a"])
+        assertEquals(Result(type, Modifier.MUTABLE, "true"), variableMap["a"])
     }
 
     @Test
     fun testGreaterOrEqualsThanWithANumberGreater() {
-        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanGreaterOrEqualThanOperator())
+        val scanners = listOf(
+            ScanMulOperator(),
+            ScanSumOperator(),
+            ScanDivOperator(),
+            ScanSubOperator(),
+            ScanGreaterOrEqualThanOperator()
+        )
         val interpreter =
             Interpreter(
                 listOf(
@@ -1172,12 +1184,18 @@ class InterpreterTest {
         val pair = interpreter.interpret(compoundAssignation, HashMap())
         val variableMap = pair.first
         assertEquals(1, variableMap.size)
-        assertEquals(Result(type, "true"), variableMap["a"])
+        assertEquals(Result(type, Modifier.MUTABLE, "true"), variableMap["a"])
     }
 
     @Test
     fun testGreaterOrEqualsThanWithEqualNumbers() {
-        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanGreaterOrEqualThanOperator())
+        val scanners = listOf(
+            ScanMulOperator(),
+            ScanSumOperator(),
+            ScanDivOperator(),
+            ScanSubOperator(),
+            ScanGreaterOrEqualThanOperator()
+        )
         val interpreter =
             Interpreter(
                 listOf(
@@ -1204,12 +1222,18 @@ class InterpreterTest {
         val pair = interpreter.interpret(compoundAssignation, HashMap())
         val variableMap = pair.first
         assertEquals(1, variableMap.size)
-        assertEquals(Result(type, "true"), variableMap["a"])
+        assertEquals(Result(type, Modifier.MUTABLE, "true"), variableMap["a"])
     }
 
     @Test
     fun testLessOrEqualsThanWithANumberLesser() {
-        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanLessOrEqualThanOperator())
+        val scanners = listOf(
+            ScanMulOperator(),
+            ScanSumOperator(),
+            ScanDivOperator(),
+            ScanSubOperator(),
+            ScanLessOrEqualThanOperator()
+        )
         val interpreter =
             Interpreter(
                 listOf(
@@ -1236,12 +1260,18 @@ class InterpreterTest {
         val pair = interpreter.interpret(compoundAssignation, HashMap())
         val variableMap = pair.first
         assertEquals(1, variableMap.size)
-        assertEquals(Result(type, "true"), variableMap["a"])
+        assertEquals(Result(type, Modifier.MUTABLE, "true"), variableMap["a"])
     }
 
     @Test
     fun testLessOrEqualsThanWithEqualsNumbers() {
-        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanLessOrEqualThanOperator())
+        val scanners = listOf(
+            ScanMulOperator(),
+            ScanSumOperator(),
+            ScanDivOperator(),
+            ScanSubOperator(),
+            ScanLessOrEqualThanOperator()
+        )
         val interpreter =
             Interpreter(
                 listOf(
@@ -1268,12 +1298,13 @@ class InterpreterTest {
         val pair = interpreter.interpret(compoundAssignation, HashMap())
         val variableMap = pair.first
         assertEquals(1, variableMap.size)
-        assertEquals(Result(type, "true"), variableMap["a"])
+        assertEquals(Result(type, Modifier.MUTABLE, "true"), variableMap["a"])
     }
 
     @Test
     fun testLessThan() {
-        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanLessThanOperator())
+        val scanners =
+            listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanLessThanOperator())
         val interpreter =
             Interpreter(
                 listOf(
@@ -1300,12 +1331,13 @@ class InterpreterTest {
         val pair = interpreter.interpret(compoundAssignation, HashMap())
         val variableMap = pair.first
         assertEquals(1, variableMap.size)
-        assertEquals(Result(type, "true"), variableMap["a"])
+        assertEquals(Result(type, Modifier.MUTABLE, "true"), variableMap["a"])
     }
 
     @Test
     fun testEqualsWithStrings() {
-        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanEqualsOperator())
+        val scanners =
+            listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanEqualsOperator())
         val interpreter =
             Interpreter(
                 listOf(
@@ -1332,6 +1364,397 @@ class InterpreterTest {
         val pair = interpreter.interpret(compoundAssignation, HashMap())
         val variableMap = pair.first
         assertEquals(1, variableMap.size)
-        assertEquals(Result(type, "true"), variableMap["a"])
+        assertEquals(Result(type, Modifier.MUTABLE, "true"), variableMap["a"])
     }
+
+    @Test
+    fun testTryToUpdateValueToAnImmutableVariable() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.IMMUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.INTEGER, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                SingleValue(Token(position, "5", TokenType.INTEGER))
+            )
+        val pair = interpreter.interpret(compoundAssignation, HashMap())
+        val updateVariable = Assignation(position, variable, SingleValue(Token(position, "10", TokenType.INTEGER)))
+        val exception = assertThrows<Exception> { interpreter.interpret(updateVariable, pair.first) }
+        assertEquals(
+            "You can't update the value of an immutable variable at line " +
+                    position.startLine + " at column " + position.startColumn,
+            exception.message,
+        )
+    }
+
+    @Test
+    fun testTryToUpdateValueToAMutableVariable() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.INTEGER, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                SingleValue(Token(position, "5", TokenType.INTEGER))
+            )
+        val pair = interpreter.interpret(compoundAssignation, HashMap())
+        val updateVariable = Assignation(position, variable, SingleValue(Token(position, "10", TokenType.INTEGER)))
+        val pair2 = interpreter.interpret(updateVariable, pair.first)
+        assertEquals(1, pair2.first.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "10"), pair2.first["a"])
+    }
+
+    @Test
+    fun testSubtractTwoBooleans() {
+        val scanners =
+            listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanEqualsOperator())
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.IMMUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.BOOLEAN, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "-", TokenType.OPERATOR),
+                    SingleValue(Token(position, "true", TokenType.BOOLEAN)),
+                    SingleValue(Token(position, "true", TokenType.BOOLEAN))
+                )
+            )
+        val exception = assertThrows<Exception> { interpreter.interpret(compoundAssignation, HashMap()) }
+        assertEquals(
+            "Can't do subtraction using no integer types in line " +
+                    position.startLine + " at position " +
+                    position.startColumn,
+            exception.message,
+        )
+    }
+
+    @Test
+    fun testSumTwoBooleans() {
+        val scanners =
+            listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanEqualsOperator())
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.IMMUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.BOOLEAN, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "+", TokenType.OPERATOR),
+                    SingleValue(Token(position, "true", TokenType.BOOLEAN)),
+                    SingleValue(Token(position, "true", TokenType.BOOLEAN))
+                )
+            )
+        val exception = assertThrows<Exception> { interpreter.interpret(compoundAssignation, HashMap()) }
+        assertEquals(
+            "Sum operation is just allowed between integers and strings in line " +
+                    position.startLine + " at position " +
+                    position.startColumn,
+            exception.message,
+        )
+    }
+
+    @Test
+    fun testMultiplyTwoBooleans() {
+        val scanners =
+            listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanEqualsOperator())
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.IMMUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.BOOLEAN, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "*", TokenType.OPERATOR),
+                    SingleValue(Token(position, "true", TokenType.BOOLEAN)),
+                    SingleValue(Token(position, "true", TokenType.BOOLEAN))
+                )
+            )
+        val exception = assertThrows<Exception> { interpreter.interpret(compoundAssignation, HashMap()) }
+        assertEquals(
+            "Can't do multiplication using no integer types in line " +
+                    position.startLine + " at position " +
+                    position.startColumn,
+            exception.message,
+        )
+    }
+
+    @Test
+    fun testDivideTwoBooleans() {
+        val scanners =
+            listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanEqualsOperator())
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.IMMUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.BOOLEAN, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "/", TokenType.OPERATOR),
+                    SingleValue(Token(position, "true", TokenType.BOOLEAN)),
+                    SingleValue(Token(position, "true", TokenType.BOOLEAN))
+                )
+            )
+        val exception = assertThrows<Exception> { interpreter.interpret(compoundAssignation, HashMap()) }
+        assertEquals(
+            "Can't do division using no integer types in line " +
+                    position.startLine + " at position " +
+                    position.startColumn,
+            exception.message,
+        )
+    }
+
+    @Test
+    fun testSumStingAndBoolean(){
+        val scanners =
+            listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanEqualsOperator())
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+
+        val keyword = Keyword(Modifier.IMMUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.STRING, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "+", TokenType.OPERATOR),
+                    SingleValue(Token(position, "hello", TokenType.STRING)),
+                    SingleValue(Token(position, "true", TokenType.BOOLEAN))
+                )
+            )
+        val exception = assertThrows<Exception> { interpreter.interpret(compoundAssignation, HashMap()) }
+        assertEquals(
+            "Sum operation is just allowed between integers and strings in line " +
+                    position.startLine + " at position " +
+                    position.startColumn,
+            exception.message,
+        )
+    }
+
+    @Test
+    fun testSumIntegerAndBoolean(){
+        val scanners =
+            listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanEqualsOperator())
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+
+        val keyword = Keyword(Modifier.IMMUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.STRING, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "+", TokenType.OPERATOR),
+                    SingleValue(Token(position, "3", TokenType.INTEGER)),
+                    SingleValue(Token(position, "true", TokenType.BOOLEAN))
+                )
+            )
+        val exception = assertThrows<Exception> { interpreter.interpret(compoundAssignation, HashMap()) }
+        assertEquals(
+            "Sum operation is just allowed between integers and strings in line " +
+                    position.startLine + " at position " +
+                    position.startColumn,
+            exception.message,
+        )
+    }
+
+    @Test
+    fun testSubtractBooleanAndInteger(){
+        val scanners =
+            listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanEqualsOperator())
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+
+        val keyword = Keyword(Modifier.IMMUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.STRING, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "-", TokenType.OPERATOR),
+                    SingleValue(Token(position, "true", TokenType.BOOLEAN)),
+                    SingleValue(Token(position, "3", TokenType.INTEGER))
+                )
+            )
+        val exception = assertThrows<Exception> { interpreter.interpret(compoundAssignation, HashMap()) }
+        assertEquals(
+            "Can't do subtraction using no integer types in line " +
+                    position.startLine + " at position " +
+                    position.startColumn,
+            exception.message,
+        )
+    }
+
+    @Test
+    fun testMultiplyBooleanAndInteger(){
+        val scanners =
+            listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanEqualsOperator())
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+
+        val keyword = Keyword(Modifier.IMMUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.STRING, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "*", TokenType.OPERATOR),
+                    SingleValue(Token(position, "true", TokenType.BOOLEAN)),
+                    SingleValue(Token(position, "3", TokenType.INTEGER))
+                )
+            )
+        val exception = assertThrows<Exception> { interpreter.interpret(compoundAssignation, HashMap()) }
+        assertEquals(
+            "Can't do multiplication using no integer types in line " +
+                    position.startLine + " at position " +
+                    position.startColumn,
+            exception.message,
+        )
+    }
+
+    @Test
+    fun testDivideBooleanAndInteger(){
+        val scanners =
+            listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanEqualsOperator())
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+
+        val keyword = Keyword(Modifier.IMMUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.STRING, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "/", TokenType.OPERATOR),
+                    SingleValue(Token(position, "true", TokenType.BOOLEAN)),
+                    SingleValue(Token(position, "3", TokenType.INTEGER))
+                )
+            )
+        val exception = assertThrows<Exception> { interpreter.interpret(compoundAssignation, HashMap()) }
+        assertEquals(
+            "Can't do division using no integer types in line " +
+                    position.startLine + " at position " +
+                    position.startColumn,
+            exception.message,
+        )
+    }
+
 }

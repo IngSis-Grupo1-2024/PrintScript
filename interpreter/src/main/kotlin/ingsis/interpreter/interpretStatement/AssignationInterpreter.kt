@@ -16,11 +16,17 @@ class AssignationInterpreter(private val scanners: List<ScanOperatorType>) : Sta
         val variable = assignation.getVariable()
         val value = assignation.getValue()
 
-        val result = ValueAnalyzer(scanners).analyze(value, previousState)
-        if (checkIfNewValueTypeMatchesType(variable, result, previousState)) {
-            previousState[variable.getName()] = result
+        var result = ValueAnalyzer(scanners).analyze(value, previousState)
+        result = result.updateModifier(previousState[variable.getName()]?.getModifier())
+        if (checkMutability(variable, previousState)) {
+            if (checkIfNewValueTypeMatchesType(variable, result, previousState)) {
+                previousState[variable.getName()] = result
+            } else {
+                throw Exception("Type mismatch")
+            }
         } else {
-            throw Exception("Type mismatch")
+            throw Exception("You can't update the value of an immutable variable at line " +
+                    variable.getPosition().startLine + " at column " + variable.getPosition().startColumn)
         }
 
         return Pair(previousState, null)
@@ -32,5 +38,11 @@ class AssignationInterpreter(private val scanners: List<ScanOperatorType>) : Sta
         map: Map<String, Result>,
     ): Boolean {
         return map[variable.getName()]?.getType()?.getValue() == result.getType().getValue()
+    }
+
+    private fun checkMutability(variable: Variable, map: Map<String, Result>): Boolean {
+        return if (map[variable.getName()]?.getModifier() == null) {
+            true
+        } else map[variable.getName()]?.getModifier() == Modifier.MUTABLE
     }
 }
