@@ -26,7 +26,7 @@ class ScanDivOperator : ScanOperatorType {
         if (firstValue.getType().getValue() != TokenType.INTEGER ||
             secondValue.getType().getValue() != TokenType.INTEGER
         ) {
-            throw InvalidTypeException(
+            throw Exception(
                 "Can't do division using no integer types in line " +
                     operatorPosition.startLine + " at position " +
                     operatorPosition.startColumn,

@@ -25,7 +25,7 @@ class ScanMulOperator : ScanOperatorType {
         if (firstValue.getType().getValue() != TokenType.INTEGER ||
             secondValue.getType().getValue() != TokenType.INTEGER
         ) {
-            throw Error(
+            throw Exception(
                 "Can't do multiplication using no integer types in line " +
                     operatorPosition.startLine + " at position " + operatorPosition.startColumn,
             )

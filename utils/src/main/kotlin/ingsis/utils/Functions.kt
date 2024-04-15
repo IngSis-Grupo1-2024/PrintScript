@@ -1,6 +1,7 @@
 package ingsis.utils
 
 import ingsis.components.TokenType
+import ingsis.components.statement.Modifier
 import ingsis.components.statement.Type
 import ingsis.components.statement.Value
 
@@ -16,6 +17,6 @@ fun checkIfVariableDefined(
             throw IllegalArgumentException("Variable ${value.getToken().getValue()} not declared")
         }
     } else {
-        return Result(Type(value.getToken().getType(), value.getToken().getPosition()), value.getToken().getValue())
+        return Result(Type(value.getToken().getType(), value.getToken().getPosition()), Modifier.IMMUTABLE, value.getToken().getValue())
     }
 }

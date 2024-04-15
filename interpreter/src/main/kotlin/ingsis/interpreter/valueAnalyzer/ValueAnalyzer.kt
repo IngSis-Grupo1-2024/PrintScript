@@ -1,10 +1,7 @@
 package ingsis.interpreter.valueAnalyzer
 
 import ingsis.components.TokenType
-import ingsis.components.statement.Operator
-import ingsis.components.statement.SingleValue
-import ingsis.components.statement.Type
-import ingsis.components.statement.Value
+import ingsis.components.statement.*
 import ingsis.interpreter.operatorScanner.ScanOperatorType
 import ingsis.utils.Result
 
@@ -17,13 +14,16 @@ class ValueAnalyzer(private val scanners: List<ScanOperatorType>) {
             is SingleValue -> {
                 if (value.getToken().getType() == TokenType.IDENTIFIER) {
                     val variableResult = map[value.getToken().getValue()]
+                    val variableModifier = map[value.getToken().getValue()]!!.getModifier()
                     return Result(
                         Type(variableResult!!.getType().getValue(), variableResult.getType().getPosition()),
+                        variableModifier,
                         variableResult.getValue(),
                     )
                 }
                 return Result(
                     Type(value.getToken().getType(), value.getToken().getPosition()),
+                    Modifier.IMMUTABLE,
                     value.getToken().getValue(),
                 )
             }
@@ -34,6 +34,7 @@ class ValueAnalyzer(private val scanners: List<ScanOperatorType>) {
                         calculatedValue.getToken().getType(),
                         calculatedValue.getToken().getPosition(),
                     ),
+                    Modifier.IMMUTABLE,
                     calculatedValue.getToken().getValue(),
                 )
             }
