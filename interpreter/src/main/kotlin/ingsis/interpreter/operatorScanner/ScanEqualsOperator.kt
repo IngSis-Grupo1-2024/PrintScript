@@ -6,6 +6,7 @@ import ingsis.components.TokenType
 import ingsis.components.statement.SingleValue
 import ingsis.components.statement.Value
 import ingsis.utils.Result
+import ingsis.utils.checkIfVariableDefined
 
 class ScanEqualsOperator : ScanOperatorType {
     override fun canHandle(operator: String): Boolean {
@@ -18,8 +19,11 @@ class ScanEqualsOperator : ScanOperatorType {
         operatorPosition: Position,
         map: Map<String, Result>
     ): Value {
-        val firstValue = left.getToken().getValue()
-        val secondValue = right.getToken().getValue()
+        val firstValue = checkIfVariableDefined(left, map)
+        val secondValue = checkIfVariableDefined(right, map)
+
+        val firstType = firstValue.getType().getValue()
+        val secondType = secondValue.getType().getValue()
 
         if (firstValue == secondValue) {
             return SingleValue(Token(Position(), "true", TokenType.BOOLEAN))
