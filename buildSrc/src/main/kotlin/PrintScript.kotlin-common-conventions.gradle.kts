@@ -96,7 +96,7 @@ publishing {
         register<MavenPublication>("maven") {
             groupId = "org.gradle.PrintScript"
             artifactId = "library"
-            version = "1.0.1"
+            version = "1.0.0"
             from(components["java"])
         }
 
