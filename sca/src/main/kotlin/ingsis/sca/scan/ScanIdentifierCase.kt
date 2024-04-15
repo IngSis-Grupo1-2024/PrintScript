@@ -9,9 +9,10 @@ import ingsis.sca.result.Result
 import ingsis.sca.result.ValidResult
 import ingsis.sca.scan.cases.CaseScanner
 import ingsis.sca.scan.cases.ScanCamelCase
+import ingsis.sca.scan.cases.ScanSnakeCase
 import ingsis.utils.ReadScaRulesFile
 
-class ScanIdentifierCase(private val caseScanner: CaseScanner = ScanCamelCase()) :
+class ScanIdentifierCase() :
     ScanStatement {
     override fun canHandle(statement: Statement): Boolean {
         return statement.getStatementType() == StatementType.DECLARATION ||
@@ -29,7 +30,24 @@ class ScanIdentifierCase(private val caseScanner: CaseScanner = ScanCamelCase())
             } else {
                 (statement as Declaration)
             }
-        when (val result = caseScanner.checkIdentifierFormat(declaration)) {
+
+        // A can handle should be here
+        val scanner: CaseScanner =
+            when (jsonReader.getIdentifierFormat()) {
+                "camel case" -> {
+                    ScanCamelCase()
+                }
+
+                "snake case" -> {
+                    ScanSnakeCase()
+                }
+
+                else -> {
+                    ScanCamelCase()
+                }
+            }
+
+        when (val result = scanner.checkIdentifierFormat(declaration)) {
             is InvalidResult -> {
                 return InvalidResult(result.getPosition(), result.getMessage())
             }

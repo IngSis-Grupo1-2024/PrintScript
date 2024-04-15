@@ -12,6 +12,6 @@ class PrintLine(private val position: Position, private val value: Value) : Stat
     override fun getStatementType(): StatementType = statementType
 
     override fun toString(): String {
-        return "PrintLine(position=$position, value=$value, statementType=$statementType)"
+        return "PrintLine(value=$value, statementType=$statementType)"
     }
 }

@@ -108,7 +108,7 @@ class ScanValue {
             return originalAST.addChildren(ast)
         }
         if (originalAST is Operator) {
-            return addInLastChild(originalAST.getLastOperator(), ast)
+            return originalAST.replace(originalAST.getLastOperator(), addInLastChild(originalAST.getLastOperator(), ast))
         }
         return originalAST.addChildren(ast)
     }

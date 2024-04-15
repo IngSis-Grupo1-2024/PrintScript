@@ -47,7 +47,10 @@ object PrintScriptLexer {
 class Lexer(
     private val tokenAssignatorList: List<TokenAssignator>,
 ) {
-    fun tokenize(input: String,  position: Position): List<Token> {
+    fun tokenize(
+        input: String,
+        position: Position,
+    ): List<Token> {
         val tokens = ArrayList<Token>()
         var currentPosition = position.copy()
         var currentToken = ""
@@ -150,7 +153,7 @@ class Lexer(
             startLine = newEndLine,
             endOffset = newEndOffset,
             endColumn = newEndColumn,
-            endLine = newEndLine
+            endLine = newEndLine,
         )
     }
 
