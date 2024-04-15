@@ -6,6 +6,8 @@ plugins {
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
     id("org.jetbrains.kotlin.jvm")
     jacoco
+    java
+    `maven-publish`
 }
 
 repositories {
@@ -77,11 +79,6 @@ tasks.register<JavaExec>("ktlintFormat") {
         "**.kts",
         "!**/build/**",
     )
-}
-
-plugins {
-    java
-    `maven-publish`
 }
 
 publishing {
