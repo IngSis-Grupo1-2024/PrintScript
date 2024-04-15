@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test
 
 class LexerTest {
     private val lexer = PrintScriptLexer.createLexer("VERSION_1")
+    private val lexer2 = PrintScriptLexer.createLexer("VERSION_2")
 
     @Test
     fun testTokenizeADeclaration() {

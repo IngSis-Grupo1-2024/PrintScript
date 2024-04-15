@@ -18,8 +18,11 @@ enum class TokenType {
     PARENTHESIS, // can be either ( open or ) closed
     OPERATOR,
     DELIMITER,
+    BRACES, // can be either { open or } closed
 
     // Types
     STRING,
     INTEGER,
+    BOOLEAN,
+
 }
