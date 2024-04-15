@@ -12,7 +12,6 @@ import ingsis.sca.PrintScriptSca
 import ingsis.utils.Result
 import java.io.PrintWriter
 import java.nio.file.Path
-import java.nio.file.Paths
 
 class Cli(version: Version) {
     private val lexer = PrintScriptLexer.createLexer(version.toString())
@@ -126,7 +125,7 @@ class Cli(version: Version) {
             try {
                 statement = parse(tokens)
                 result.append(
-                    formatter.format(statement, "formatter/src/main/kotlin/ingsis/formatter/rules/rules.json")
+                    formatter.format(statement, "formatter/src/main/kotlin/ingsis/formatter/rules/rules.json"),
                 )
             } catch (e: ParserError) {
                 result.append("\n" + e.localizedMessage + " in position :" + e.getTokenPosition())
@@ -153,7 +152,10 @@ class Cli(version: Version) {
             try {
                 statement = parse(tokens)
                 result.append(
-                    sca.analyze(statement, "/Users/tinavalenzi/projects/dissis/PrintScript/sca/src/main/kotlin/ingsis/sca/rules/rules.json"),
+                    sca.analyze(
+                        statement,
+                        "/Users/tinavalenzi/projects/dissis/PrintScript/sca/src/main/kotlin/ingsis/sca/rules/rules.json",
+                    ),
                 )
             } catch (e: ParserError) {
                 result.append("\n" + e.localizedMessage + " in position :" + e.getTokenPosition())
