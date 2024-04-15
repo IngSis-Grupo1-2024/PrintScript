@@ -19,7 +19,7 @@ class LexerTest {
                 Token(Position(7, 13, 1, 1, 7, 13), "string", TokenType.TYPE),
                 Token(Position(13, 14, 1, 1, 13, 14), ";", TokenType.DELIMITER),
             )
-        val result = lexer.tokenize(input)
+        val result = lexer.tokenize(input, Position())
         var i = 0
         while (i < result.size) {
             assertEquals(tokenList[i].getType(), result[i].getType())
@@ -39,7 +39,7 @@ class LexerTest {
                 Token(Position(5, 6, 1, 1, 5, 6), "5", TokenType.SYMBOL),
                 Token(Position(6, 7, 1, 1, 6, 7), ";", TokenType.DELIMITER),
             )
-        val result = lexer.tokenize(input)
+        val result = lexer.tokenize(input, Position())
         var i = 0
         while (i < result.size) {
             assertEquals(tokenList[i].getType(), result[i].getType())
@@ -59,7 +59,7 @@ class LexerTest {
                 Token(Position(6, 7, 1, 1, 6, 7), "5", TokenType.SYMBOL),
                 Token(Position(7, 8, 1, 1, 7, 8), ";", TokenType.DELIMITER),
             )
-        val result = lexer.tokenize(input)
+        val result = lexer.tokenize(input, Position())
         var i = 0
         while (i < result.size) {
             assertEquals(tokenList[i].getType(), result[i].getType())
@@ -79,7 +79,7 @@ class LexerTest {
                 Token(Position(7, 8, 1, 1, 7, 8), "5", TokenType.SYMBOL),
                 Token(Position(10, 11, 1, 1, 10, 11), ";", TokenType.DELIMITER),
             )
-        val result = lexer.tokenize(input)
+        val result = lexer.tokenize(input, Position())
         var i = 0
         while (i < result.size) {
             assertEquals(tokenList[i].getType(), result[i].getType())
@@ -102,7 +102,7 @@ class LexerTest {
                 Token(Position(16, 17, 1, 1, 16, 17), "8", TokenType.SYMBOL),
                 Token(Position(17, 18, 1, 1, 17, 18), ";", TokenType.DELIMITER),
             )
-        val result = lexer.tokenize(input)
+        val result = lexer.tokenize(input, Position())
         var i = 0
         while (i < result.size) {
             assertEquals(tokenList[i].getType(), result[i].getType())
@@ -125,7 +125,7 @@ class LexerTest {
                 Token(Position(16, 23, 1, 1, 16, 23), "\"hello\"", TokenType.SYMBOL),
                 Token(Position(23, 24, 1, 1, 23, 24), ";", TokenType.DELIMITER),
             )
-        val result = lexer.tokenize(input)
+        val result = lexer.tokenize(input, Position())
         var i = 0
         while (i < result.size) {
             assertEquals(tokenList[i].getType(), result[i].getType())
@@ -150,7 +150,7 @@ class LexerTest {
                 Token(Position(28, 29, 1, 1, 28, 29), "8", TokenType.SYMBOL),
                 Token(Position(30, 31, 1, 1, 30, 31), ";", TokenType.DELIMITER),
             )
-        val result = lexer.tokenize(input)
+        val result = lexer.tokenize(input, Position())
         var i = 0
         while (i < result.size) {
             assertEquals(tokenList[i].getType(), result[i].getType())
@@ -171,7 +171,7 @@ class LexerTest {
                 Token(Position(10, 11, 1, 1, 10, 11), ")", TokenType.PARENTHESIS),
                 Token(Position(11, 12, 1, 1, 11, 12), ";", TokenType.DELIMITER),
             )
-        val result = lexer.tokenize(input)
+        val result = lexer.tokenize(input, Position())
         var i = 0
         while (i < result.size) {
             assertEquals(tokenList[i].getType(), result[i].getType())
@@ -194,7 +194,7 @@ class LexerTest {
                 Token(Position(14, 15, 1, 1, 14, 15), ")", TokenType.PARENTHESIS),
                 Token(Position(17, 18, 1, 1, 17, 18), ";", TokenType.DELIMITER),
             )
-        val result = lexer.tokenize(input)
+        val result = lexer.tokenize(input, Position())
         var i = 0
         while (i < result.size) {
             assertEquals(tokenList[i].getType(), result[i].getType())
@@ -217,7 +217,7 @@ class LexerTest {
                 Token(Position(18, 19, 1, 1, 18, 19), ")", TokenType.PARENTHESIS),
                 Token(Position(21, 22, 1, 1, 21, 22), ";", TokenType.DELIMITER),
             )
-        val result = lexer.tokenize(input)
+        val result = lexer.tokenize(input, Position())
         var i = 0
         while (i < result.size) {
             assertEquals(tokenList[i].getType(), result[i].getType())
@@ -240,7 +240,7 @@ class LexerTest {
                 Token(Position(18, 19, 1, 1, 18, 19), ")", TokenType.PARENTHESIS),
                 Token(Position(21, 22, 1, 1, 21, 22), ";", TokenType.DELIMITER),
             )
-        val result = lexer.tokenize(input)
+        val result = lexer.tokenize(input, Position())
         var i = 0
         while (i < result.size) {
             assertEquals(tokenList[i].getType(), result[i].getType())
@@ -263,7 +263,7 @@ class LexerTest {
                 Token(Position(18, 19, 1, 1, 18, 19), ")", TokenType.PARENTHESIS),
                 Token(Position(21, 22, 1, 1, 21, 22), ";", TokenType.DELIMITER),
             )
-        val result = lexer.tokenize(input)
+        val result = lexer.tokenize(input, Position())
         var i = 0
         while (i < result.size) {
             assertEquals(tokenList[i].getType(), result[i].getType())
@@ -286,7 +286,7 @@ class LexerTest {
                 Token(Position(18, 19, 1, 1, 18, 19), ")", TokenType.PARENTHESIS),
                 Token(Position(21, 22, 1, 1, 21, 22), ";", TokenType.DELIMITER),
             )
-        val result = lexer.tokenize(input)
+        val result = lexer.tokenize(input, Position())
         var i = 0
         while (i < result.size) {
             assertEquals(tokenList[i].getType(), result[i].getType())
@@ -309,7 +309,7 @@ class LexerTest {
                 Token(Position(26, 27, 1, 1, 26, 27), ")", TokenType.PARENTHESIS),
                 Token(Position(27, 28, 1, 1, 27, 28), ";", TokenType.DELIMITER),
             )
-        val result = lexer.tokenize(input)
+        val result = lexer.tokenize(input, Position())
         var i = 0
         while (i < result.size) {
             assertEquals(tokenList[i].getType(), result[i].getType())
@@ -330,7 +330,7 @@ class LexerTest {
                 Token(Position(10, 11, 1, 1, 10, 11), ")", TokenType.PARENTHESIS),
                 Token(Position(11, 12, 1, 1, 11, 12), ";", TokenType.DELIMITER),
             )
-        val result = lexer.tokenize(input)
+        val result = lexer.tokenize(input, Position())
         var i = 0
         while (i < result.size) {
             assertEquals(tokenList[i].getType(), result[i].getType())
@@ -353,7 +353,7 @@ class LexerTest {
                 Token(Position(13, 14, 6, 6, 1, 2), "8", TokenType.SYMBOL),
                 Token(Position(14, 15, 7, 7, 1, 2), ";", TokenType.DELIMITER),
             )
-        val result = lexer.tokenize(input)
+        val result = lexer.tokenize(input, Position())
         var i = 0
         while (i < result.size) {
             assertEquals(tokenList[i].getType(), result[i].getType())
@@ -383,7 +383,7 @@ class LexerTest {
                 Token(Position(33, 34, 1, 1, 33, 34), "9", TokenType.SYMBOL),
                 Token(Position(34, 35, 1, 1, 34, 35), ";", TokenType.DELIMITER),
             )
-        val result = lexer.tokenize(input)
+        val result = lexer.tokenize(input, Position())
         var i = 0
         while (i < result.size) {
             assertEquals(tokenList[i].getType(), result[i].getType())

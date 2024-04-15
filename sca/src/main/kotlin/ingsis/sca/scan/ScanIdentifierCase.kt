@@ -32,7 +32,7 @@ class ScanIdentifierCase() :
             }
 
         // A can handle should be here
-        var scanner: CaseScanner =
+        val scanner: CaseScanner =
             when (jsonReader.getIdentifierFormat()) {
                 "camel case" -> {
                     ScanCamelCase()

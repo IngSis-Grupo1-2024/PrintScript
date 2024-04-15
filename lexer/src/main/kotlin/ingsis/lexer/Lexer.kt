@@ -14,11 +14,10 @@ object PrintScriptLexer {
 
     private fun version1() =
         Lexer(
-            Position(),
             listOf(
                 TokenAssignator(TokenType.KEYWORD, listOf("let")),
                 TokenAssignator(TokenType.FUNCTION, listOf("println")),
-                TokenAssignator(TokenType.TYPE, listOf("number", "string", "boolean")),
+                TokenAssignator(TokenType.TYPE, listOf("number", "string")),
                 TokenAssignator(TokenType.OPERATOR, listOf("+", "-", "/", "*")),
                 TokenAssignator(TokenType.DELIMITER, listOf(";")),
                 TokenAssignator(TokenType.PARENTHESIS, listOf("(", ")")),
@@ -29,10 +28,12 @@ object PrintScriptLexer {
 }
 
 class Lexer(
-    private val position: Position,
     private val tokenAssignatorList: List<TokenAssignator>,
 ) {
-    fun tokenize(input: String): List<Token> {
+    fun tokenize(
+        input: String,
+        position: Position,
+    ): List<Token> {
         val tokens = ArrayList<Token>()
         var currentPosition = position.copy()
         var currentToken = ""

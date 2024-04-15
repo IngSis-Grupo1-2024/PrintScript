@@ -183,22 +183,22 @@ class CLIValidationTest {
                 "error: wrong number of values and operators in position :{\n" +
                 "\tstartOffset: 19,\n" +
                 "\tendOffset: 20,\n" +
-                "\tstartLine: 1,\n" +
-                "\tendLine: 1,\n" +
+                "\tstartLine: 3,\n" +
+                "\tendLine: 3,\n" +
                 "\tstartColumn: 19,\n" +
                 "\tendColumn: 20}\n" +
                 "error: wrong number of values and operators in position :{\n" +
                 "\tstartOffset: 12,\n" +
                 "\tendOffset: 13,\n" +
-                "\tstartLine: 1,\n" +
-                "\tendLine: 1,\n" +
+                "\tstartLine: 9,\n" +
+                "\tendLine: 9,\n" +
                 "\tstartColumn: 12,\n" +
                 "\tendColumn: 13}\n" +
                 "error: expected ')' in position :{\n" +
                 "\tstartOffset: 22,\n" +
                 "\tendOffset: 23,\n" +
-                "\tstartLine: 1,\n" +
-                "\tendLine: 1,\n" +
+                "\tstartLine: 11,\n" +
+                "\tendLine: 11,\n" +
                 "\tstartColumn: 22,\n" +
                 "\tendColumn: 23}"
         assertEquals(expected, result)
