@@ -3,9 +3,11 @@ import ingsis.components.Position
 import ingsis.components.Token
 import ingsis.components.TokenType
 import ingsis.components.statement.*
+import ingsis.components.statement.Function
 import ingsis.sca.Sca
 import ingsis.sca.scan.ScanIdentifierCase
 import ingsis.sca.scan.ScanPrintLine
+import ingsis.sca.scan.ScanReadInput
 import org.junit.jupiter.api.Test
 
 class ScaTest {
@@ -93,5 +95,23 @@ class ScaTest {
         val scanIdentifierCase = ScanIdentifierCase()
         val sca = Sca(listOf(scanIdentifierCase))
         println(sca.analyze(declaration, "src/main/resources/rules.json"))
+    }
+
+    @Test
+    fun testScanReadInput() {
+        val value = SingleValue(Token(Position(), "4", TokenType.INTEGER))
+        val function = Function(Token(Position(), "readinput", TokenType.FUNCTION), value)
+        val scanReadInput = ScanReadInput(arrayListOf(TokenType.INTEGER))
+        val sca = Sca(listOf(scanReadInput))
+        println(sca.analyze(function, "src/main/resources/rules.json"))
+    }
+
+    @Test
+    fun testReadInputWithIdentifier() {
+        val value = SingleValue(Token(Position(), "a", TokenType.IDENTIFIER))
+        val function = Function(Token(Position(), "readinput", TokenType.FUNCTION), value)
+        val scanPrintLine = ScanReadInput(ArrayList())
+        val sca = Sca(listOf(scanPrintLine))
+        println(sca.analyze(function, "src/main/resources/rules.json"))
     }
 }

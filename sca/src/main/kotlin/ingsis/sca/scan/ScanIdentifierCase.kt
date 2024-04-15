@@ -4,7 +4,6 @@ import ingsis.components.statement.CompoundAssignation
 import ingsis.components.statement.Declaration
 import ingsis.components.statement.Statement
 import ingsis.components.statement.StatementType
-import ingsis.sca.defaultConfig.getDefaultBooleanValue
 import ingsis.sca.defaultConfig.getDefaultCase
 import ingsis.sca.result.InvalidResult
 import ingsis.sca.result.Result

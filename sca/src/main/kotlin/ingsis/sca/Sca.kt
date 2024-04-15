@@ -42,7 +42,7 @@ class Sca(private val scanners: List<ScanStatement>) {
         try {
             jsonReader.readSCARulesAndStackMap(jsonPath)
         } catch (
-            e: Exception
+            e: Exception,
         ) {
             println("Error reading the rules file")
         }

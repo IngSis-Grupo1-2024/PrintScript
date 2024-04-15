@@ -1,9 +1,13 @@
 {
-  "println":{
+  "println": {
     "expression": false,
     "identifier": false,
     "literal": true
   },
-  "identifier_format":{
+  "identifier_format": {
+  },
+  "readinput":{
+    "expression": false,
+    "literal": false
   }
 }

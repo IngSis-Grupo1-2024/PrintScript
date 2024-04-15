@@ -4,10 +4,10 @@ fun getDefaultBeforeDeclarationSpaces(): Int {
     return 1
 }
 
-fun getDefaultPrintlnNewLines() : Int {
+fun getDefaultPrintlnNewLines(): Int {
     return 1
 }
 
-fun getDefaultAssignationSpaces() : Int {
+fun getDefaultAssignationSpaces(): Int {
     return 1
 }
