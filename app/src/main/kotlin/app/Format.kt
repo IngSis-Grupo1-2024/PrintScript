@@ -12,7 +12,7 @@ import com.github.ajalt.clikt.parameters.types.path
 import kotlin.io.path.Path
 import kotlin.io.path.readText
 
-class Format: CliktCommand(help = "Formats a PrintScript script file") {
+class Format : CliktCommand(help = "Formats a PrintScript script file") {
     private val fileInput by argument()
         .path(canBeDir = false, mustExist = true, mustBeReadable = true)
         .help { "the file path for the PrintScript code" }

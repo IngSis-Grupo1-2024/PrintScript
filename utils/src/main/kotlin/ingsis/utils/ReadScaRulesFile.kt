@@ -26,9 +26,12 @@ class ReadScaRulesFile() {
     }
 
     private fun handleIdentifierFormat(identifierProps: Map<String, Any>) {
-        identifierFormat = if (identifierProps.containsKey("format")) {
-            identifierProps["format"] as String
-        } else ""
+        identifierFormat =
+            if (identifierProps.containsKey("format")) {
+                identifierProps["format"] as String
+            } else {
+                ""
+            }
     }
 
     private fun handlePrintln(printLnOptions: Map<String, Any>) {

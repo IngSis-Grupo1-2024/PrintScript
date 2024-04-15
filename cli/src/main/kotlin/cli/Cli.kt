@@ -143,7 +143,10 @@ class Cli(version: Version) {
         writeInFile(path, analyzeFile(rulePath, codeLines))
     }
 
-    fun analyzeFile(rulePath: String, codeLines: String): String {
+    fun analyzeFile(
+        rulePath: String,
+        codeLines: String,
+    ): String {
         val lines = splitLines(codeLines)
         var tokens: List<Token>
         var statement: Statement
