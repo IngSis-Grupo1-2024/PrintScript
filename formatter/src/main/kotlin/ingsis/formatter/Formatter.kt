@@ -1,6 +1,7 @@
 package ingsis.formatter
 import ingsis.components.statement.Statement
 import ingsis.formatter.scan.*
+import ingsis.formatter.utils.FormatterRule
 import ingsis.formatter.utils.readJsonAndStackMap
 
 object PrintScriptFormatter {
@@ -17,7 +18,14 @@ class Formatter(private val scanners: List<ScanStatement>) {
         statement: Statement,
         rulePath: String,
     ): String {
-        val ruleMap = readJsonAndStackMap(rulePath)
+        var ruleMap: Map<String, FormatterRule> = mapOf()
+        try {
+            ruleMap = readJsonAndStackMap(rulePath)
+        } catch (
+            e: Exception
+        ) {
+            println("Error reading the rules file")
+        }
         val result = StringBuilder()
         for (scanner in scanners) {
             if (scanner.canHandle(statement)) {
