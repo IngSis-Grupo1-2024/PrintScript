@@ -1,5 +1,6 @@
 package ingsis.formatter.spacesCounter
 
+import ingsis.formatter.defaultConfig.getDefaultAssignationSpaces
 import ingsis.formatter.utils.FormatterRule
 import ingsis.formatter.utils.generateSpaces
 
@@ -10,7 +11,7 @@ class AssignationSpaces(
         return if ((ruleMap["assignation"]!!.isOn())) {
             generateSpaces(ruleMap["assignation"]!!.quantity)
         } else {
-            generateSpaces(1)
+            generateSpaces(getDefaultAssignationSpaces())
         }
     }
 }
