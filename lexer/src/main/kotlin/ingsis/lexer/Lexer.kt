@@ -31,7 +31,7 @@ object PrintScriptLexer {
         Lexer(
             listOf(
                 TokenAssignator(TokenType.KEYWORD, listOf("let", "const", "if", "else")),
-                TokenAssignator(TokenType.FUNCTION, listOf("println")),
+                TokenAssignator(TokenType.FUNCTION, listOf("println", "readEnv", "readInput")),
                 TokenAssignator(TokenType.TYPE, listOf("number", "string", "boolean")),
                 TokenAssignator(TokenType.OPERATOR, listOf("+", "-", "/", "*", "==", "!=", ">", "<", ">=", "<=")),
                 TokenAssignator(TokenType.DELIMITER, listOf(";")),
