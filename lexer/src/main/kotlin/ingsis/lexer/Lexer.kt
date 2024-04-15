@@ -65,6 +65,12 @@ class Lexer(
                 continue
             }
             if (currentToken.isNotBlank()) {
+                if (canCreateToken(currentToken + nextChar)) {
+                    currentToken = currentToken.plus(nextChar)
+                    currentPosition = updatePosition(currentPosition, nextChar)
+                    i++
+                    continue
+                }
                 if (canCreateToken(currentToken)) {
                     tokens.add(createTokenIfValid(currentToken, currentPosition))
                     currentToken = ""
