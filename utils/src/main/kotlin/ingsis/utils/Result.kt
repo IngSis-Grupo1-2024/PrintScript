@@ -1,5 +1,6 @@
 package ingsis.utils
 
+import ingsis.components.statement.Modifier
 import ingsis.components.statement.Type
 
 data class Result(private val type: Type, private val value: String? = null) { // type may be string, integer or boolean

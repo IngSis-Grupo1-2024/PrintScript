@@ -9,10 +9,7 @@ import ingsis.interpreter.interpretStatement.AssignationInterpreter
 import ingsis.interpreter.interpretStatement.CompoundAssignationInterpreter
 import ingsis.interpreter.interpretStatement.DeclarationInterpreter
 import ingsis.interpreter.interpretStatement.PrintLineInterpreter
-import ingsis.interpreter.operatorScanner.ScanDivOperator
-import ingsis.interpreter.operatorScanner.ScanMulOperator
-import ingsis.interpreter.operatorScanner.ScanSubOperator
-import ingsis.interpreter.operatorScanner.ScanSumOperator
+import ingsis.interpreter.operatorScanner.*
 import ingsis.utils.Result
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -1048,5 +1045,293 @@ class InterpreterTest {
             "Type mismatch",
             exception.message,
         )
+    }
+
+    @Test
+    fun testEqualsEquals() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanEqualsOperator())
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.BOOLEAN, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "==", TokenType.OPERATOR),
+                    SingleValue(Token(position, "5", TokenType.INTEGER)),
+                    SingleValue(Token(position, "5", TokenType.INTEGER)),
+                ),
+            )
+        val pair = interpreter.interpret(compoundAssignation, HashMap())
+        val variableMap = pair.first
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, "true"), variableMap["a"])
+    }
+
+    @Test
+    fun testNotEquals() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanNotEqualsOperator())
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.BOOLEAN, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "!=", TokenType.OPERATOR),
+                    SingleValue(Token(position, "6", TokenType.INTEGER)),
+                    SingleValue(Token(position, "5", TokenType.INTEGER)),
+                ),
+            )
+        val pair = interpreter.interpret(compoundAssignation, HashMap())
+        val variableMap = pair.first
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, "true"), variableMap["a"])
+    }
+
+    @Test
+    fun testGreaterThan() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanGreaterThanOperator())
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.BOOLEAN, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, ">", TokenType.OPERATOR),
+                    SingleValue(Token(position, "6", TokenType.INTEGER)),
+                    SingleValue(Token(position, "5", TokenType.INTEGER)),
+                ),
+            )
+        val pair = interpreter.interpret(compoundAssignation, HashMap())
+        val variableMap = pair.first
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, "true"), variableMap["a"])
+    }
+
+    @Test
+    fun testGreaterOrEqualsThanWithANumberGreater() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanGreaterOrEqualThanOperator())
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.BOOLEAN, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, ">=", TokenType.OPERATOR),
+                    SingleValue(Token(position, "6", TokenType.INTEGER)),
+                    SingleValue(Token(position, "5", TokenType.INTEGER)),
+                ),
+            )
+        val pair = interpreter.interpret(compoundAssignation, HashMap())
+        val variableMap = pair.first
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, "true"), variableMap["a"])
+    }
+
+    @Test
+    fun testGreaterOrEqualsThanWithEqualNumbers() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanGreaterOrEqualThanOperator())
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.BOOLEAN, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, ">=", TokenType.OPERATOR),
+                    SingleValue(Token(position, "6", TokenType.INTEGER)),
+                    SingleValue(Token(position, "5", TokenType.INTEGER)),
+                ),
+            )
+        val pair = interpreter.interpret(compoundAssignation, HashMap())
+        val variableMap = pair.first
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, "true"), variableMap["a"])
+    }
+
+    @Test
+    fun testLessOrEqualsThanWithANumberLesser() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanLessOrEqualThanOperator())
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.BOOLEAN, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "<=", TokenType.OPERATOR),
+                    SingleValue(Token(position, "4", TokenType.INTEGER)),
+                    SingleValue(Token(position, "5", TokenType.INTEGER)),
+                ),
+            )
+        val pair = interpreter.interpret(compoundAssignation, HashMap())
+        val variableMap = pair.first
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, "true"), variableMap["a"])
+    }
+
+    @Test
+    fun testLessOrEqualsThanWithEqualsNumbers() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanLessOrEqualThanOperator())
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.BOOLEAN, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "<=", TokenType.OPERATOR),
+                    SingleValue(Token(position, "5", TokenType.INTEGER)),
+                    SingleValue(Token(position, "5", TokenType.INTEGER)),
+                ),
+            )
+        val pair = interpreter.interpret(compoundAssignation, HashMap())
+        val variableMap = pair.first
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, "true"), variableMap["a"])
+    }
+
+    @Test
+    fun testLessThan() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanLessThanOperator())
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.BOOLEAN, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "<", TokenType.OPERATOR),
+                    SingleValue(Token(position, "4", TokenType.INTEGER)),
+                    SingleValue(Token(position, "5", TokenType.INTEGER)),
+                ),
+            )
+        val pair = interpreter.interpret(compoundAssignation, HashMap())
+        val variableMap = pair.first
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, "true"), variableMap["a"])
+    }
+
+    @Test
+    fun testEqualsWithStrings() {
+        val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanEqualsOperator())
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.BOOLEAN, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "==", TokenType.OPERATOR),
+                    SingleValue(Token(position, "hello", TokenType.STRING)),
+                    SingleValue(Token(position, "hello", TokenType.STRING)),
+                ),
+            )
+        val pair = interpreter.interpret(compoundAssignation, HashMap())
+        val variableMap = pair.first
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, "true"), variableMap["a"])
     }
 }
