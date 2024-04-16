@@ -1,5 +1,4 @@
 plugins{
-    java
     `maven-publish`
 }
 
@@ -16,12 +15,8 @@ publishing {
         }
     }
     publications {
-        register<MavenPublication>("maven") {
-            groupId = "org.gradle.PrintScript"
-            artifactId = "library"
-            version = "1.0.0-SNAPSHOT"
+        create<MavenPublication>("maven") {
             from(components["java"])
         }
-
     }
 }
