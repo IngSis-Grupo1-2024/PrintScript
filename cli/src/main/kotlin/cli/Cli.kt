@@ -111,6 +111,7 @@ class Cli(version: Version) {
     }
 
     fun format(
+        rulePath: String,
         codeLines: String,
         file: Path,
     ) {
@@ -125,7 +126,7 @@ class Cli(version: Version) {
             try {
                 statement = parse(tokens)
                 result.append(
-                    formatter.format(statement, "formatter/src/main/kotlin/ingsis/formatter/rules/rules.json"),
+                    formatter.format(statement, rulePath),
                 )
             } catch (e: ParserError) {
                 result.append("\n" + e.localizedMessage + " in position :" + e.getTokenPosition())
@@ -135,13 +136,17 @@ class Cli(version: Version) {
     }
 
     fun analyzeFileInFileOutput(
+        rulePath: String,
         codeLines: String,
         path: String,
     ) {
-        writeInFile(path, analyzeFile(codeLines))
+        writeInFile(path, analyzeFile(rulePath, codeLines))
     }
 
-    fun analyzeFile(codeLines: String): String {
+    fun analyzeFile(
+        rulePath: String,
+        codeLines: String,
+    ): String {
         val lines = splitLines(codeLines)
         var tokens: List<Token>
         var statement: Statement
@@ -154,12 +159,15 @@ class Cli(version: Version) {
                 result.append(
                     sca.analyze(
                         statement,
-                        "/Users/tinavalenzi/projects/dissis/PrintScript/sca/src/main/kotlin/ingsis/sca/rules/rules.json",
+                        rulePath,
                     ),
                 )
             } catch (e: ParserError) {
                 result.append("\n" + e.localizedMessage + " in position :" + e.getTokenPosition())
             }
+        }
+        if (result.isEmpty()) {
+            return "SUCCESSFUL ANALYSIS"
         }
         return result.toString()
     }

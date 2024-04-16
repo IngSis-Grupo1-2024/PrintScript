@@ -1,8 +1,8 @@
 package ingsis.formatter.spacesCounter
 
+import ingsis.formatter.defaultConfig.getDefaultBeforeDeclarationSpaces
 import ingsis.formatter.utils.FormatterRule
 import ingsis.formatter.utils.generateSpaces
-import ingsis.formatter.defaultConfig.getDefaultBeforeDeclarationSpaces
 
 class DeclarationSpaces(
     private val ruleMap: Map<String, FormatterRule>,
@@ -14,5 +14,4 @@ class DeclarationSpaces(
             generateSpaces(getDefaultBeforeDeclarationSpaces())
         }
     }
-
 }

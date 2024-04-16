@@ -22,7 +22,7 @@ class Formatter(private val scanners: List<ScanStatement>) {
         try {
             ruleMap = readJsonAndStackMap(rulePath)
         } catch (
-            e: Exception
+            e: Exception,
         ) {
             println("Error reading the rules file")
         }

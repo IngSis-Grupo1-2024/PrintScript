@@ -2,11 +2,11 @@ package ingsis.sca.scan
 
 import ingsis.components.TokenType
 import ingsis.components.statement.*
+import ingsis.sca.defaultConfig.getDefaultBooleanValue
 import ingsis.sca.result.InvalidResult
 import ingsis.sca.result.Result
 import ingsis.sca.result.ValidResult
 import ingsis.utils.ReadScaRulesFile
-import ingsis.sca.defaultConfig.getDefaultBooleanValue
 
 class ScanPrintLine(private val literalsAllowed: ArrayList<TokenType>) : ScanStatement {
     override fun canHandle(statement: Statement): Boolean {
@@ -48,7 +48,10 @@ class ScanPrintLine(private val literalsAllowed: ArrayList<TokenType>) : ScanSta
         return InvalidResult(statement.getPosition(), "Println with unknown value type")
     }
 
-    private fun isInFile(string: String, jsonReader: ReadScaRulesFile): Boolean {
+    private fun isInFile(
+        string: String,
+        jsonReader: ReadScaRulesFile,
+    ): Boolean {
         return if (jsonReader.getPrintLnRuleMap().containsKey(string)) {
             jsonReader.getPrintLnRuleMap()[string]!!
         } else {
