@@ -4,6 +4,7 @@
 
 plugins {
     id("PrintScript.kotlin-library-conventions")
+    id("publish-plugin")
 }
 
 dependencies {
