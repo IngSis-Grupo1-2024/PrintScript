@@ -1985,8 +1985,6 @@ class InterpreterTest {
 
         val position = Position()
         val keyword = Keyword(Modifier.MUTABLE, "let", position)
-
-        // Declaration of variable 'a' with initial value 5
         val variableA = Variable("a", position)
         val type = Type(TokenType.INTEGER, position)
         val declarationStatementA = Declaration(keyword, variableA, type, position)
@@ -1998,7 +1996,6 @@ class InterpreterTest {
 
         val addAToMap = interpreter.interpret(assignationA, HashMap()).first
 
-        // Declaration of variable 'b' with initial value 7 (for else case)
         val variableB = Variable("b", position)
         val declarationStatementB = Declaration(keyword, variableB, type, position)
         val assignationB = CompoundAssignation(
@@ -2009,7 +2006,6 @@ class InterpreterTest {
 
         val updateVariableA = Assignation(position, variableA, SingleValue(Token(position, "10", TokenType.INTEGER)))
 
-        // Constructing if-else statement
         val elseStatement = Else(listOf(assignationB))
         val ifStatement = If(
             Operator(
@@ -2021,11 +2017,119 @@ class InterpreterTest {
             listOf(updateVariableA)
         )
 
-        // Interpretation and assertion
         val variableMap = interpreter.interpret(ifStatement, addAToMap).first
         assertEquals(1, variableMap.size)
         assertEquals(Result(type, Modifier.MUTABLE, "10"), variableMap["a"])
         assertFalse(variableMap.containsKey("b"))
     }
 
+    @Test
+    fun testIfStatementWhenIfReceivesATrueBoolean() {
+        val scanners = listOf(
+            ScanMulOperator(),
+            ScanSumOperator(),
+            ScanDivOperator(),
+            ScanSubOperator(),
+            ScanEqualsOperator()
+        )
+
+        val interpreter = Interpreter(
+            listOf(
+                AssignationInterpreter(scanners),
+                DeclarationInterpreter(),
+                CompoundAssignationInterpreter(scanners),
+                IfInterpreter(scanners, "VERSION_2")
+            )
+        )
+
+        val position = Position()
+        val variableA = Variable("a", position)
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val type = Type(TokenType.BOOLEAN, position)
+        val declarationStatement = Declaration(keyword, Variable("a", position), type, position)
+        val assignation = CompoundAssignation(
+            position,
+            declarationStatement,
+            SingleValue(Token(position, "true", TokenType.BOOLEAN))
+        )
+
+        val variableMap = interpreter.interpret(assignation, HashMap()).first
+
+
+        val variableB = Variable("b", position)
+        val declarationStatementB = Declaration(keyword, variableB, type, position)
+        val assignationB = CompoundAssignation(
+            position,
+            declarationStatementB,
+            SingleValue(Token(position, "7", TokenType.INTEGER))
+        )
+
+        val updateVariableA = Assignation(position, variableA,SingleValue(Token(position, "false", TokenType.BOOLEAN)))
+
+        val ifStatement = If(
+            SingleValue(Token(position, "a", TokenType.IDENTIFIER)),
+            Else(listOf(assignationB)),
+            listOf(updateVariableA)
+        )
+
+        val variableMap2 = interpreter.interpret(ifStatement, variableMap).first
+        assertEquals(1, variableMap2.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "false"), variableMap2["a"])
+    }
+
+    @Test
+    fun testIfStatementWhenIfReceivesAFalseBoolean() {
+        val scanners = listOf(
+            ScanMulOperator(),
+            ScanSumOperator(),
+            ScanDivOperator(),
+            ScanSubOperator(),
+            ScanEqualsOperator()
+        )
+
+        val interpreter = Interpreter(
+            listOf(
+                AssignationInterpreter(scanners),
+                DeclarationInterpreter(),
+                CompoundAssignationInterpreter(scanners),
+                IfInterpreter(scanners, "VERSION_2")
+            )
+        )
+
+        val position = Position()
+        val variableA = Variable("a", position)
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val type = Type(TokenType.BOOLEAN, position)
+        val declarationStatement = Declaration(keyword, Variable("a", position), type, position)
+        val assignation = CompoundAssignation(
+            position,
+            declarationStatement,
+            SingleValue(Token(position, "false", TokenType.BOOLEAN))
+        )
+
+        val variableMap = interpreter.interpret(assignation, HashMap()).first
+
+
+        val variableB = Variable("b", position)
+        val typeB = Type(TokenType.INTEGER, position)
+        val declarationStatementB = Declaration(keyword, variableB, typeB, position)
+        val assignationB = CompoundAssignation(
+            position,
+            declarationStatementB,
+            SingleValue(Token(position, "7", TokenType.INTEGER))
+        )
+
+        val updateVariableA = Assignation(position, variableA,SingleValue(Token(position, "false", TokenType.BOOLEAN)))
+
+        val ifStatement = If(
+            SingleValue(Token(position, "a", TokenType.IDENTIFIER)),
+            Else(listOf(assignationB)),
+            listOf(updateVariableA)
+        )
+
+        val variableMap2 = interpreter.interpret(ifStatement, variableMap).first
+        assertEquals(2, variableMap2.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "false"), variableMap2["a"])
+        assertEquals(Result(typeB, Modifier.MUTABLE, "7"), variableMap2["b"])
+    }
 }
