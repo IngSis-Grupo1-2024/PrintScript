@@ -31,6 +31,7 @@ object PrintScriptInterpreter {
                         AssignationInterpreter(scanners),
                         CompoundAssignationInterpreter(scanners),
                         PrintLineInterpreter(scanners),
+                        IfInterpreter(scanners, version),
                     ),
                 )
             }
