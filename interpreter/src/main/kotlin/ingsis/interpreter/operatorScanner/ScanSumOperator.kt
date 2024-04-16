@@ -22,19 +22,30 @@ class ScanSumOperator : ScanOperatorType {
         val firstValue = checkIfVariableDefined(left, map)
         val secondValue = checkIfVariableDefined(right, map)
 
-        if (firstValue.getType().getValue() == TokenType.STRING || secondValue.getType().getValue() == TokenType.STRING) {
-            val finalValue = firstValue.getValue() + secondValue.getValue()
-            return SingleValue(token = Token(Position(), finalValue, TokenType.STRING))
-        } else if (firstValue.getType().getValue() != TokenType.INTEGER ||
-            secondValue.getType().getValue() != TokenType.INTEGER
-        ) {
-            throw Error(
-                "Can't do addition using no integer types or string types in line " +
-                    operatorPosition.startLine + " at position " +
-                    operatorPosition.startColumn,
+        val firstType = firstValue.getType().getValue()
+        val secondType = secondValue.getType().getValue()
+
+        if (firstType == TokenType.BOOLEAN || secondType == TokenType.BOOLEAN) {
+            throw Exception(
+                "Sum operation is just allowed between integers and strings in line " +
+                        operatorPosition.startLine + " at position " +
+                        operatorPosition.startColumn
+            )
+        }
+
+        if (firstType == TokenType.STRING || secondType == TokenType.STRING) {
+            val finalValue = firstValue.getValue().toString() + secondValue.getValue().toString()
+            return SingleValue(Token(Position(), finalValue, TokenType.STRING))
+        }
+
+        if (firstType != TokenType.INTEGER || secondType != TokenType.INTEGER) {
+            throw Exception(
+                "Sum operation is just allowed between integers and strings in line " +
+                        operatorPosition.startLine + " at position " +
+                        operatorPosition.startColumn
             )
         }
         val finalValue = firstValue.getValue()!!.toInt() + secondValue.getValue()!!.toInt()
-        return SingleValue(token = Token(Position(), finalValue.toString(), TokenType.INTEGER))
+        return SingleValue(Token(Position(), finalValue.toString(), TokenType.INTEGER))
     }
 }
