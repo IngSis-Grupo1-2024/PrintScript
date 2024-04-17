@@ -32,6 +32,7 @@ object PrintScriptInterpreter {
                         CompoundAssignationInterpreter(scanners),
                         PrintLineInterpreter(scanners),
                         IfInterpreter(scanners, version),
+                        ReadEnvInterpreter(Environment(emptyMap()))
                     ),
                 )
             }

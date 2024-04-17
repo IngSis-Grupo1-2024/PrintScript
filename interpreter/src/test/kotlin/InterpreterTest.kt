@@ -2,6 +2,7 @@ import ingsis.components.Position
 import ingsis.components.Token
 import ingsis.components.TokenType
 import ingsis.components.statement.*
+import ingsis.interpreter.Environment
 import ingsis.interpreter.Interpreter
 import ingsis.interpreter.PrintScriptInterpreter
 import ingsis.interpreter.interpretStatement.*
@@ -2131,5 +2132,28 @@ class InterpreterTest {
         assertEquals(2, variableMap2.size)
         assertEquals(Result(type, Modifier.MUTABLE, "false"), variableMap2["a"])
         assertEquals(Result(typeB, Modifier.MUTABLE, "7"), variableMap2["b"])
+    }
+
+    @Test
+    fun testReadEnvInterpreter() {
+        val environment = Environment(emptyMap())
+        val interpreter = Interpreter(
+            listOf(
+                ReadEnvInterpreter(environment)
+            )
+        )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variableA = Variable("userName", position)
+        val type = Type(TokenType.STRING, position)
+        val declarationStatementA = Declaration(keyword, variableA, type, position)
+        val assignationA = CompoundAssignation(
+            position,
+            declarationStatementA,
+            ReadEnv(Token(position, "USER_NAME", TokenType.STRING))
+        )
+
+
+
     }
 }

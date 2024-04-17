@@ -6,6 +6,8 @@ enum class StatementType {
     COMPOUND_ASSIGNATION,
     FUNCTION,
     PRINT_LINE,
+    READ_ENV,
+    READ_INPUT,
     IF,
     ELSE
 }
