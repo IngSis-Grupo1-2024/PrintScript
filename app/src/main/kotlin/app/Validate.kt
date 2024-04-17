@@ -28,7 +28,6 @@ class Validate : CliktCommand(help = "Validates a PrintScript script file") {
 
     override fun run() {
         startCli()
-        echo("validation in progress...")
         if (outputPresent()) {
             cli.validateResultInFile(fileInput.readText(), fileOutput.toString())
         } else {

@@ -21,31 +21,23 @@ class Cli(version: Version) {
     private val sca = PrintScriptSca.createSCA(version.toString())
     private var position = Position()
 
-    fun startCli(codeLines: String): String {
+    fun startCli(codeLines: String) {
         val lines = splitLines(codeLines)
-        if (lines.isEmpty()) return "empty file"
+        if (lines.isEmpty()) return
         var tokens: List<Token>
         var statement: Statement
-        val string = StringBuilder()
         var variableMap = HashMap<String, Result>()
-        for ((i, line) in lines.withIndex()) {
+        for (line in lines) {
             tokens = tokenizeWithLexer(line)
             if (tokens.isEmpty()) continue
-            try {
-                statement = parse(tokens)
-                string.append("\nstatement of line $i -> $statement\n")
-                val pair = interpreter.interpret(statement, variableMap)
-                variableMap = pair.first
-                if (pair.second != null) string.append(pair.second)
-            } catch (e: Exception) {
-                string.append("\n" + e.localizedMessage)
-            }
+            statement = parse(tokens)
+            variableMap = interpreter.interpret(statement, variableMap)
         }
-        return string.toString()
     }
 
     private fun tokenizeWithLexer(line: String): List<Token> {
         if (line.isEmpty() || line == ";") {
+            incrementOneLine()
             return emptyList()
         }
         if (line[0] == '\n') {
@@ -66,16 +58,23 @@ class Cli(version: Version) {
     private fun parse(tokens: List<Token>): Statement = parser.parse(tokens)
 
     private fun splitLines(codeLines: String): List<String> {
-        return codeLines.split(";")
-            .filter { it.isNotEmpty() }
-            .map { "$it;" }
-            .toList()
+        val delimiter = ";"
+        val splitRegex = "(?<=$delimiter|\n)".toRegex()
+        return codeLines.split(splitRegex)
+            .map { it.trim() }
+            .mapIndexed { index, part ->
+                if (part.isNotEmpty() && codeLines[index] == '\n') {
+                    part + "\n"
+                } else {
+                    part
+                }
+            }
     }
 
-    fun startCliResultInFile(
-        fileInput: String,
-        fileOutput: String,
-    ) = writeInFile(fileOutput, startCli(fileInput))
+//    fun startCliResultInFile(
+//        fileInput: String,
+//        fileOutput: String,
+//    ) = writeInFile(fileOutput, startCli(fileInput))
 
     fun validate(codeLines: String): String {
         val lines = splitLines(codeLines)

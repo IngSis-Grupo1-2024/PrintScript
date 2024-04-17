@@ -45,9 +45,11 @@ class Interpreter(private val interpreters: List<StatementInterpreter>) {
     fun interpret(
         statement: Statement,
         variableMap: HashMap<String, Result>,
-    ): Pair<HashMap<String, Result>, String?> {
+    ): HashMap<String, Result> {
         interpreters.forEach {
-            if (it.canHandle(statement)) return it.interpret(statement, variableMap)
+            if (it.canHandle(statement)) {
+                return it.interpret(statement, variableMap)
+            }
         }
 
         throw IllegalArgumentException("No interpreter found for statement: $statement")

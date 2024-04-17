@@ -35,8 +35,6 @@ class Format : CliktCommand(help = "Formats a PrintScript script file") {
 
     override fun run() {
         startCli()
-        echo("Rules for Formatter: \n${rulesFormatter.readText()}")
-        echo("formatting...")
 
         if (outputPresent()) {
             cli.format(rulesFormatter.toString(), fileInput.readText(), fileOutput!!)

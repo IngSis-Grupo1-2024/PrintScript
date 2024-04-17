@@ -28,15 +28,14 @@ class Execution : CliktCommand(help = "Executes a PrintScript script file") {
 
     override fun run() {
         startCli()
-        echo("execution in progress...")
-        if (outputPresent()) {
-            cli.startCliResultInFile(fileInput.readText(), fileOutput!!.toString())
-        } else {
-            print(cli.startCli(fileInput.readText()))
-        }
+//        if (outputPresent()) {
+//            cli.startCliResultInFile(fileInput.readText(), fileOutput!!.toString())
+//        } else {
+        cli.startCli(fileInput.readText())
+//        }
     }
 
-    private fun outputPresent(): Boolean = fileOutput != null
+//    private fun outputPresent(): Boolean = fileOutput != null
 
     private fun startCli() {
         if (version == "v1") {

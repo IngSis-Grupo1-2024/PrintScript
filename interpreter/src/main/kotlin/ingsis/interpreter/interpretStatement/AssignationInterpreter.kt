@@ -11,7 +11,7 @@ class AssignationInterpreter(private val scanners: List<ScanOperatorType>) : Sta
     override fun interpret(
         statement: Statement,
         previousState: HashMap<String, Result>,
-    ): Pair<HashMap<String, Result>, String?> {
+    ): HashMap<String, Result> {
         val assignation = statement as Assignation
         val variable = assignation.getVariable()
         val value = assignation.getValue()
@@ -23,7 +23,7 @@ class AssignationInterpreter(private val scanners: List<ScanOperatorType>) : Sta
             throw Exception("Type mismatch")
         }
 
-        return Pair(previousState, null)
+        return previousState
     }
 
     private fun checkIfNewValueTypeMatchesType(

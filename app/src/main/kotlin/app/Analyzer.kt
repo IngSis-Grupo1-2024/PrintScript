@@ -35,8 +35,6 @@ class Analyzer : CliktCommand(help = "Analyze a PrintScript script file") {
 
     override fun run() {
         startCli()
-        echo("rules for SCA: \n${rulesSCA.readText()}")
-        echo("analyzing...")
         if (outputPresent()) {
             cli.analyzeFileInFileOutput(rulesSCA.toString(), fileInput.readText(), fileOutput!!.toString())
         } else {
