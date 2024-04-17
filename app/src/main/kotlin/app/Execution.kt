@@ -8,7 +8,6 @@ import com.github.ajalt.clikt.parameters.arguments.help
 import com.github.ajalt.clikt.parameters.arguments.optional
 import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.clikt.parameters.types.path
-import kotlin.io.path.readText
 
 class Execution : CliktCommand(help = "Executes a PrintScript script file") {
     private val fileInput by argument()
@@ -31,7 +30,7 @@ class Execution : CliktCommand(help = "Executes a PrintScript script file") {
 //        if (outputPresent()) {
 //            cli.startCliResultInFile(fileInput.readText(), fileOutput!!.toString())
 //        } else {
-        cli.startCli(fileInput.readText())
+        cli.executeFile(fileInput)
 //        }
     }
 

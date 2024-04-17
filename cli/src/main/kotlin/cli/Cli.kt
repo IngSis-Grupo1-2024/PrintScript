@@ -10,6 +10,8 @@ import ingsis.parser.PrintScriptParser
 import ingsis.parser.error.ParserError
 import ingsis.sca.PrintScriptSca
 import ingsis.utils.Result
+import java.io.FileInputStream
+import java.io.InputStream
 import java.io.PrintWriter
 import java.nio.file.Path
 
@@ -32,6 +34,29 @@ class Cli(version: Version) {
             if (tokens.isEmpty()) continue
             statement = parse(tokens)
             variableMap = interpreter.interpret(statement, variableMap)
+        }
+    }
+
+    fun executeFile(filePath: Path) {
+        executeInputStream(FileInputStream(filePath.toFile()))
+    }
+
+    fun executeInputStream(inputStream: InputStream) {
+        val inputReader = InputReader(inputStream)
+        var tokens: List<Token>
+        var statement: Statement
+        var variableMap = HashMap<String, Result>()
+        var line: String? = inputReader.nextLine()
+        while (line != null) {
+            val lines = splitLines(line)
+            for (l in lines) {
+                tokens = tokenizeWithLexer(l)
+                if (tokens.isEmpty()) continue
+                statement = parse(tokens)
+                variableMap = interpreter.interpret(statement, variableMap)
+            }
+            line = inputReader.nextLine()
+            incrementOneLine()
         }
     }
 
