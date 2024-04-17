@@ -20,6 +20,8 @@ class ScanDivOperator : ScanOperatorType {
         operatorPosition: Position,
         map: Map<String, Result>,
     ): Value {
+
+        var finalValue: Any = 0
         val firstValue = checkIfVariableDefined(left, map)
         val secondValue = checkIfVariableDefined(right, map)
 
@@ -28,11 +30,22 @@ class ScanDivOperator : ScanOperatorType {
         ) {
             throw Exception(
                 "Can't do division using no integer types in line " +
-                    operatorPosition.startLine + " at position " +
-                    operatorPosition.startColumn,
+                        operatorPosition.startLine + " at position " +
+                        operatorPosition.startColumn,
             )
         }
-        val finalValue = firstValue.getValue()!!.toInt() / secondValue.getValue()!!.toInt()
+        if (firstValue.getType().getValue() == TokenType.INTEGER && secondValue.getType().getValue() == TokenType.INTEGER) {
+            finalValue = firstValue.getValue()!!.toInt() / secondValue.getValue()!!.toInt()
+        }
+        if (firstValue.getType().getValue() == TokenType.DOUBLE && secondValue.getType().getValue() == TokenType.DOUBLE) {
+            finalValue = firstValue.getValue()!!.toDouble() / secondValue.getValue()!!.toDouble()
+        }
+        if (firstValue.getType().getValue() == TokenType.DOUBLE && secondValue.getType().getValue() == TokenType.INTEGER) {
+            finalValue = firstValue.getValue()!!.toDouble() / secondValue.getValue()!!.toInt()
+        }
+        if (firstValue.getType().getValue() == TokenType.INTEGER && secondValue.getType().getValue() == TokenType.DOUBLE) {
+            finalValue = firstValue.getValue()!!.toInt() / secondValue.getValue()!!.toDouble()
+        }
         return SingleValue(token = Token(Position(), finalValue.toString(), TokenType.INTEGER))
     }
 }
