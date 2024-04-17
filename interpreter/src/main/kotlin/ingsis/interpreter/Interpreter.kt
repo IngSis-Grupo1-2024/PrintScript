@@ -54,4 +54,5 @@ class Interpreter(private val interpreters: List<StatementInterpreter>) {
 
         throw IllegalArgumentException("No interpreter found for statement: $statement")
     }
+
 }
