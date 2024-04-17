@@ -20,3 +20,10 @@ fun checkIfVariableDefined(
         return Result(Type(value.getToken().getType(), value.getToken().getPosition()), Modifier.IMMUTABLE, value.getToken().getValue())
     }
 }
+
+fun getResultType(firstValueType: TokenType, secondValueType: TokenType): TokenType {
+    if (firstValueType == TokenType.DOUBLE || secondValueType == TokenType.DOUBLE) {
+        return TokenType.DOUBLE
+    }
+    return TokenType.INTEGER
+}

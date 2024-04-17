@@ -8,11 +8,14 @@ import ingsis.components.statement.SingleValue
 import ingsis.components.statement.Value
 import ingsis.utils.Result
 import ingsis.utils.checkIfVariableDefined
+import ingsis.utils.getResultType
 
 class ScanDivOperator : ScanOperatorType {
     override fun canHandle(operator: String): Boolean {
         return operator == "/"
     }
+
+    val notAllowedTypes = listOf(TokenType.BOOLEAN, TokenType.STRING)
 
     override fun analyze(
         left: SingleValue,
@@ -21,31 +24,38 @@ class ScanDivOperator : ScanOperatorType {
         map: Map<String, Result>,
     ): Value {
 
-        var finalValue: Any = 0
         val firstValue = checkIfVariableDefined(left, map)
         val secondValue = checkIfVariableDefined(right, map)
 
-        if (firstValue.getType().getValue() != TokenType.INTEGER ||
-            secondValue.getType().getValue() != TokenType.INTEGER
+        if (notAllowedTypes.contains(firstValue.getType().getValue()) ||
+            notAllowedTypes.contains(secondValue.getType().getValue()
+            )
         ) {
             throw Exception(
-                "Can't do division using no integer types in line " +
+                "Can't do division using no integer types or double types in line " +
                         operatorPosition.startLine + " at position " +
                         operatorPosition.startColumn,
             )
         }
-        if (firstValue.getType().getValue() == TokenType.INTEGER && secondValue.getType().getValue() == TokenType.INTEGER) {
-            finalValue = firstValue.getValue()!!.toInt() / secondValue.getValue()!!.toInt()
+
+        val resultType = getResultType(firstValue.getType().getValue(), secondValue.getType().getValue())
+        if (resultType == TokenType.DOUBLE) {
+            return SingleValue(
+                Token(
+                    Position(),
+                    (firstValue.getValue().toString().toDouble() / secondValue.getValue().toString()
+                        .toDouble()).toString(),
+                    TokenType.DOUBLE,
+                ),
+            )
+        } else {
+            return SingleValue(
+                Token(
+                    Position(),
+                    (firstValue.getValue().toString().toInt() / secondValue.getValue().toString().toInt()).toString(),
+                    TokenType.INTEGER,
+                ),
+            )
         }
-        if (firstValue.getType().getValue() == TokenType.DOUBLE && secondValue.getType().getValue() == TokenType.DOUBLE) {
-            finalValue = firstValue.getValue()!!.toDouble() / secondValue.getValue()!!.toDouble()
-        }
-        if (firstValue.getType().getValue() == TokenType.DOUBLE && secondValue.getType().getValue() == TokenType.INTEGER) {
-            finalValue = firstValue.getValue()!!.toDouble() / secondValue.getValue()!!.toInt()
-        }
-        if (firstValue.getType().getValue() == TokenType.INTEGER && secondValue.getType().getValue() == TokenType.DOUBLE) {
-            finalValue = firstValue.getValue()!!.toInt() / secondValue.getValue()!!.toDouble()
-        }
-        return SingleValue(token = Token(Position(), finalValue.toString(), TokenType.INTEGER))
     }
 }
