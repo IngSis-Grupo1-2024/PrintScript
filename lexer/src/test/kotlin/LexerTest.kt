@@ -621,4 +621,25 @@ class LexerTest {
         }
     }
 
+    @Test
+    fun testRareVariableNames() {
+        val input = "let numberResult:number;"
+        val tokenList =
+            listOf(
+                Token(Position(1, 4, 1, 1, 1, 4), "let", TokenType.KEYWORD),
+                Token(Position(5, 17, 1, 1, 5, 17), "numberResult", TokenType.SYMBOL),
+                Token(Position(17, 18, 1, 1, 17, 18), ":", TokenType.DECLARATION),
+                Token(Position(18, 24, 1, 1, 18, 24), "number", TokenType.TYPE),
+                Token(Position(24, 25, 1, 1, 24, 25), ";", TokenType.DELIMITER),
+            )
+        val result = lexer2.tokenize(input, Position())
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
+    }
+
 }

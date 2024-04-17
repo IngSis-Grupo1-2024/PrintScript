@@ -46,6 +46,7 @@ object PrintScriptLexer {
 
 class Lexer(
     private val tokenAssignatorList: List<TokenAssignator>,
+    private val tokenSeparators: List<String> = listOf(" ", "+", "-", "/", "*", "==", "!=", ">", "<", ">=", "<=", ";", "(", ")", "{", "}", ":", "=", "\n")
 ) {
     fun tokenize(
         input: String,
@@ -71,7 +72,12 @@ class Lexer(
                     i++
                     continue
                 }
-                if (canCreateToken(currentToken)) {
+                if (canCreateToken(currentToken) && tokenSeparators.contains(nextChar.toString())) {
+                    tokens.add(createTokenIfValid(currentToken, currentPosition))
+                    currentToken = ""
+                    currentPosition = previousEndToNewStart(currentPosition)
+                }
+                if (tokenSeparators.contains(currentToken) && canCreateToken(currentToken)) {
                     tokens.add(createTokenIfValid(currentToken, currentPosition))
                     currentToken = ""
                     currentPosition = previousEndToNewStart(currentPosition)
