@@ -642,4 +642,27 @@ class LexerTest {
         }
     }
 
+    @Test
+    fun testWithDoubleNumber() {
+        val input = "let a:number = 8.5;"
+        val tokenList =
+            listOf(
+                Token(Position(1, 4, 1, 1, 1, 4), "let", TokenType.KEYWORD),
+                Token(Position(5, 6, 1, 1, 5, 6), "a", TokenType.SYMBOL),
+                Token(Position(6, 7, 1, 1, 6, 7), ":", TokenType.DECLARATION),
+                Token(Position(7, 13, 1, 1, 7, 13), "number", TokenType.TYPE),
+                Token(Position(14, 15, 1, 1, 14, 15), "=", TokenType.ASSIGNATION),
+                Token(Position(16, 19, 1, 1, 16, 19), "8.5", TokenType.SYMBOL),
+                Token(Position(19, 20, 1, 1, 19, 20), ";", TokenType.DELIMITER),
+            )
+        val result = lexer2.tokenize(input, Position())
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
+    }
+
 }
