@@ -29,7 +29,8 @@ object PrintScriptLexer {
 
 class Lexer(
     private val tokenAssignatorList: List<TokenAssignator>,
-    private val tokenSeparators: List<String> = listOf(" ", "+", "-", "/", "*", "==", "!=", ">", "<", ">=", "<=", ";", "(", ")", "{", "}", ":", "=", "\n")
+    private val tokenSeparators: List<String> =
+        listOf(" ", "+", "-", "/", "*", "==", "!=", ">", "<", ">=", "<=", ";", "(", ")", "{", "}", ":", "=", "\n"),
 ) {
     fun tokenize(
         input: String,
