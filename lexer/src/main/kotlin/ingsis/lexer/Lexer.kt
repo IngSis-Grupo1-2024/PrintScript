@@ -120,7 +120,7 @@ class Lexer(
                 currentToken = currentToken.plus(nextChar)
                 currentPosition = updatePosition(currentPosition, nextChar)
             }
-            if (currentToken == "\"" || (currentToken.count{ it == '"' } == 2 && nextChar == '"')) {
+            if (currentToken == "\"" || (currentToken.count { it == '"' } == 2 && nextChar == '"')) {
                 isInsideString = !isInsideString
             }
             i++
