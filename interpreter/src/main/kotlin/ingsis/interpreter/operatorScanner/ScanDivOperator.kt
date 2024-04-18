@@ -1,6 +1,5 @@
 package ingsis.interpreter.operatorScanner
 
-import com.sun.jdi.InvalidTypeException
 import ingsis.components.Position
 import ingsis.components.Token
 import ingsis.components.TokenType
@@ -15,7 +14,6 @@ class ScanDivOperator : ScanOperatorType {
         return operator == "/"
     }
 
-
     val notAllowedTypes = listOf(TokenType.STRING)
 
     override fun analyze(
@@ -28,13 +26,14 @@ class ScanDivOperator : ScanOperatorType {
         val secondValue = checkIfVariableDefined(right, map)
 
         if (notAllowedTypes.contains(firstValue.getType().getValue()) ||
-            notAllowedTypes.contains(secondValue.getType().getValue()
+            notAllowedTypes.contains(
+                secondValue.getType().getValue(),
             )
         ) {
             throw Exception(
                 "Can't do division using no integer types or double types in line " +
-                        operatorPosition.startLine + " at position " +
-                        operatorPosition.startColumn,
+                    operatorPosition.startLine + " at position " +
+                    operatorPosition.startColumn,
             )
         }
 
@@ -43,8 +42,11 @@ class ScanDivOperator : ScanOperatorType {
             return SingleValue(
                 Token(
                     Position(),
-                    (firstValue.getValue().toString().toDouble() / secondValue.getValue().toString()
-                        .toDouble()).toString(),
+                    (
+                        firstValue.getValue().toString().toDouble() /
+                            secondValue.getValue().toString()
+                                .toDouble()
+                    ).toString(),
                     TokenType.DOUBLE,
                 ),
             )

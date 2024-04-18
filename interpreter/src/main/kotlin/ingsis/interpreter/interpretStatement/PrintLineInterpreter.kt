@@ -7,9 +7,10 @@ import ingsis.components.statement.Statement
 import ingsis.components.statement.StatementType
 import ingsis.interpreter.operatorScanner.ScanOperatorType
 import ingsis.interpreter.valueAnalyzer.ValueAnalyzer
+import ingsis.utils.OutputEmitter
 import ingsis.utils.Result
 
-class PrintLineInterpreter(private val scanners: List<ScanOperatorType>) : StatementInterpreter {
+class PrintLineInterpreter(private val scanners: List<ScanOperatorType>, private val outputEmitter: OutputEmitter) : StatementInterpreter {
 //    private val functions = InterpreterFunctions()
 
     override fun canHandle(statement: Statement): Boolean = statement.getStatementType() == StatementType.PRINT_LINE
@@ -22,7 +23,7 @@ class PrintLineInterpreter(private val scanners: List<ScanOperatorType>) : State
         val valueToken = printLine.getValue().getToken()
         val result = getResult(valueToken, previousState, printLine)
 
-        println(result)
+        outputEmitter.print(result)
 
         return previousState
     }

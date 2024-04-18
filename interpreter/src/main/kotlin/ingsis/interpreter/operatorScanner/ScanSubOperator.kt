@@ -26,13 +26,14 @@ class ScanSubOperator : ScanOperatorType {
         val secondValue = checkIfVariableDefined(right, map)
 
         if (notAllowedTypes.contains(firstValue.getType().getValue()) ||
-            notAllowedTypes.contains(secondValue.getType().getValue()
+            notAllowedTypes.contains(
+                secondValue.getType().getValue(),
             )
         ) {
             throw Exception(
                 "Can't do subtraction using no integer types or double types in line " +
-                        operatorPosition.startLine + " at position " +
-                        operatorPosition.startColumn,
+                    operatorPosition.startLine + " at position " +
+                    operatorPosition.startColumn,
             )
         }
 
@@ -41,8 +42,7 @@ class ScanSubOperator : ScanOperatorType {
         if (resultType == TokenType.DOUBLE) {
             val finalValue = firstValue.getValue()!!.toDouble() - secondValue.getValue()!!.toDouble()
             return SingleValue(token = Token(Position(), finalValue.toString(), TokenType.DOUBLE))
-        }
-        else {
+        } else {
             val finalValue = firstValue.getValue()!!.toInt() - secondValue.getValue()!!.toInt()
             return SingleValue(token = Token(Position(), finalValue.toString(), TokenType.INTEGER))
         }

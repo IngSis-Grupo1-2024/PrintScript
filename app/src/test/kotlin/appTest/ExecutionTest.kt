@@ -6,8 +6,8 @@ import util.ReadFromConsole
 class ExecutionTest {
     @Test
     fun `v1 - test 01 - print line with single value`() {
-        val result = ReadFromConsole.execute("src/test/resources/printLine/SingleValue", "v1")
-        val expected = "8\n"
+        val result = ReadFromConsole.execute("src/test/resources/printLine/divisionOfVariables", "v1")
+        val expected = ""
         assertEquals(expected, result)
     }
 

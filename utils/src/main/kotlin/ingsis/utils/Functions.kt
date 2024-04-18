@@ -20,7 +20,10 @@ fun checkIfVariableDefined(
     }
 }
 
-fun getResultType(firstValueType: TokenType, secondValueType: TokenType): TokenType {
+fun getResultType(
+    firstValueType: TokenType,
+    secondValueType: TokenType,
+): TokenType {
     if (firstValueType == TokenType.DOUBLE || secondValueType == TokenType.DOUBLE) {
         return TokenType.DOUBLE
     }

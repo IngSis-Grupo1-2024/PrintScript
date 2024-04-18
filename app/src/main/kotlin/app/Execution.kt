@@ -1,6 +1,7 @@
 package app
 
 import cli.Cli
+import cli.PrintOutputEmitter
 import cli.Version
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
@@ -38,7 +39,7 @@ class Execution : CliktCommand(help = "Executes a PrintScript script file") {
 
     private fun startCli() {
         if (version == "v1") {
-            cli = Cli(Version.VERSION_1)
+            cli = Cli(PrintOutputEmitter(), Version.VERSION_1)
         }
     }
 }
