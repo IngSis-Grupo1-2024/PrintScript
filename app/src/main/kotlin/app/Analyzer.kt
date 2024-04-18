@@ -20,7 +20,7 @@ class Analyzer : CliktCommand(help = "Analyze a PrintScript script file") {
 
     private val version by argument()
         .choice("v1")
-        .help { "the version of the printscript" }
+        .help { "PrintScript version" }
 
     private val fileOutput by argument()
         .path(canBeDir = false, mustExist = true, mustBeWritable = true)
