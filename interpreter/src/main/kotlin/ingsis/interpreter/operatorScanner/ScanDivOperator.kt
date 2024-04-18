@@ -1,6 +1,5 @@
 package ingsis.interpreter.operatorScanner
 
-import com.sun.jdi.InvalidTypeException
 import ingsis.components.Position
 import ingsis.components.Token
 import ingsis.components.TokenType
@@ -43,8 +42,11 @@ class ScanDivOperator : ScanOperatorType {
             return SingleValue(
                 Token(
                     Position(),
-                    (firstValue.getValue().toString().toDouble() / secondValue.getValue().toString()
-                        .toDouble()).toString(),
+                    (
+                        firstValue.getValue().toString().toDouble() /
+                            secondValue.getValue().toString()
+                                .toDouble()
+                    ).toString(),
                     TokenType.DOUBLE,
                 ),
             )

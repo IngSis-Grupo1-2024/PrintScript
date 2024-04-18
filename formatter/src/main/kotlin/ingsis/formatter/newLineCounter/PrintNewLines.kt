@@ -1,5 +1,6 @@
 package ingsis.formatter.newLineCounter
 
+import ingsis.formatter.defaultConfig.getDefaultPrintlnNewLines
 import ingsis.formatter.utils.FormatterRule
 import ingsis.formatter.utils.generateNewLines
 
@@ -10,7 +11,7 @@ class PrintNewLines(
         return if (ruleMap["println"]!!.isOn()) {
             generateNewLines(ruleMap["println"]!!.quantity)
         } else {
-            generateNewLines(1)
+            generateNewLines(getDefaultPrintlnNewLines())
         }
     }
 }

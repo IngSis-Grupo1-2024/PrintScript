@@ -1,0 +1,6 @@
+let x: number = 10;
+println(x);
+x = 8;
+println(x);
+x = 'hola';
+println(x);

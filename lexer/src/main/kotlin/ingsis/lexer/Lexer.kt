@@ -17,7 +17,7 @@ object PrintScriptLexer {
             listOf(
                 TokenAssignator(TokenType.KEYWORD, listOf("let")),
                 TokenAssignator(TokenType.FUNCTION, listOf("println")),
-                TokenAssignator(TokenType.TYPE, listOf("number", "string", "boolean")),
+                TokenAssignator(TokenType.TYPE, listOf("number", "string")),
                 TokenAssignator(TokenType.OPERATOR, listOf("+", "-", "/", "*")),
                 TokenAssignator(TokenType.DELIMITER, listOf(";")),
                 TokenAssignator(TokenType.PARENTHESIS, listOf("(", ")")),
@@ -29,6 +29,8 @@ object PrintScriptLexer {
 
 class Lexer(
     private val tokenAssignatorList: List<TokenAssignator>,
+    private val tokenSeparators: List<String> =
+        listOf(" ", "+", "-", "/", "*", "==", "!=", ">", "<", ">=", "<=", ";", "(", ")", "{", "}", ":", "=", "\n"),
 ) {
     fun tokenize(
         input: String,
@@ -37,10 +39,11 @@ class Lexer(
         val tokens = ArrayList<Token>()
         var currentPosition = position.copy()
         var currentToken = ""
+        var isInsideString = false
         var i = 0
         while (i < input.length) {
             val nextChar = input[i]
-            if (currentToken.isEmpty() && nextChar == ' ') {
+            if (currentToken.isEmpty() && nextChar == ' ' && !isInsideString) {
                 currentPosition = updatePosition(currentPosition, ' ')
                 currentPosition = previousEndToNewStart(currentPosition)
                 currentToken = ""
@@ -48,12 +51,23 @@ class Lexer(
                 continue
             }
             if (currentToken.isNotBlank()) {
-                if (canCreateToken(currentToken)) {
+                if (canCreateToken(currentToken + nextChar)) {
+                    currentToken = currentToken.plus(nextChar)
+                    currentPosition = updatePosition(currentPosition, nextChar)
+                    i++
+                    continue
+                }
+                if (canCreateToken(currentToken) && tokenSeparators.contains(nextChar.toString()) && !isInsideString) {
                     tokens.add(createTokenIfValid(currentToken, currentPosition))
                     currentToken = ""
                     currentPosition = previousEndToNewStart(currentPosition)
                 }
-                if (nextChar == ' ' && currentToken.isNotEmpty()) { // current token is a symbol
+                if (tokenSeparators.contains(currentToken) && canCreateToken(currentToken)) {
+                    tokens.add(createTokenIfValid(currentToken, currentPosition))
+                    currentToken = ""
+                    currentPosition = previousEndToNewStart(currentPosition)
+                }
+                if (nextChar == ' ' && currentToken.isNotEmpty() && !isInsideString) { // current token is a symbol
                     tokens.add(Token(currentPosition, currentToken, TokenType.SYMBOL))
                     currentPosition = updatePosition(currentPosition, ' ')
                     currentPosition = previousEndToNewStart(currentPosition)
@@ -61,7 +75,7 @@ class Lexer(
                     i++
                     continue
                 }
-                if (nextChar == '\n' && currentToken.isNotEmpty()) {
+                if (nextChar == '\n' && currentToken.isNotEmpty() && !isInsideString) {
                     tokens.add(Token(currentPosition, currentToken, TokenType.SYMBOL))
                     currentPosition = newLineUpdatePosition(currentPosition)
                     currentPosition = previousEndToNewStart(currentPosition)
@@ -69,9 +83,15 @@ class Lexer(
                     i++
                     continue
                 }
-                if (nextChar == ' ') {
+                if (nextChar == ' ' && !isInsideString) {
                     currentPosition = updatePosition(currentPosition, nextChar)
                     currentPosition = previousEndToNewStart(currentPosition)
+                    i++
+                    continue
+                }
+                if (nextChar == ' ' && isInsideString) {
+                    currentToken = currentToken.plus(nextChar)
+                    currentPosition = updatePosition(currentPosition, nextChar)
                     i++
                     continue
                 }
@@ -99,6 +119,9 @@ class Lexer(
                 }
                 currentToken = currentToken.plus(nextChar)
                 currentPosition = updatePosition(currentPosition, nextChar)
+            }
+            if (currentToken == "\"" || (currentToken.count{ it == '"' } == 2 && nextChar == '"')) {
+                isInsideString = !isInsideString
             }
             i++
         }

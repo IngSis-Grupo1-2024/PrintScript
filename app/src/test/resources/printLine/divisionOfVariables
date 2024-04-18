@@ -1,0 +1,2 @@
+let pi: number;
+pi = 3.14;

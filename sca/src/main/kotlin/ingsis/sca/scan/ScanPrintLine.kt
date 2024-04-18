@@ -2,6 +2,7 @@ package ingsis.sca.scan
 
 import ingsis.components.TokenType
 import ingsis.components.statement.*
+import ingsis.sca.defaultConfig.getDefaultBooleanValue
 import ingsis.sca.result.InvalidResult
 import ingsis.sca.result.Result
 import ingsis.sca.result.ValidResult
@@ -21,12 +22,12 @@ class ScanPrintLine(private val literalsAllowed: ArrayList<TokenType>) : ScanSta
             is SingleValue -> {
                 val value = statement.getValue() as SingleValue
                 return if (value.getToken().getType() == TokenType.IDENTIFIER) {
-                    if (jsonReader.getPrintLnRuleMap()["identifier"]!!) {
+                    if (isInFile("identifier", jsonReader)) {
                         ValidResult()
                     } else {
                         InvalidResult(statement.getPosition(), "Println with identifier is not allowed")
                     }
-                } else if (value.getToken().getType() in literalsAllowed) {
+                } else if (value.getToken().getType() in literalsAllowed && isInFile("literal", jsonReader)) {
                     ValidResult()
                 } else {
                     InvalidResult(
@@ -37,7 +38,7 @@ class ScanPrintLine(private val literalsAllowed: ArrayList<TokenType>) : ScanSta
             }
 
             is Operator -> {
-                return if (jsonReader.getPrintLnRuleMap()["expression"]!!) {
+                return if (isInFile("expression", jsonReader)) {
                     ValidResult()
                 } else {
                     InvalidResult(statement.getPosition(), "Println with expression is not allowed")
@@ -45,5 +46,16 @@ class ScanPrintLine(private val literalsAllowed: ArrayList<TokenType>) : ScanSta
             }
         }
         return InvalidResult(statement.getPosition(), "Println with unknown value type")
+    }
+
+    private fun isInFile(
+        string: String,
+        jsonReader: ReadScaRulesFile,
+    ): Boolean {
+        return if (jsonReader.getPrintLnRuleMap().containsKey(string)) {
+            jsonReader.getPrintLnRuleMap()[string]!!
+        } else {
+            getDefaultBooleanValue(string)
+        }
     }
 }

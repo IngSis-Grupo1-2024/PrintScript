@@ -1,10 +1,9 @@
 {
   "println":{
     "expression": false,
-    "identifier": true,
+    "identifier": false,
     "literal": true
   },
   "identifier_format":{
-    "format": "camel case"
   }
 }
