@@ -12,8 +12,6 @@ fun main(args: Array<String>) {
     App()
         .subcommands(Validate(), Execution(), Analyzer(), Format())
         .main(args)
-//    val test = TestExecution()
-//    test.testExecution()
 }
 
 class Exec() {
