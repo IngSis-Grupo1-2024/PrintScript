@@ -1,7 +1,7 @@
 package ingsis.components
 
 class ComparatorTokenType : Comparator<TokenType> {
-    private val leafTypes = listOf(TokenType.TYPE, TokenType.VALUE, TokenType.IDENTIFIER)
+    private val leafTypes = listOf(TokenType.TYPE, TokenType.INTEGER, TokenType.STRING, TokenType.DOUBLE, TokenType.IDENTIFIER)
     private val rootTypes = listOf(TokenType.ASSIGNATION, TokenType.OPERATOR)
 
     // it returns 0 if they are equals

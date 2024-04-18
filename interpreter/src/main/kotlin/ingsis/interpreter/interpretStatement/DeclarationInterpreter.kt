@@ -11,12 +11,12 @@ class DeclarationInterpreter : StatementInterpreter {
     override fun interpret(
         statement: Statement,
         previousState: HashMap<String, Result>,
-    ): Pair<HashMap<String, Result>, String?> {
+    ): HashMap<String, Result> {
         val declaration = statement as Declaration
         val variable = declaration.getVariable()
         val type = declaration.getType()
         val variableModifier = declaration.getKeyword().getModifier()
-        previousState[variable.getName()] = Result(type, variableModifier,null)
-        return Pair(previousState, null)
+        previousState[variable.getName()] = Result(type, variableModifier, null)
+        return previousState
     }
 }

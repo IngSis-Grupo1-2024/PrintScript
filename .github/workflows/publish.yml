@@ -7,7 +7,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     environment: deployment
-    
+
     steps:
       - uses: actions/checkout@v4.1.2
       - name: Set up JDK 17
@@ -19,6 +19,6 @@ jobs:
         run: ./gradlew build
       - name: Publish package
         run: ./gradlew publish
-        env: 
+        env:
           GITHUB_AUTHOR: ${{ secrets.AUTHOR }}
           GITHUB_TOKEN: ${{ secrets.TOKEN }}

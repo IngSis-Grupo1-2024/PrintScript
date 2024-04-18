@@ -6,10 +6,14 @@ import ingsis.interpreter.operatorScanner.ScanDivOperator
 import ingsis.interpreter.operatorScanner.ScanMulOperator
 import ingsis.interpreter.operatorScanner.ScanSubOperator
 import ingsis.interpreter.operatorScanner.ScanSumOperator
+import ingsis.utils.OutputEmitter
 import ingsis.utils.Result
 
 object PrintScriptInterpreter {
-    fun createInterpreter(version: String): Interpreter {
+    fun createInterpreter(
+        version: String,
+        outputEmitter: OutputEmitter,
+    ): Interpreter {
         return when (version) {
             "VERSION_1" -> {
                 val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
@@ -18,7 +22,7 @@ object PrintScriptInterpreter {
                         DeclarationInterpreter(),
                         AssignationInterpreter(scanners),
                         CompoundAssignationInterpreter(scanners),
-                        PrintLineInterpreter(scanners),
+                        PrintLineInterpreter(scanners, outputEmitter),
                     ),
                 )
             }
@@ -30,6 +34,7 @@ object PrintScriptInterpreter {
                         DeclarationInterpreter(),
                         AssignationInterpreter(scanners),
                         CompoundAssignationInterpreter(scanners),
+                        PrintLineInterpreter(scanners, outputEmitter),
                         PrintLineInterpreter(scanners),
                         IfInterpreter(scanners, version),
                         ReadEnvInterpreter(Environment(emptyMap()))
@@ -47,9 +52,11 @@ class Interpreter(private val interpreters: List<StatementInterpreter>) {
     fun interpret(
         statement: Statement,
         variableMap: HashMap<String, Result>,
-    ): Pair<HashMap<String, Result>, String?> {
+    ): HashMap<String, Result> {
         interpreters.forEach {
-            if (it.canHandle(statement)) return it.interpret(statement, variableMap)
+            if (it.canHandle(statement)) {
+                return it.interpret(statement, variableMap)
+            }
         }
 
         throw IllegalArgumentException("No interpreter found for statement: $statement")

@@ -23,4 +23,5 @@ enum class TokenType {
     STRING,
     INTEGER,
     BOOLEAN,
+    DOUBLE,
 }

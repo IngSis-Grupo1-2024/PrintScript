@@ -9,39 +9,42 @@ import ingsis.lexer.PrintScriptLexer
 import ingsis.parser.PrintScriptParser
 import ingsis.parser.error.ParserError
 import ingsis.sca.PrintScriptSca
+import ingsis.utils.OutputEmitter
 import ingsis.utils.Result
+import java.io.FileInputStream
+import java.io.InputStream
 import java.io.PrintWriter
 import java.nio.file.Path
 
-class Cli(version: Version) {
+class Cli(outputEmitter: OutputEmitter, version: Version) {
     private val lexer = PrintScriptLexer.createLexer(version.toString())
     private val parser = PrintScriptParser.createParser(version.toString())
-    private val interpreter = PrintScriptInterpreter.createInterpreter(version.toString())
+    private val interpreter = PrintScriptInterpreter.createInterpreter(version.toString(), outputEmitter)
     private val formatter = PrintScriptFormatter.createFormatter(version.toString())
     private val sca = PrintScriptSca.createSCA(version.toString())
     private var position = Position()
 
-    fun startCli(codeLines: String): String {
-        val lines = splitLines(codeLines)
-        if (lines.isEmpty()) return "empty file"
+    fun executeFile(filePath: Path) {
+        executeInputStream(FileInputStream(filePath.toFile()))
+    }
+
+    fun executeInputStream(inputStream: InputStream) {
+        val inputReader = InputReader(inputStream)
         var tokens: List<Token>
         var statement: Statement
-        val string = StringBuilder()
         var variableMap = HashMap<String, Result>()
-        for ((i, line) in lines.withIndex()) {
-            tokens = tokenizeWithLexer(line)
-            if (tokens.isEmpty()) continue
-            try {
+        var line: String? = inputReader.nextLine()
+        while (line != null) {
+            val lines = splitLines(line)
+            for (l in lines) {
+                tokens = tokenizeWithLexer(l)
+                if (tokens.isEmpty()) continue
                 statement = parse(tokens)
-                string.append("\nstatement of line $i -> $statement\n")
-                val pair = interpreter.interpret(statement, variableMap)
-                variableMap = pair.first
-                if (pair.second != null) string.append(pair.second)
-            } catch (e: Exception) {
-                string.append("\n" + e.localizedMessage)
+                variableMap = interpreter.interpret(statement, variableMap)
             }
+            line = inputReader.nextLine()
+            incrementOneLine()
         }
-        return string.toString()
     }
 
     private fun tokenizeWithLexer(line: String): List<Token> {
@@ -49,7 +52,6 @@ class Cli(version: Version) {
             return emptyList()
         }
         if (line[0] == '\n') {
-            incrementOneLine()
             return tokenizeWithLexer(line.substring(1))
         }
         return lexer.tokenize(line, position)
@@ -66,16 +68,23 @@ class Cli(version: Version) {
     private fun parse(tokens: List<Token>): Statement = parser.parse(tokens)
 
     private fun splitLines(codeLines: String): List<String> {
-        return codeLines.split(";")
-            .filter { it.isNotEmpty() }
-            .map { "$it;" }
-            .toList()
+        val delimiter = ";"
+        val splitRegex = "(?<=$delimiter|\n)".toRegex()
+        return codeLines.split(splitRegex)
+            .map { it.trim() }
+            .mapIndexed { index, part ->
+                if (part.isNotEmpty() && codeLines[index] == '\n') {
+                    part + "\n"
+                } else {
+                    part
+                }
+            }
     }
 
-    fun startCliResultInFile(
-        fileInput: String,
-        fileOutput: String,
-    ) = writeInFile(fileOutput, startCli(fileInput))
+//    fun startCliResultInFile(
+//        fileInput: String,
+//        fileOutput: String,
+//    ) = writeInFile(fileOutput, startCli(fileInput))
 
     fun validate(codeLines: String): String {
         val lines = splitLines(codeLines)

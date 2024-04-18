@@ -25,14 +25,6 @@ class ScanSumOperator : ScanOperatorType {
         val firstType = firstValue.getType().getValue()
         val secondType = secondValue.getType().getValue()
 
-        if (firstType == TokenType.BOOLEAN || secondType == TokenType.BOOLEAN) {
-            throw Exception(
-                "Sum operation is just allowed between integers and strings in line " +
-                        operatorPosition.startLine + " at position " +
-                        operatorPosition.startColumn
-            )
-        }
-
         if (firstType == TokenType.STRING || secondType == TokenType.STRING) {
             val finalValue = firstValue.getValue().toString() + secondValue.getValue().toString()
             return SingleValue(Token(Position(), finalValue, TokenType.STRING))
@@ -45,7 +37,14 @@ class ScanSumOperator : ScanOperatorType {
                         operatorPosition.startColumn
             )
         }
-        val finalValue = firstValue.getValue()!!.toInt() + secondValue.getValue()!!.toInt()
-        return SingleValue(Token(Position(), finalValue.toString(), TokenType.INTEGER))
+
+        val resultType = getResultType(firstType, secondType)
+        if (resultType == TokenType.DOUBLE) {
+            val finalValue = firstValue.getValue()!!.toDouble() + secondValue.getValue()!!.toDouble()
+            return SingleValue(Token(Position(), finalValue.toString(), TokenType.DOUBLE))
+        } else {
+            val finalValue = firstValue.getValue()!!.toInt() + secondValue.getValue()!!.toInt()
+            return SingleValue(Token(Position(), finalValue.toString(), TokenType.INTEGER))
+        }
     }
 }

@@ -14,6 +14,8 @@ class ScanDivOperator : ScanOperatorType {
         return operator == "/"
     }
 
+    val notAllowedTypes = listOf(TokenType.STRING)
+
     override fun analyze(
         left: SingleValue,
         right: SingleValue,
@@ -23,8 +25,10 @@ class ScanDivOperator : ScanOperatorType {
         val firstValue = checkIfVariableDefined(left, map)
         val secondValue = checkIfVariableDefined(right, map)
 
-        if (firstValue.getType().getValue() != TokenType.INTEGER ||
-            secondValue.getType().getValue() != TokenType.INTEGER
+        if (notAllowedTypes.contains(firstValue.getType().getValue()) ||
+            notAllowedTypes.contains(
+                secondValue.getType().getValue(),
+            )
         ) {
             throw Exception(
                 "Can't do division using no integer types in line " +
@@ -32,7 +36,28 @@ class ScanDivOperator : ScanOperatorType {
                     operatorPosition.startColumn,
             )
         }
-        val finalValue = firstValue.getValue()!!.toInt() / secondValue.getValue()!!.toInt()
-        return SingleValue(token = Token(Position(), finalValue.toString(), TokenType.INTEGER))
+
+        val resultType = getResultType(firstValue.getType().getValue(), secondValue.getType().getValue())
+        if (resultType == TokenType.DOUBLE) {
+            return SingleValue(
+                Token(
+                    Position(),
+                    (
+                        firstValue.getValue().toString().toDouble() /
+                            secondValue.getValue().toString()
+                                .toDouble()
+                    ).toString(),
+                    TokenType.DOUBLE,
+                ),
+            )
+        } else {
+            return SingleValue(
+                Token(
+                    Position(),
+                    (firstValue.getValue().toString().toInt() / secondValue.getValue().toString().toInt()).toString(),
+                    TokenType.INTEGER,
+                ),
+            )
+        }
     }
 }

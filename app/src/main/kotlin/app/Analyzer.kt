@@ -1,6 +1,7 @@
 package app
 
 import cli.Cli
+import cli.PrintOutputEmitter
 import cli.Version
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
@@ -19,7 +20,7 @@ class Analyzer : CliktCommand(help = "Analyze a PrintScript script file") {
 
     private val version by argument()
         .choice("v1")
-        .help { "the version of the printscript" }
+        .help { "PrintScript version" }
 
     private val fileOutput by argument()
         .path(canBeDir = false, mustExist = true, mustBeWritable = true)
@@ -35,8 +36,6 @@ class Analyzer : CliktCommand(help = "Analyze a PrintScript script file") {
 
     override fun run() {
         startCli()
-        echo("rules for SCA: \n${rulesSCA.readText()}")
-        echo("analyzing...")
         if (outputPresent()) {
             cli.analyzeFileInFileOutput(rulesSCA.toString(), fileInput.readText(), fileOutput!!.toString())
         } else {
@@ -48,7 +47,7 @@ class Analyzer : CliktCommand(help = "Analyze a PrintScript script file") {
 
     private fun startCli() {
         if (version == "v1") {
-            cli = Cli(Version.VERSION_1)
+            cli = Cli(PrintOutputEmitter(), Version.VERSION_1)
         }
     }
 }
