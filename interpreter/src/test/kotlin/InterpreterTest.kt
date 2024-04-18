@@ -1,5 +1,4 @@
 
-import com.sun.jdi.InvalidTypeException
 import ingsis.components.Position
 import ingsis.components.Token
 import ingsis.components.TokenType
@@ -1057,9 +1056,8 @@ class InterpreterTest {
                 ),
             )
         val pair = interpreter.interpret(compoundAssignation, HashMap())
-        val variableMap = pair.first
-        assertEquals(1, variableMap.size)
-        assertEquals(Result(type, Modifier.MUTABLE, "true"), variableMap["a"])
+        assertEquals(1, pair.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "true"), pair["a"])
     }
 
     @Test
@@ -1090,9 +1088,8 @@ class InterpreterTest {
                 ),
             )
         val pair = interpreter.interpret(compoundAssignation, HashMap())
-        val variableMap = pair.first
-        assertEquals(1, variableMap.size)
-        assertEquals(Result(type, Modifier.MUTABLE, "true"), variableMap["a"])
+        assertEquals(1, pair.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "true"), pair["a"])
     }
 
     @Test
@@ -1128,9 +1125,8 @@ class InterpreterTest {
                 ),
             )
         val pair = interpreter.interpret(compoundAssignation, HashMap())
-        val variableMap = pair.first
-        assertEquals(1, variableMap.size)
-        assertEquals(Result(type, Modifier.MUTABLE, "true"), variableMap["a"])
+        assertEquals(1, pair.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "true"), pair["a"])
     }
 
     @Test
@@ -1166,9 +1162,8 @@ class InterpreterTest {
                 ),
             )
         val pair = interpreter.interpret(compoundAssignation, HashMap())
-        val variableMap = pair.first
-        assertEquals(1, variableMap.size)
-        assertEquals(Result(type, Modifier.MUTABLE, "true"), variableMap["a"])
+        assertEquals(1, pair.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "true"), pair["a"])
     }
 
     @Test
@@ -1204,9 +1199,8 @@ class InterpreterTest {
                 ),
             )
         val pair = interpreter.interpret(compoundAssignation, HashMap())
-        val variableMap = pair.first
-        assertEquals(1, variableMap.size)
-        assertEquals(Result(type, Modifier.MUTABLE, "true"), variableMap["a"])
+        assertEquals(1, pair.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "true"), pair["a"])
     }
 
     @Test
@@ -1242,9 +1236,8 @@ class InterpreterTest {
                 ),
             )
         val pair = interpreter.interpret(compoundAssignation, HashMap())
-        val variableMap = pair.first
-        assertEquals(1, variableMap.size)
-        assertEquals(Result(type, Modifier.MUTABLE, "true"), variableMap["a"])
+        assertEquals(1, pair.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "true"), pair["a"])
     }
 
     @Test
@@ -1280,9 +1273,8 @@ class InterpreterTest {
                 ),
             )
         val pair = interpreter.interpret(compoundAssignation, HashMap())
-        val variableMap = pair.first
-        assertEquals(1, variableMap.size)
-        assertEquals(Result(type, Modifier.MUTABLE, "true"), variableMap["a"])
+        assertEquals(1, pair.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "true"), pair["a"])
     }
 
     @Test
@@ -1313,9 +1305,8 @@ class InterpreterTest {
                 ),
             )
         val pair = interpreter.interpret(compoundAssignation, HashMap())
-        val variableMap = pair.first
-        assertEquals(1, variableMap.size)
-        assertEquals(Result(type, Modifier.MUTABLE, "true"), variableMap["a"])
+        assertEquals(1, pair.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "true"), pair["a"])
     }
 
     @Test
@@ -1346,9 +1337,8 @@ class InterpreterTest {
                 ),
             )
         val pair = interpreter.interpret(compoundAssignation, HashMap())
-        val variableMap = pair.first
-        assertEquals(1, variableMap.size)
-        assertEquals(Result(type, Modifier.MUTABLE, "true"), variableMap["a"])
+        assertEquals(1, pair.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "true"), pair["a"])
     }
 
     @Test
@@ -1375,7 +1365,7 @@ class InterpreterTest {
             )
         val pair = interpreter.interpret(compoundAssignation, HashMap())
         val updateVariable = Assignation(position, variable, SingleValue(Token(position, "10", TokenType.INTEGER)))
-        val exception = assertThrows<Exception> { interpreter.interpret(updateVariable, pair.first) }
+        val exception = assertThrows<Exception> { interpreter.interpret(updateVariable, pair) }
         assertEquals(
             "You can't update the value of an immutable variable at line " +
                     position.startLine + " at column " + position.startColumn,
@@ -1407,9 +1397,9 @@ class InterpreterTest {
             )
         val pair = interpreter.interpret(compoundAssignation, HashMap())
         val updateVariable = Assignation(position, variable, SingleValue(Token(position, "10", TokenType.INTEGER)))
-        val pair2 = interpreter.interpret(updateVariable, pair.first)
-        assertEquals(1, pair2.first.size)
-        assertEquals(Result(type, Modifier.MUTABLE, "10"), pair2.first["a"])
+        val pair2 = interpreter.interpret(updateVariable, pair)
+        assertEquals(1, pair2.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "10"), pair2["a"])
     }
 
     @Test
@@ -1747,13 +1737,13 @@ class InterpreterTest {
     fun testIfStatementWhenComparisonBetweenTwoIntegersIsTrue() {
         val scanners =
             listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanEqualsOperator())
-
+        val outputEmitter = PrintOutputEmitterTests()
         val interpreter = Interpreter(
             listOf(
                 AssignationInterpreter(scanners),
                 DeclarationInterpreter(),
                 CompoundAssignationInterpreter(scanners),
-                IfInterpreter(scanners, "VERSION_2"),
+                IfInterpreter(scanners, "VERSION_2", outputEmitter),
             ),
         )
 
@@ -1789,23 +1779,22 @@ class InterpreterTest {
             listOf(ifTrueCompoundAssignation)
         )
         val pair = interpreter.interpret(ifStatement, HashMap())
-        val variableMap = pair.first
-        assertEquals(1, variableMap.size)
-        assertEquals(Result(type, Modifier.MUTABLE, "5"), variableMap["a"])
-        assertFalse(variableMap.containsKey("b"))
+        assertEquals(1, pair.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "5"), pair["a"])
+        assertFalse(pair.containsKey("b"))
     }
 
     @Test
     fun testIfStatementWhenComparisonBetweenTwoIntegersIsFalse() {
         val scanners =
             listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanEqualsOperator())
-
+        val outputEmitter = PrintOutputEmitterTests()
         val interpreter = Interpreter(
             listOf(
                 AssignationInterpreter(scanners),
                 DeclarationInterpreter(),
                 CompoundAssignationInterpreter(scanners),
-                IfInterpreter(scanners, "VERSION_2"),
+                IfInterpreter(scanners, "VERSION_2", outputEmitter),
             ),
         )
 
@@ -1841,23 +1830,22 @@ class InterpreterTest {
             listOf(ifTrueCompoundAssignation)
         )
         val pair = interpreter.interpret(ifStatement, HashMap())
-        val variableMap = pair.first
-        assertEquals(1, variableMap.size)
-        assertEquals(Result(type, Modifier.MUTABLE, "7"), variableMap["b"])
-        assertFalse(variableMap.containsKey("a"))
+        assertEquals(1, pair.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "7"), pair["b"])
+        assertFalse(pair.containsKey("a"))
     }
 
     @Test
     fun testIfStatementWhenComparisonBetweenTwoStringsIsTrue() {
         val scanners =
             listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanEqualsOperator())
-
+        val outputEmitter = PrintOutputEmitterTests()
         val interpreter = Interpreter(
             listOf(
                 AssignationInterpreter(scanners),
                 DeclarationInterpreter(),
                 CompoundAssignationInterpreter(scanners),
-                IfInterpreter(scanners, "VERSION_2"),
+                IfInterpreter(scanners, "VERSION_2", outputEmitter),
             ),
         )
 
@@ -1893,23 +1881,22 @@ class InterpreterTest {
             listOf(ifTrueCompoundAssignation)
         )
         val pair = interpreter.interpret(ifStatement, HashMap())
-        val variableMap = pair.first
-        assertEquals(1, variableMap.size)
-        assertEquals(Result(type, Modifier.MUTABLE, "hello"), variableMap["a"])
-        assertFalse(variableMap.containsKey("b"))
+        assertEquals(1, pair.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "hello"), pair["a"])
+        assertFalse(pair.containsKey("b"))
     }
 
     @Test
     fun testIfStatementWhenComparisonBetweenTwoStringsIsFalse() {
         val scanners =
             listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanEqualsOperator())
-
+        val outputEmitter = PrintOutputEmitterTests()
         val interpreter = Interpreter(
             listOf(
                 AssignationInterpreter(scanners),
                 DeclarationInterpreter(),
                 CompoundAssignationInterpreter(scanners),
-                IfInterpreter(scanners, "VERSION_2"),
+                IfInterpreter(scanners, "VERSION_2", outputEmitter),
             ),
         )
 
@@ -1945,10 +1932,9 @@ class InterpreterTest {
             listOf(ifTrueCompoundAssignation)
         )
         val pair = interpreter.interpret(ifStatement, HashMap())
-        val variableMap = pair.first
-        assertEquals(1, variableMap.size)
-        assertEquals(Result(type, Modifier.MUTABLE, "world"), variableMap["b"])
-        assertFalse(variableMap.containsKey("a"))
+        assertEquals(1, pair.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "world"), pair["b"])
+        assertFalse(pair.containsKey("a"))
     }
 
     @Test
@@ -1960,13 +1946,13 @@ class InterpreterTest {
             ScanSubOperator(),
             ScanEqualsOperator()
         )
-
+        val outputEmitter = PrintOutputEmitterTests()
         val interpreter = Interpreter(
             listOf(
                 AssignationInterpreter(scanners),
                 DeclarationInterpreter(),
                 CompoundAssignationInterpreter(scanners),
-                IfInterpreter(scanners, "VERSION_2")
+                IfInterpreter(scanners, "VERSION_2", outputEmitter)
             )
         )
 
@@ -1981,7 +1967,7 @@ class InterpreterTest {
             SingleValue(Token(position, "5", TokenType.INTEGER))
         )
 
-        val addAToMap = interpreter.interpret(assignationA, HashMap()).first
+        val addAToMap = interpreter.interpret(assignationA, HashMap())
 
         val variableB = Variable("b", position)
         val declarationStatementB = Declaration(keyword, variableB, type, position)
@@ -2004,7 +1990,7 @@ class InterpreterTest {
             listOf(updateVariableA)
         )
 
-        val variableMap = interpreter.interpret(ifStatement, addAToMap).first
+        val variableMap = interpreter.interpret(ifStatement, addAToMap)
         assertEquals(1, variableMap.size)
         assertEquals(Result(type, Modifier.MUTABLE, "10"), variableMap["a"])
         assertFalse(variableMap.containsKey("b"))
@@ -2019,13 +2005,13 @@ class InterpreterTest {
             ScanSubOperator(),
             ScanEqualsOperator()
         )
-
+        val outputEmitter = PrintOutputEmitterTests()
         val interpreter = Interpreter(
             listOf(
                 AssignationInterpreter(scanners),
                 DeclarationInterpreter(),
                 CompoundAssignationInterpreter(scanners),
-                IfInterpreter(scanners, "VERSION_2")
+                IfInterpreter(scanners, "VERSION_2", outputEmitter)
             )
         )
 
@@ -2040,7 +2026,7 @@ class InterpreterTest {
             SingleValue(Token(position, "true", TokenType.BOOLEAN))
         )
 
-        val variableMap = interpreter.interpret(assignation, HashMap()).first
+        val variableMap = interpreter.interpret(assignation, HashMap())
 
 
         val variableB = Variable("b", position)
@@ -2059,7 +2045,7 @@ class InterpreterTest {
             listOf(updateVariableA)
         )
 
-        val variableMap2 = interpreter.interpret(ifStatement, variableMap).first
+        val variableMap2 = interpreter.interpret(ifStatement, variableMap)
         assertEquals(1, variableMap2.size)
         assertEquals(Result(type, Modifier.MUTABLE, "false"), variableMap2["a"])
     }
@@ -2073,13 +2059,13 @@ class InterpreterTest {
             ScanSubOperator(),
             ScanEqualsOperator()
         )
-
+        val outputEmitter = PrintOutputEmitterTests()
         val interpreter = Interpreter(
             listOf(
                 AssignationInterpreter(scanners),
                 DeclarationInterpreter(),
                 CompoundAssignationInterpreter(scanners),
-                IfInterpreter(scanners, "VERSION_2")
+                IfInterpreter(scanners, "VERSION_2", outputEmitter)
             )
         )
 
@@ -2094,7 +2080,7 @@ class InterpreterTest {
             SingleValue(Token(position, "false", TokenType.BOOLEAN))
         )
 
-        val variableMap = interpreter.interpret(assignation, HashMap()).first
+        val variableMap = interpreter.interpret(assignation, HashMap())
 
 
         val variableB = Variable("b", position)
@@ -2114,7 +2100,7 @@ class InterpreterTest {
             listOf(updateVariableA)
         )
 
-        val variableMap2 = interpreter.interpret(ifStatement, variableMap).first
+        val variableMap2 = interpreter.interpret(ifStatement, variableMap)
         assertEquals(2, variableMap2.size)
         assertEquals(Result(type, Modifier.MUTABLE, "false"), variableMap2["a"])
         assertEquals(Result(typeB, Modifier.MUTABLE, "7"), variableMap2["b"])
@@ -2129,13 +2115,13 @@ class InterpreterTest {
             ScanSubOperator(),
             ScanEqualsOperator()
         )
-
+        val outputEmitter = PrintOutputEmitterTests()
         val interpreter = Interpreter(
             listOf(
                 AssignationInterpreter(scanners),
                 DeclarationInterpreter(),
                 CompoundAssignationInterpreter(scanners),
-                IfInterpreter(scanners, "VERSION_2")
+                IfInterpreter(scanners, "VERSION_2", outputEmitter)
             )
         )
 
@@ -2150,7 +2136,7 @@ class InterpreterTest {
             SingleValue(Token(position, "5.5", TokenType.DOUBLE))
         )
 
-        val variableMap = interpreter.interpret(assignation, HashMap()).first
+        val variableMap = interpreter.interpret(assignation, HashMap())
 
         assertEquals(1, variableMap.size)
         assertEquals(Result(type, Modifier.MUTABLE, "5.5"), variableMap["a"])
@@ -2165,12 +2151,13 @@ class InterpreterTest {
             ScanSubOperator(),
             ScanEqualsOperator()
         )
+        val outputEmitter = PrintOutputEmitterTests()
         val interpreter = Interpreter(
             listOf(
                 AssignationInterpreter(scanners),
                 DeclarationInterpreter(),
                 CompoundAssignationInterpreter(scanners),
-                IfInterpreter(scanners, "VERSION_2")
+                IfInterpreter(scanners, "VERSION_2", outputEmitter)
             )
         )
         val position = Position()
@@ -2189,9 +2176,8 @@ class InterpreterTest {
                 ),
             )
         val pair = interpreter.interpret(compoundAssignation, HashMap())
-        val variableMap = pair.first
-        assertEquals(1, variableMap.size)
-        assertEquals(Result(type, Modifier.MUTABLE, "8.8"), variableMap["a"])
+        assertEquals(1, pair.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "8.8"), pair["a"])
     }
 
     @Test
@@ -2203,12 +2189,13 @@ class InterpreterTest {
             ScanSubOperator(),
             ScanEqualsOperator()
         )
+        val outputEmitter = PrintOutputEmitterTests()
         val interpreter = Interpreter(
             listOf(
                 AssignationInterpreter(scanners),
                 DeclarationInterpreter(),
                 CompoundAssignationInterpreter(scanners),
-                IfInterpreter(scanners, "VERSION_2")
+                IfInterpreter(scanners, "VERSION_2", outputEmitter)
             )
         )
         val position = Position()
@@ -2227,9 +2214,8 @@ class InterpreterTest {
                 ),
             )
         val pair = interpreter.interpret(compoundAssignation, HashMap())
-        val variableMap = pair.first
-        assertEquals(1, variableMap.size)
-        assertEquals(Result(type, Modifier.MUTABLE, "2.2"), variableMap["a"])
+        assertEquals(1, pair.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "2.2"), pair["a"])
     }
 
     @Test
@@ -2241,12 +2227,13 @@ class InterpreterTest {
             ScanSubOperator(),
             ScanEqualsOperator()
         )
+        val outputEmitter = PrintOutputEmitterTests()
         val interpreter = Interpreter(
             listOf(
                 AssignationInterpreter(scanners),
                 DeclarationInterpreter(),
                 CompoundAssignationInterpreter(scanners),
-                IfInterpreter(scanners, "VERSION_2")
+                IfInterpreter(scanners, "VERSION_2", outputEmitter)
             )
         )
         val position = Position()
@@ -2265,9 +2252,8 @@ class InterpreterTest {
                 ),
             )
         val pair = interpreter.interpret(compoundAssignation, HashMap())
-        val variableMap = pair.first
-        assertEquals(1, variableMap.size)
-        assertEquals(Result(type, Modifier.MUTABLE, "2.5"), variableMap["a"])
+        assertEquals(1, pair.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "2.5"), pair["a"])
     }
 
     @Test
@@ -2279,12 +2265,13 @@ class InterpreterTest {
             ScanSubOperator(),
             ScanEqualsOperator()
         )
+        val outputEmitter = PrintOutputEmitterTests()
         val interpreter = Interpreter(
             listOf(
                 AssignationInterpreter(scanners),
                 DeclarationInterpreter(),
                 CompoundAssignationInterpreter(scanners),
-                IfInterpreter(scanners, "VERSION_2")
+                IfInterpreter(scanners, "VERSION_2", outputEmitter)
             )
         )
         val position = Position()
@@ -2303,9 +2290,8 @@ class InterpreterTest {
                 ),
             )
         val pair = interpreter.interpret(compoundAssignation, HashMap())
-        val variableMap = pair.first
-        assertEquals(1, variableMap.size)
-        assertEquals(Result(type, Modifier.MUTABLE, "12.1"), variableMap["a"])
+        assertEquals(1, pair.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "12.1"), pair["a"])
     }
 
     @Test
@@ -2317,12 +2303,13 @@ class InterpreterTest {
             ScanSubOperator(),
             ScanEqualsOperator()
         )
+        val outputEmitter = PrintOutputEmitterTests()
         val interpreter = Interpreter(
             listOf(
                 AssignationInterpreter(scanners),
                 DeclarationInterpreter(),
                 CompoundAssignationInterpreter(scanners),
-                IfInterpreter(scanners, "VERSION_2")
+                IfInterpreter(scanners, "VERSION_2", outputEmitter)
             )
         )
         val position = Position()
@@ -2341,9 +2328,8 @@ class InterpreterTest {
                 ),
             )
         val pair = interpreter.interpret(compoundAssignation, HashMap())
-        val variableMap = pair.first
-        assertEquals(1, variableMap.size)
-        assertEquals(Result(type, Modifier.MUTABLE, "7.5"), variableMap["a"])
+        assertEquals(1, pair.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "7.5"), pair["a"])
     }
 
     @Test
@@ -2355,12 +2341,13 @@ class InterpreterTest {
             ScanSubOperator(),
             ScanEqualsOperator()
         )
+        val outputEmitter = PrintOutputEmitterTests()
         val interpreter = Interpreter(
             listOf(
                 AssignationInterpreter(scanners),
                 DeclarationInterpreter(),
                 CompoundAssignationInterpreter(scanners),
-                IfInterpreter(scanners, "VERSION_2")
+                IfInterpreter(scanners, "VERSION_2", outputEmitter)
             )
         )
         val position = Position()
@@ -2379,9 +2366,8 @@ class InterpreterTest {
                 ),
             )
         val pair = interpreter.interpret(compoundAssignation, HashMap())
-        val variableMap = pair.first
-        assertEquals(1, variableMap.size)
-        assertEquals(Result(type, Modifier.MUTABLE, "3.5"), variableMap["a"])
+        assertEquals(1, pair.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "3.5"), pair["a"])
     }
 
     @Test
@@ -2393,12 +2379,13 @@ class InterpreterTest {
             ScanSubOperator(),
             ScanEqualsOperator()
         )
+        val outputEmitter = PrintOutputEmitterTests()
         val interpreter = Interpreter(
             listOf(
                 AssignationInterpreter(scanners),
                 DeclarationInterpreter(),
                 CompoundAssignationInterpreter(scanners),
-                IfInterpreter(scanners, "VERSION_2")
+                IfInterpreter(scanners, "VERSION_2", outputEmitter)
             )
         )
         val position = Position()
@@ -2417,9 +2404,8 @@ class InterpreterTest {
                 ),
             )
         val pair = interpreter.interpret(compoundAssignation, HashMap())
-        val variableMap = pair.first
-        assertEquals(1, variableMap.size)
-        assertEquals(Result(type, Modifier.MUTABLE, "11.0"), variableMap["a"])
+        assertEquals(1, pair.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "11.0"), pair["a"])
     }
 
     @Test
@@ -2431,12 +2417,13 @@ class InterpreterTest {
             ScanSubOperator(),
             ScanEqualsOperator()
         )
+        val outputEmitter = PrintOutputEmitterTests()
         val interpreter = Interpreter(
             listOf(
                 AssignationInterpreter(scanners),
                 DeclarationInterpreter(),
                 CompoundAssignationInterpreter(scanners),
-                IfInterpreter(scanners, "VERSION_2")
+                IfInterpreter(scanners, "VERSION_2", outputEmitter)
             )
         )
         val position = Position()
@@ -2455,9 +2442,8 @@ class InterpreterTest {
                 ),
             )
         val pair = interpreter.interpret(compoundAssignation, HashMap())
-        val variableMap = pair.first
-        assertEquals(1, variableMap.size)
-        assertEquals(Result(type, Modifier.MUTABLE, "2.75"), variableMap["a"])
+        assertEquals(1, pair.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "2.75"), pair["a"])
     }
 
     @Test
@@ -2469,12 +2455,13 @@ class InterpreterTest {
             ScanSubOperator(),
             ScanEqualsOperator()
         )
+        val outputEmitter = PrintOutputEmitterTests()
         val interpreter = Interpreter(
             listOf(
                 AssignationInterpreter(scanners),
                 DeclarationInterpreter(),
                 CompoundAssignationInterpreter(scanners),
-                IfInterpreter(scanners, "VERSION_2")
+                IfInterpreter(scanners, "VERSION_2", outputEmitter)
             )
         )
         val position = Position()
@@ -2493,9 +2480,8 @@ class InterpreterTest {
                 ),
             )
         val result = interpreter.interpret(compoundAssignation, HashMap())
-        val variableMap = result.first
-        assertEquals(1, variableMap.size)
-        assertEquals(Result(type, Modifier.MUTABLE, "5.5hello"), variableMap["a"])
+        assertEquals(1, result.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "5.5hello"), result["a"])
     }
 
     @Test
@@ -2507,12 +2493,13 @@ class InterpreterTest {
             ScanSubOperator(),
             ScanEqualsOperator()
         )
+        val outputEmitter = PrintOutputEmitterTests()
         val interpreter = Interpreter(
             listOf(
                 AssignationInterpreter(scanners),
                 DeclarationInterpreter(),
                 CompoundAssignationInterpreter(scanners),
-                IfInterpreter(scanners, "VERSION_2")
+                IfInterpreter(scanners, "VERSION_2", outputEmitter)
             )
         )
         val position = Position()
@@ -2547,12 +2534,13 @@ class InterpreterTest {
             ScanSubOperator(),
             ScanEqualsOperator()
         )
+        val outputEmitter = PrintOutputEmitterTests()
         val interpreter = Interpreter(
             listOf(
                 AssignationInterpreter(scanners),
                 DeclarationInterpreter(),
                 CompoundAssignationInterpreter(scanners),
-                IfInterpreter(scanners, "VERSION_2")
+                IfInterpreter(scanners, "VERSION_2", outputEmitter)
             )
         )
         val position = Position()
@@ -2587,12 +2575,13 @@ class InterpreterTest {
             ScanSubOperator(),
             ScanEqualsOperator()
         )
+        val outputEmitter = PrintOutputEmitterTests()
         val interpreter = Interpreter(
             listOf(
                 AssignationInterpreter(scanners),
                 DeclarationInterpreter(),
                 CompoundAssignationInterpreter(scanners),
-                IfInterpreter(scanners, "VERSION_2")
+                IfInterpreter(scanners, "VERSION_2", outputEmitter)
             )
         )
         val position = Position()
@@ -2627,12 +2616,13 @@ class InterpreterTest {
             ScanSubOperator(),
             ScanEqualsOperator()
         )
+        val outputEmitter = PrintOutputEmitterTests()
         val interpreter = Interpreter(
             listOf(
                 AssignationInterpreter(scanners),
                 DeclarationInterpreter(),
                 CompoundAssignationInterpreter(scanners),
-                IfInterpreter(scanners, "VERSION_2")
+                IfInterpreter(scanners, "VERSION_2", outputEmitter)
             )
         )
         val position = Position()

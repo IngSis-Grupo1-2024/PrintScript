@@ -7,11 +7,13 @@ import ingsis.interpreter.Interpreter
 import ingsis.interpreter.PrintScriptInterpreter
 import ingsis.interpreter.operatorScanner.ScanOperatorType
 import ingsis.interpreter.valueAnalyzer.ValueAnalyzer
+import ingsis.utils.OutputEmitter
 import ingsis.utils.Result
 
 class IfInterpreter(
     private val scanners: List<ScanOperatorType>,
-    private val version: String
+    private val version: String,
+    private val outputEmitter: OutputEmitter
 ) : StatementInterpreter {
 
     override fun canHandle(statement: Statement): Boolean = statement.getStatementType() == StatementType.IF
@@ -19,8 +21,8 @@ class IfInterpreter(
     override fun interpret(
         statement: Statement,
         previousState: HashMap<String, Result>
-    ): Pair<HashMap<String, Result>, String?> {
-        val interpreter = PrintScriptInterpreter.createInterpreter(version)
+    ): HashMap<String, Result> {
+        val interpreter = PrintScriptInterpreter.createInterpreter(version, outputEmitter)
         val ifStatement = statement as If
         var newState = previousState
         val getElseStatement = ifStatement.getElseStatement()
@@ -31,13 +33,13 @@ class IfInterpreter(
         val comparisonValue = comparisonResult.getValue()
         if (comparisonValue == "true") {
             for (block in ifBlock) {
-                newState = interpreter.interpret(block, previousState).first
+                newState = interpreter.interpret(block, previousState)
             }
         } else {
             for (block in getElseStatement) {
-               newState = interpreter.interpret(block, previousState).first
+               newState = interpreter.interpret(block, previousState)
             }
         }
-        return Pair(newState, null)
+        return newState
     }
 }

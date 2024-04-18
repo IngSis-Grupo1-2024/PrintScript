@@ -34,7 +34,7 @@ object PrintScriptInterpreter {
                         DeclarationInterpreter(),
                         AssignationInterpreter(scanners),
                         CompoundAssignationInterpreter(scanners),
-                        IfInterpreter(scanners, version),
+                        IfInterpreter(scanners, version, outputEmitter),
                         PrintLineInterpreter(scanners, outputEmitter),
                     ),
                 )
