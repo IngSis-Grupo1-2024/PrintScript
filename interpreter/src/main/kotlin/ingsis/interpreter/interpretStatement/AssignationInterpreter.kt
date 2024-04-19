@@ -26,8 +26,10 @@ class AssignationInterpreter(private val scanners: List<ScanOperatorType>) : Sta
                 throw Exception("Type mismatch")
             }
         } else {
-            throw Exception("You can't update the value of an immutable variable at line " +
-                    variable.getPosition().startLine + " at column " + variable.getPosition().startColumn)
+            throw Exception(
+                "You can't update the value of an immutable variable at line " +
+                    variable.getPosition().startLine + " at column " + variable.getPosition().startColumn,
+            )
         }
 
         return previousState
@@ -48,9 +50,14 @@ class AssignationInterpreter(private val scanners: List<ScanOperatorType>) : Sta
 
     private fun isInteger(value: TokenType?): Boolean = value == TokenType.INTEGER
 
-    private fun checkMutability(variable: Variable, map: Map<String, Result>): Boolean {
+    private fun checkMutability(
+        variable: Variable,
+        map: Map<String, Result>,
+    ): Boolean {
         return if (map[variable.getName()]?.getModifier() == null) {
             true
-        } else map[variable.getName()]?.getModifier() == Modifier.MUTABLE
+        } else {
+            map[variable.getName()]?.getModifier() == Modifier.MUTABLE
+        }
     }
 }

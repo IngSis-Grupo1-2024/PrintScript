@@ -16,7 +16,7 @@ class ScanLessOrEqualThanOperator : ScanOperatorType {
         left: SingleValue,
         right: SingleValue,
         operatorPosition: Position,
-        map: Map<String, Result>
+        map: Map<String, Result>,
     ): Value {
         val firstValue = left.getToken().getValue()
         val secondValue = right.getToken().getValue()

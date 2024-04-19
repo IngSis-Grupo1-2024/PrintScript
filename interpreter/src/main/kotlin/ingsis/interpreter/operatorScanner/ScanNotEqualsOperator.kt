@@ -16,7 +16,7 @@ class ScanNotEqualsOperator : ScanOperatorType {
         left: SingleValue,
         right: SingleValue,
         operatorPosition: Position,
-        map: Map<String, Result>
+        map: Map<String, Result>,
     ): Value {
         val firstValue = left.getToken().getValue()
         val secondValue = right.getToken().getValue()
@@ -26,6 +26,4 @@ class ScanNotEqualsOperator : ScanOperatorType {
         }
         return SingleValue(Token(Position(), "false", TokenType.BOOLEAN))
     }
-
-
 }

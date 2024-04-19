@@ -29,8 +29,8 @@ class ScanSumOperator : ScanOperatorType {
         if (firstType == TokenType.BOOLEAN || secondType == TokenType.BOOLEAN) {
             throw Exception(
                 "Sum operation is just allowed between integers and strings in line " +
-                        operatorPosition.startLine + " at position " +
-                        operatorPosition.startColumn
+                    operatorPosition.startLine + " at position " +
+                    operatorPosition.startColumn,
             )
         }
 

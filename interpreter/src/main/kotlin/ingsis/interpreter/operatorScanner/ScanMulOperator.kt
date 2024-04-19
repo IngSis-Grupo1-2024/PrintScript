@@ -31,7 +31,7 @@ class ScanMulOperator : ScanOperatorType {
         ) {
             throw Exception(
                 "Can't do multiplication using no integer types or double types in line " +
-                        operatorPosition.startLine + " at position " + operatorPosition.startColumn,
+                    operatorPosition.startLine + " at position " + operatorPosition.startColumn,
             )
         }
 

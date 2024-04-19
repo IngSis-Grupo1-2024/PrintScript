@@ -1,9 +1,11 @@
 package ingsis.components.statement
 
-class ReadInput(private val declaration: Declaration) : Statement {
+import ingsis.components.Position
+
+class ReadInput(private val position: Position, private val declaration: Declaration) : Statement {
     override fun getStatementType(): StatementType = StatementType.READ_INPUT
 
     fun getDeclaration(): Declaration = declaration
 
-
+    fun getPosition(): Position = position
 }

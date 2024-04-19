@@ -12,7 +12,12 @@ class ScanGreaterOrEqualThanOperator : ScanOperatorType {
         return operator == ">="
     }
 
-    override fun analyze(left: SingleValue, right: SingleValue, operatorPosition: Position, map: Map<String, Result>): Value {
+    override fun analyze(
+        left: SingleValue,
+        right: SingleValue,
+        operatorPosition: Position,
+        map: Map<String, Result>,
+    ): Value {
         val firstValue = left.getToken().getValue()
         val secondValue = right.getToken().getValue()
 
@@ -21,6 +26,4 @@ class ScanGreaterOrEqualThanOperator : ScanOperatorType {
         }
         return SingleValue(Token(Position(), "false", TokenType.BOOLEAN))
     }
-
-
 }

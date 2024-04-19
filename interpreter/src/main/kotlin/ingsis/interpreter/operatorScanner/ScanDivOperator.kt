@@ -22,18 +22,18 @@ class ScanDivOperator : ScanOperatorType {
         operatorPosition: Position,
         map: Map<String, Result>,
     ): Value {
-
         val firstValue = checkIfVariableDefined(left, map)
         val secondValue = checkIfVariableDefined(right, map)
 
         if (notAllowedTypes.contains(firstValue.getType().getValue()) ||
-            notAllowedTypes.contains(secondValue.getType().getValue()
+            notAllowedTypes.contains(
+                secondValue.getType().getValue(),
             )
         ) {
             throw Exception(
                 "Can't do division using no integer types or double types in line " +
-                        operatorPosition.startLine + " at position " +
-                        operatorPosition.startColumn,
+                    operatorPosition.startLine + " at position " +
+                    operatorPosition.startColumn,
             )
         }
 
