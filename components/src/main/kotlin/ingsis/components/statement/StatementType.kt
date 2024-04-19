@@ -7,5 +7,6 @@ enum class StatementType {
     FUNCTION,
     PRINT_LINE,
     IF,
-    ELSE
+    ELSE,
+    READ_INPUT,
 }

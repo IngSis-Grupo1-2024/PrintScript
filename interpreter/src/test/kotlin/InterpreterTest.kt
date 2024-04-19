@@ -1,4 +1,3 @@
-
 import ingsis.components.Position
 import ingsis.components.Token
 import ingsis.components.TokenType
@@ -12,6 +11,9 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import util.PrintOutputEmitterTests
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.PrintStream
 
 class InterpreterTest {
     @Test
@@ -2126,7 +2128,6 @@ class InterpreterTest {
         )
 
         val position = Position()
-        val variableA = Variable("a", position)
         val keyword = Keyword(Modifier.MUTABLE, "let", position)
         val type = Type(TokenType.DOUBLE, position)
         val declarationStatement = Declaration(keyword, Variable("a", position), type, position)
@@ -2485,7 +2486,7 @@ class InterpreterTest {
     }
 
     @Test
-    fun testSumBetweenBooleanAndDouble(){
+    fun testSumBetweenBooleanAndDouble() {
         val scanners = listOf(
             ScanMulOperator(),
             ScanSumOperator(),
@@ -2526,7 +2527,7 @@ class InterpreterTest {
     }
 
     @Test
-    fun testSubtractBetweenBooleanAndDouble(){
+    fun testSubtractBetweenBooleanAndDouble() {
         val scanners = listOf(
             ScanMulOperator(),
             ScanSumOperator(),
@@ -2567,7 +2568,7 @@ class InterpreterTest {
     }
 
     @Test
-    fun testMultiplyBetweenBooleanAndDouble(){
+    fun testMultiplyBetweenBooleanAndDouble() {
         val scanners = listOf(
             ScanMulOperator(),
             ScanSumOperator(),
@@ -2608,7 +2609,7 @@ class InterpreterTest {
     }
 
     @Test
-    fun testDivideBetweenBooleanAndDouble(){
+    fun testDivideBetweenBooleanAndDouble() {
         val scanners = listOf(
             ScanMulOperator(),
             ScanSumOperator(),
@@ -2644,6 +2645,184 @@ class InterpreterTest {
             "Can't do division using no integer types or double types in line " +
                     position.startLine + " at position " +
                     position.startColumn,
+            exception.message,
+        )
+    }
+
+    @Test
+    fun testReadInputWithInteger() {
+        val input = ByteArrayInputStream("123".toByteArray())
+        System.setIn(input)
+
+        val output = ByteArrayOutputStream()
+        System.setOut(PrintStream(output))
+
+        val scanners = listOf(
+            ScanMulOperator(),
+            ScanSumOperator(),
+            ScanDivOperator(),
+            ScanSubOperator(),
+            ScanEqualsOperator(),
+        )
+        val outputEmitter = PrintOutputEmitterTests()
+        val interpreter = Interpreter(
+            listOf(
+                AssignationInterpreter(scanners),
+                DeclarationInterpreter(),
+                CompoundAssignationInterpreter(scanners),
+                IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                ReadInputInterpreter(InputReader())
+            )
+        )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.INTEGER, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation = CompoundAssignation(
+            position,
+            declarationStatement,
+            SingleValue(Token(Position(), InputReader().readInput(), TokenType.INTEGER))
+        )
+        val pair = interpreter.interpret(compoundAssignation, HashMap())
+
+        System.setIn(System.`in`)
+        System.setOut(System.out)
+
+        assertEquals(1, pair.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "123"), pair["a"])
+    }
+
+    @Test
+    fun testReadInputWithDouble() {
+        val input = ByteArrayInputStream("123.456".toByteArray())
+        System.setIn(input)
+
+        val output = ByteArrayOutputStream()
+        System.setOut(PrintStream(output))
+
+        val scanners = listOf(
+            ScanMulOperator(),
+            ScanSumOperator(),
+            ScanDivOperator(),
+            ScanSubOperator(),
+            ScanEqualsOperator(),
+        )
+        val outputEmitter = PrintOutputEmitterTests()
+        val interpreter = Interpreter(
+            listOf(
+                AssignationInterpreter(scanners),
+                DeclarationInterpreter(),
+                CompoundAssignationInterpreter(scanners),
+                IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                ReadInputInterpreter(InputReader())
+            )
+        )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.DOUBLE, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation = CompoundAssignation(
+            position,
+            declarationStatement,
+            SingleValue(Token(Position(), InputReader().readInput(), TokenType.DOUBLE))
+        )
+        val pair = interpreter.interpret(compoundAssignation, HashMap())
+
+        System.setIn(System.`in`)
+        System.setOut(System.out)
+
+        assertEquals(1, pair.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "123.456"), pair["a"])
+    }
+
+    @Test
+    fun testReadInputWithString() {
+        val input = ByteArrayInputStream("hello".toByteArray())
+        System.setIn(input)
+
+        val output = ByteArrayOutputStream()
+        System.setOut(PrintStream(output))
+
+        val scanners = listOf(
+            ScanMulOperator(),
+            ScanSumOperator(),
+            ScanDivOperator(),
+            ScanSubOperator(),
+            ScanEqualsOperator(),
+        )
+        val outputEmitter = PrintOutputEmitterTests()
+        val interpreter = Interpreter(
+            listOf(
+                AssignationInterpreter(scanners),
+                DeclarationInterpreter(),
+                CompoundAssignationInterpreter(scanners),
+                IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                ReadInputInterpreter(InputReader())
+            )
+        )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.STRING, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation = CompoundAssignation(
+            position,
+            declarationStatement,
+            SingleValue(Token(Position(), InputReader().readInput(), TokenType.STRING))
+        )
+        val pair = interpreter.interpret(compoundAssignation, HashMap())
+
+        System.setIn(System.`in`)
+        System.setOut(System.out)
+
+        assertEquals(1, pair.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "hello"), pair["a"])
+    }
+
+    @Test
+    fun testTypeMismatchWithReadInput() {
+        val input = ByteArrayInputStream("hello".toByteArray())
+        System.setIn(input)
+
+        val output = ByteArrayOutputStream()
+        System.setOut(PrintStream(output))
+
+        val scanners = listOf(
+            ScanMulOperator(),
+            ScanSumOperator(),
+            ScanDivOperator(),
+            ScanSubOperator(),
+            ScanEqualsOperator(),
+        )
+        val outputEmitter = PrintOutputEmitterTests()
+        val interpreter = Interpreter(
+            listOf(
+                AssignationInterpreter(scanners),
+                DeclarationInterpreter(),
+                CompoundAssignationInterpreter(scanners),
+                IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                ReadInputInterpreter(InputReader())
+            )
+        )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.INTEGER, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation = CompoundAssignation(
+            position,
+            declarationStatement,
+            SingleValue(Token(Position(), InputReader().readInput(), TokenType.STRING))
+        )
+        val exception = assertThrows<Exception> { interpreter.interpret(compoundAssignation, HashMap()) }
+
+        System.setIn(System.`in`)
+        System.setOut(System.out)
+
+        assertEquals(
+            "Type mismatch",
             exception.message,
         )
     }
