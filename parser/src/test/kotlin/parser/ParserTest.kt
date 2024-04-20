@@ -1,4 +1,4 @@
-package modules.parser.parser
+package parser
 
 import ingsis.components.Position
 import ingsis.components.Token

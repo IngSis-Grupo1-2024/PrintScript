@@ -19,11 +19,31 @@ class ParserTestV2 {
     fun `test 001 - declaration of x as number as const`() {
         val tokens =
             listOf(
-                Token(position, "const", TokenType.KEYWORD),
-                Token(position, "a", TokenType.SYMBOL),
-                Token(position, ":", TokenType.DECLARATION),
-                Token(position, "number", TokenType.TYPE),
-                Token(position, ";", TokenType.DELIMITER),
+                Token(
+                    Position(1, 6, 1, 1, 1, 6),
+                    "const",
+                    TokenType.KEYWORD,
+                ),
+                Token(
+                    Position(7, 8, 1, 1, 7, 8),
+                    "a",
+                    TokenType.SYMBOL,
+                ),
+                Token(
+                    Position(8, 9, 1, 1, 8, 9),
+                    ":",
+                    TokenType.DECLARATION,
+                ),
+                Token(
+                    Position(9, 15, 1, 1, 9, 15),
+                    "number",
+                    TokenType.TYPE,
+                ),
+                Token(
+                    Position(19, 20, 1, 1, 19, 20),
+                    ";",
+                    TokenType.DELIMITER,
+                ),
             )
         val astExpected: Statement =
             Declaration(
@@ -35,6 +55,10 @@ class ParserTestV2 {
         assertEquals(astExpected.toString(), parserV2.parse(tokens).toString())
         val exception = assertThrows<ParserError> { parserV1.parse(tokens) }
         assertEquals("error: keyword not found", exception.message)
+        assertEquals(
+            Position(1, 6, 1, 1, 1, 6),
+            exception.getTokenPosition(),
+        )
     }
 
     @Test
