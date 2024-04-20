@@ -14,8 +14,10 @@ class CompoundAssignationInterpreter(private val scanners: List<ScanOperatorType
     ): HashMap<String, Result> {
         val compoundAssignation = statement as CompoundAssignation
         val variable = compoundAssignation.getDeclaration().getVariable()
+        val variableModifier = compoundAssignation.getDeclaration().getKeyword().getModifier()
         val value = compoundAssignation.getValue()
-        val result = ValueAnalyzer(scanners).analyze(value, previousState)
+        var result = ValueAnalyzer(scanners).analyze(value, previousState)
+        result = result.updateModifier(variableModifier)
         if (checkIfNewValueTypeMatchesType(compoundAssignation.getDeclaration(), result)) {
             previousState[variable.getName()] = result
         } else {

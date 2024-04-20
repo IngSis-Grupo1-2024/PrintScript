@@ -15,7 +15,7 @@ class ScanMulOperator : ScanOperatorType {
         return operator == "*"
     }
 
-    val notAllowedTypes = listOf(TokenType.STRING)
+    val notAllowedTypes = listOf(TokenType.BOOLEAN, TokenType.STRING)
 
     override fun analyze(
         left: SingleValue,
