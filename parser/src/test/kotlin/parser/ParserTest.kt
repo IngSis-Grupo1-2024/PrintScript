@@ -1,4 +1,4 @@
-package modules.parser
+package modules.parser.parser
 
 import ingsis.components.Position
 import ingsis.components.Token
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 
 class ParserTest {
-    private val parser = PrintScriptParser.createParser("VERSION_1")
+    private val parser = PrintScriptParser.createParser("VERSION_2")
     private val position = Position()
 
     @Test

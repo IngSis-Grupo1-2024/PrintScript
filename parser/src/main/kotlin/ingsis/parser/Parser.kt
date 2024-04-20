@@ -4,18 +4,20 @@ import ingsis.components.Token
 import ingsis.components.TokenType
 import ingsis.components.statement.Statement
 import ingsis.parser.error.ParserError
-import ingsis.parser.scan.ScanAssignation
-import ingsis.parser.scan.ScanDeclaration
-import ingsis.parser.scan.ScanPrintLine
-import ingsis.parser.scan.ScanStatement
+import ingsis.parser.scan.*
 
 object PrintScriptParser {
     fun createParser(version: String): Parser {
         return when (version) {
-            "VERSION_1" -> Parser(listOf(ScanDeclaration(), ScanAssignation(), ScanPrintLine()))
-            else -> Parser(listOf(ScanDeclaration(), ScanAssignation(), ScanPrintLine()))
+            "VERSION_1" -> Parser(listOf(scanDeclaration(version), scanAssignation(version), ScanPrintLine()))
+            "VERSION_2" -> Parser(listOf(scanDeclaration(version), scanAssignation(version), ScanPrintLine()))
+            else -> Parser(listOf(scanDeclaration(version), scanAssignation(version), ScanPrintLine()))
         }
     }
+
+    private fun scanDeclaration(version: String) = PSScanDeclaration.createScanDeclaration(version)
+
+    private fun scanAssignation(version: String) = PSScanAssignation.createScanAssignation(version)
 }
 
 class Parser(private val scanStatement: List<ScanStatement>) {

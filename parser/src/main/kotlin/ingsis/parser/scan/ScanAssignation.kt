@@ -5,8 +5,19 @@ import ingsis.components.TokenType
 import ingsis.components.statement.*
 import ingsis.parser.error.ParserError
 
-class ScanAssignation : ScanStatement {
-    private val scanDeclaration = ScanDeclaration()
+object PSScanAssignation {
+    fun createScanAssignation(version: String): ScanAssignation {
+        return when (version) {
+            "VERSION_1" -> ScanAssignation(scanDeclaration(version))
+            "VERSION_2" -> ScanAssignation(scanDeclaration(version))
+            else -> ScanAssignation(scanDeclaration(version))
+        }
+    }
+
+    private fun scanDeclaration(version: String) = PSScanDeclaration.createScanDeclaration(version)
+}
+
+class ScanAssignation(private val scanDeclaration: ScanDeclaration) : ScanStatement {
     private val scanValue = ScanValue()
 
     override fun canHandle(tokens: List<Token>): Boolean {
