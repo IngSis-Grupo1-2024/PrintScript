@@ -8,7 +8,6 @@ import ingsis.components.statement.Value
 import ingsis.utils.Result
 
 class ScanGreaterThanOperator : ScanOperatorType {
-
     override fun canHandle(operator: String): Boolean {
         return operator == ">"
     }
@@ -17,7 +16,7 @@ class ScanGreaterThanOperator : ScanOperatorType {
         left: SingleValue,
         right: SingleValue,
         operatorPosition: Position,
-        map: Map<String, Result>
+        map: Map<String, Result>,
     ): Value {
         val firstValue = left.getToken().getValue()
         val secondValue = right.getToken().getValue()
@@ -27,5 +26,4 @@ class ScanGreaterThanOperator : ScanOperatorType {
         }
         return SingleValue(Token(Position(), "false", TokenType.BOOLEAN))
     }
-
 }

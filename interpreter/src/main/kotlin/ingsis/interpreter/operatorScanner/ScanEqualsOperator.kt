@@ -17,7 +17,7 @@ class ScanEqualsOperator : ScanOperatorType {
         left: SingleValue,
         right: SingleValue,
         operatorPosition: Position,
-        map: Map<String, Result>
+        map: Map<String, Result>,
     ): Value {
         val firstValue = checkIfVariableDefined(left, map)
         val secondValue = checkIfVariableDefined(right, map)

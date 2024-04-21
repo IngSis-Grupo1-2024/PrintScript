@@ -3,7 +3,7 @@ package ingsis.components.statement
 class If(
     private val comparison: Value,
     private val elseStatement: Else,
-    private val ifBlock: List<Statement>
+    private val ifBlock: List<Statement>,
 ) : Statement {
     override fun getStatementType(): StatementType {
         return StatementType.IF

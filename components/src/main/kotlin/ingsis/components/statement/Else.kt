@@ -6,5 +6,4 @@ class Else(private val elseBlock: List<Statement>) : Statement {
     fun getElseBlock(): List<Statement> {
         return elseBlock
     }
-
 }

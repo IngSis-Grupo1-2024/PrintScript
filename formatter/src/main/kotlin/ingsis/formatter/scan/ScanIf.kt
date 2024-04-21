@@ -3,6 +3,7 @@ package ingsis.formatter.scan
 import ingsis.components.statement.If
 import ingsis.components.statement.Statement
 import ingsis.components.statement.StatementType
+import ingsis.formatter.Formatter
 import ingsis.formatter.PrintScriptFormatter
 import ingsis.formatter.tabsCounter.IfTabs
 import ingsis.formatter.utils.FormatterRule
@@ -33,7 +34,7 @@ class ScanIf : ScanStatement {
             // start so I have to put the tabs after the '\n'
             string +=
                 if (statement.getStatementType() == StatementType.PRINT_LINE) {
-                    addTabsToPrintLine(statement, ruleMap, tabs)
+                    addTabsToPrintLine(statement, ruleMap, tabs, formatter)
                 } else {
                     tabs + formatter.format(statement, ruleMap)
                 }
@@ -46,8 +47,8 @@ class ScanIf : ScanStatement {
         statement: Statement,
         ruleMap: Map<String, FormatterRule>,
         tabs: String,
+        formatter: Formatter,
     ): String {
-        val formatter = PrintScriptFormatter.createFormatter("VERSION_2")
         val formattedString = formatter.format(statement, ruleMap)
         val newLineIndex = formattedString.indexOfFirst { it != '\n' }
         val newLines = formattedString.substring(0, newLineIndex)

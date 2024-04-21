@@ -118,12 +118,10 @@ class FormatterTest {
         val ifStatement = If(booleanTrue, elseStatement, listOf(declaration, function))
         val expected =
             "if{\n" +
-                "\n" +
-                "println(4);" +
-                "\n" +
+                "\tlet x: number;\n\n\n" +
+                "\tprintln(4);\n" +
                 "}"
 
-//        r
-        println(formatter.format(ifStatement, readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")))
+        assertEquals(expected, formatter.format(ifStatement, readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")))
     }
 }
