@@ -5,22 +5,43 @@ import ingsis.components.TokenType
 import ingsis.components.statement.Statement
 import ingsis.parser.error.ParserError
 import ingsis.parser.scan.*
+import ingsis.parser.symbolType.*
 
 object PrintScriptParser {
     fun createParser(version: String): Parser {
         return when (version) {
-            "VERSION_1" -> Parser(listOf(scanDeclaration(version), scanAssignation(version), ScanPrintLine()))
-            "VERSION_2" -> Parser(listOf(scanDeclaration(version), scanAssignation(version), ScanPrintLine()))
-            else -> Parser(listOf(scanDeclaration(version), scanAssignation(version), ScanPrintLine()))
+            "VERSION_1" -> Parser(getScannersOfV1(version), getSymbolChangersV1())
+            "VERSION_2" -> Parser(getScannersOfV1(version), getSymbolChangersV2())
+            else -> Parser(getScannersOfV1(version), getSymbolChangersV1())
         }
     }
+
+    private fun getSymbolChangersV1(): List<SymbolChanger> =
+        listOf(
+            StringSymbolChanger(), DoubleSymbolChanger(),
+            IntegerSymbolChanger(), IdentifierSymbolChanger()
+        )
+
+    private fun getScannersOfV1(version: String) =
+        listOf(scanDeclaration(version), scanAssignation(version), scanPrintLine(version))
+
+    private fun scanPrintLine(version: String) = PSScanPrintLine.createPrintLine(version)
+
+    private fun getSymbolChangersV2(): List<SymbolChanger> =
+        listOf(
+            StringSymbolChanger(), DoubleSymbolChanger(),
+            IntegerSymbolChanger(), BooleanSymbolChanger(),
+            IdentifierSymbolChanger())
 
     private fun scanDeclaration(version: String) = PSScanDeclaration.createScanDeclaration(version)
 
     private fun scanAssignation(version: String) = PSScanAssignation.createScanAssignation(version)
 }
 
-class Parser(private val scanStatement: List<ScanStatement>) {
+class Parser(
+    private val scanStatement: List<ScanStatement>,
+    private val symbolChangers: List<SymbolChanger>
+) {
     fun parse(tokensWSymbols: List<Token>): Statement {
         val tokens: List<Token> = changeSymbolType(tokensWSymbols)
 
@@ -43,23 +64,10 @@ class Parser(private val scanStatement: List<ScanStatement>) {
     private fun isSymbol(token: Token) = token.getType() == TokenType.SYMBOL
 
     private fun getTokenWithRightType(token: Token): Token {
-        if (checkIfString(token) || checkIfChar(token)) {
-            return Token(token.getPosition(), getStringWithoutQuotes(token), TokenType.STRING)
-        } else if (checkIfDouble(token)) {
-            return Token(token.getPosition(), token.getValue(), TokenType.DOUBLE)
-        } else if (checkIfNumber(token)) {
-            return Token(token.getPosition(), token.getValue(), TokenType.INTEGER)
+        symbolChangers.forEach {
+            if (it.canHandle(token)) return it.changeToken(token)
         }
-        return Token(token.getPosition(), token.getValue(), TokenType.IDENTIFIER)
+        throw ParserError("error: There is no type for: " + token.getValue(), token)
     }
 
-    private fun getStringWithoutQuotes(token: Token): String = token.getValue().substring(1, token.getValue().length - 1)
-
-    private fun checkIfNumber(token: Token): Boolean = token.getValue().toIntOrNull() != null
-
-    private fun checkIfDouble(token: Token): Boolean = token.getValue().contains(".") && (token.getValue().toDoubleOrNull() != null)
-
-    private fun checkIfString(token: Token) = token.getValue()[0] == '"' && token.getValue().last() == '"'
-
-    private fun checkIfChar(token: Token): Boolean = token.getValue()[0] == '\'' && token.getValue().last() == '\''
 }
