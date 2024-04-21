@@ -1,6 +1,7 @@
 package ingsis.interpreter
 
 import ingsis.components.statement.Statement
+import ingsis.interpreter.environment.Environment
 import ingsis.interpreter.interpretStatement.*
 import ingsis.interpreter.operatorScanner.ScanDivOperator
 import ingsis.interpreter.operatorScanner.ScanMulOperator
@@ -35,7 +36,7 @@ object PrintScriptInterpreter {
                         AssignationInterpreter(scanners),
                         CompoundAssignationInterpreter(scanners),
                         PrintLineInterpreter(scanners, outputEmitter),
-                        PrintLineInterpreter(scanners),
+                        PrintLineInterpreter(scanners, outputEmitter),
                         IfInterpreter(scanners, version),
                         ReadEnvInterpreter(Environment(emptyMap()))
                     ),
@@ -46,8 +47,6 @@ object PrintScriptInterpreter {
 }
 
 class Interpreter(private val interpreters: List<StatementInterpreter>) {
-    //    fun interpret(statement: Statement): Map<String, Result> =
-//        interpret(statement, emptyMap())
 
     fun interpret(
         statement: Statement,

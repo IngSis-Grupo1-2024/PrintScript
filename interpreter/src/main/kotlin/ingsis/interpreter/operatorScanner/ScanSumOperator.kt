@@ -7,6 +7,7 @@ import ingsis.components.statement.SingleValue
 import ingsis.components.statement.Value
 import ingsis.utils.Result
 import ingsis.utils.checkIfVariableDefined
+import ingsis.utils.getResultType
 
 class ScanSumOperator : ScanOperatorType {
     override fun canHandle(operator: String): Boolean {

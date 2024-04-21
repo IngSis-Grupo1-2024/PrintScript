@@ -1,10 +1,9 @@
-package ingsis.interpreter
+package ingsis.interpreter.environment
 
 import ingsis.components.Position
 import ingsis.components.Token
 import ingsis.components.TokenType
 import ingsis.components.statement.SingleValue
-import ingsis.components.statement.Value
 import ingsis.interpreter.interpretStatement.VariableType
 
 class Environment (private val variables: Map<String, EnvironmentVariable> = emptyMap()){

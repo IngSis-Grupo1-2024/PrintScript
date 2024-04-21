@@ -1,6 +1,5 @@
-package ingsis.interpreter
+package ingsis.interpreter.environment
 
-import ingsis.components.statement.Modifier
 import ingsis.components.statement.Value
 import ingsis.interpreter.interpretStatement.VariableType
 

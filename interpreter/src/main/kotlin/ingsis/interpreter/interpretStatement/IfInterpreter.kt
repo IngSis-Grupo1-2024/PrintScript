@@ -19,7 +19,7 @@ class IfInterpreter(
     override fun interpret(
         statement: Statement,
         previousState: HashMap<String, Result>
-    ): Pair<HashMap<String, Result>, String?> {
+    ): HashMap<String, Result> {
         val interpreter = PrintScriptInterpreter.createInterpreter(version)
         val ifStatement = statement as If
         var newState = previousState
@@ -31,13 +31,13 @@ class IfInterpreter(
         val comparisonValue = comparisonResult.getValue()
         if (comparisonValue == "true") {
             for (block in ifBlock) {
-                newState = interpreter.interpret(block, previousState).first
+                newState = interpreter.interpret(block, previousState)
             }
         } else {
             for (block in getElseStatement) {
-               newState = interpreter.interpret(block, previousState).first
+               newState = interpreter.interpret(block, previousState)
             }
         }
-        return Pair(newState, null)
+        return newState
     }
 }

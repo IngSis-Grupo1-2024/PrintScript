@@ -1,6 +1,6 @@
 package ingsis.components.statement
 
-class ReadEnv (private val variableName: String, val value: Value): Statement {
+class ReadEnv (private val variableName: String, private val callingStatement: Statement): Statement {
     override fun getStatementType(): StatementType {
         return StatementType.READ_ENV
     }
@@ -9,7 +9,8 @@ class ReadEnv (private val variableName: String, val value: Value): Statement {
         return variableName
     }
 
-    fun getValue() : Value {
-        return value
+    fun getCallingStatement() : Statement {
+        return callingStatement
     }
+
 }
