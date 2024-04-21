@@ -49,7 +49,7 @@ class ScanIf(private val scanValue: ScanValue) : ScanStatement{
     }
 
     private fun checkIf(tokens: List<Token>): Boolean =
-        tokens[0].getValue() == "if" && tokens[0].getType() == TokenType.FUNCTION_KEYWORDS
+        tokens[0].getValue() == "if" && tokens[0].getType() == TokenType.FUNCTION_KEYWORD
 
     private fun checkOpeningParenthesis(tokens: List<Token>) =
         tokens[1].getValue() == "(" && tokens[1].getType() == TokenType.PARENTHESIS
