@@ -26,7 +26,10 @@ object PrintScriptParser {
 
     private fun getScannersOfV1(version: String) = listOf(scanDeclaration(version), scanAssignation(version), scanPrintLine(version))
 
-    private fun getScannersOfV2(version: String): List<ScanStatement> = getScannersOfV1(version) + listOf(scanIf(version))
+    private fun getScannersOfV2(version: String): List<ScanStatement> =
+        getScannersOfV1(version) + listOf(scanIf(version), scanElse(version))
+
+    private fun scanElse(version: String) = PSScanElse.createScanElse(version)
 
     private fun scanPrintLine(version: String) = PSScanPrintLine.createPrintLine(version)
 
@@ -51,20 +54,27 @@ class Parser(
     private val symbolChangers: List<SymbolChanger>,
 ) {
     private val ifIndex: Int = findIfIndex()
+    private val elseIndex: Int = findElseIndex()
 
-    fun parse(tokensWSymbols: List<Token>): Statement {
+    fun parse(tokensWSymbols: List<Token>): Statement? {
         val tokens: List<Token> = changeSymbolType(tokensWSymbols)
 
         if (ifCanHandle(tokens)) return ifMakeAst(tokens)
 
-        scanStatement.forEach {
-            if (it.canHandle(tokens)) return it.makeAST(tokens)
+        if (elseCanHandle(tokens)) {
+            return elseMakeAst(tokens)
+        } else {
+            scanStatement.forEach {
+                if (it.canHandle(tokens)) return it.makeAST(tokens)
+            }
         }
 
         throw ParserError("PrintScript couldn't parse that code.", tokens[0])
     }
 
-    private fun ifMakeAst(tokens: List<Token>): Statement = scanStatement[ifIndex].makeAST(tokens)
+    private fun ifMakeAst(tokens: List<Token>): Statement? = scanStatement[ifIndex].makeAST(tokens)
+
+    private fun elseMakeAst(tokens: List<Token>): Statement? = scanStatement[elseIndex].makeAST(tokens)
 
     private fun ifCanHandle(tokens: List<Token>): Boolean =
         if (checkIfIndex()) {
@@ -73,7 +83,16 @@ class Parser(
             false
         }
 
+    private fun elseCanHandle(tokens: List<Token>): Boolean =
+        if (checkElseIndex()) {
+            scanStatement[elseIndex].canHandle(tokens)
+        } else {
+            false
+        }
+
     private fun checkIfIndex(): Boolean = ifIndex != -1
+
+    private fun checkElseIndex(): Boolean = elseIndex != -1
 
     private fun changeSymbolType(tokens: List<Token>): List<Token> =
         tokens.map { token ->
@@ -96,6 +115,13 @@ class Parser(
     private fun findIfIndex(): Int {
         scanStatement.indices.forEach {
             if (scanStatement[it] is ScanIf) return it
+        }
+        return -1
+    }
+
+    private fun findElseIndex(): Int {
+        scanStatement.indices.forEach {
+            if (scanStatement[it] is ScanElse) return it
         }
         return -1
     }

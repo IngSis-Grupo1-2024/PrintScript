@@ -145,7 +145,32 @@ class ParserTestV2 {
     }
 
     @Test
-    fun `test 005 - declaration of x as boolean as const`() {
+    fun `test 005 - if condition without code block`() {
+        val tokens =
+            listOf(
+                Token(position, "if", TokenType.FUNCTION_KEYWORD),
+                Token(position, "(", TokenType.PARENTHESIS),
+                Token(position, "8", TokenType.SYMBOL),
+                Token(position, "<=", TokenType.OPERATOR),
+                Token(position, "9", TokenType.SYMBOL),
+                Token(position, ")", TokenType.PARENTHESIS),
+                Token(position, "{", TokenType.BRACES),
+            )
+
+        val tokensLastBraces: List<Token> =
+            listOf(
+                Token(position, "}", TokenType.BRACES),
+            )
+        parserV2.parse(tokens)
+        val exception = assertThrows<ParserError> { parserV2.parse(tokensLastBraces) }
+        assertEquals(
+            "error: there are no statements inside if",
+            exception.message,
+        )
+    }
+
+    @Test
+    fun `test 006 - if condition, with code block, and with a simple boolean inside`() {
         val tokens =
             listOf(
                 Token(position, "if", TokenType.FUNCTION_KEYWORD),
@@ -154,23 +179,134 @@ class ParserTestV2 {
                 Token(position, ")", TokenType.PARENTHESIS),
                 Token(position, "{", TokenType.BRACES),
             )
+        val tokensDeclaration: List<Token> =
+            listOf(
+                Token(position, "let", TokenType.KEYWORD),
+                Token(position, "x", TokenType.SYMBOL),
+                Token(position, ":", TokenType.DECLARATION),
+                Token(position, "string", TokenType.TYPE),
+                Token(position, "", TokenType.DELIMITER),
+            )
+        val tokensLastBraces: List<Token> =
+            listOf(
+                Token(position, "}", TokenType.BRACES),
+            )
         val astExpected: Statement =
             If(
                 SingleValue(Token(position, "true", TokenType.BOOLEAN)),
                 Else(emptyList()),
-                emptyList(),
+                listOf(
+                    Declaration(
+                        Keyword(Modifier.MUTABLE, "let", position),
+                        Variable("x", position),
+                        Type(TokenType.STRING, position),
+                        position,
+                    ),
+                ),
             )
-        assertEquals(astExpected.toString(), parserV2.parse(tokens).toString())
-        val exception = assertThrows<ParserError> { parserV1.parse(tokens) }
+
+        parserV2.parse(tokens)
+        parserV2.parse(tokensDeclaration)
+        assertEquals(astExpected.toString(), parserV2.parse(tokensLastBraces).toString())
+    }
+
+    @Test
+    fun `test 007 - if condition, with code block, and with a complex operation`() {
+        val tokens =
+            listOf(
+                Token(position, "if", TokenType.FUNCTION_KEYWORD),
+                Token(position, "(", TokenType.PARENTHESIS),
+                Token(position, "8", TokenType.SYMBOL),
+                Token(position, "<=", TokenType.OPERATOR),
+                Token(position, "9", TokenType.SYMBOL),
+                Token(position, ")", TokenType.PARENTHESIS),
+                Token(position, "{", TokenType.BRACES),
+            )
+        val tokensDeclaration: List<Token> =
+            listOf(
+                Token(position, "let", TokenType.KEYWORD),
+                Token(position, "x", TokenType.SYMBOL),
+                Token(position, ":", TokenType.DECLARATION),
+                Token(position, "string", TokenType.TYPE),
+                Token(position, "", TokenType.DELIMITER),
+            )
+        val tokensLastBraces: List<Token> =
+            listOf(
+                Token(position, "}", TokenType.BRACES),
+            )
+        val astExpected: Statement =
+            If(
+                Operator(
+                    Token(position, "<=", TokenType.OPERATOR),
+                    SingleValue(Token(position, "8", TokenType.INTEGER)),
+                    SingleValue(Token(position, "9", TokenType.INTEGER)),
+                ),
+                Else(emptyList()),
+                listOf(
+                    Declaration(
+                        Keyword(Modifier.MUTABLE, "let", position),
+                        Variable("x", position),
+                        Type(TokenType.STRING, position),
+                        position,
+                    ),
+                ),
+            )
+        parserV2.parse(tokens)
+        parserV2.parse(tokensDeclaration)
+        assertEquals(astExpected.toString(), parserV2.parse(tokensLastBraces).toString())
+    }
+
+    @Test
+    fun `test 008 - else condition without code block`() {
+        val tokens =
+            listOf(
+                Token(position, "else", TokenType.FUNCTION_KEYWORD),
+                Token(position, "{", TokenType.BRACES),
+            )
+        val tokensLastBraces: List<Token> =
+            listOf(
+                Token(position, "}", TokenType.BRACES),
+            )
+        parserV2.parse(tokens)
+        val exception = assertThrows<ParserError> { parserV2.parse(tokensLastBraces) }
         assertEquals(
-            "error: delimiter (;) expected at {\n" +
-                "\tstartOffset: 1,\n" +
-                "\tendOffset: 1,\n" +
-                "\tstartLine: 1,\n" +
-                "\tendLine: 1,\n" +
-                "\tstartColumn: 1,\n" +
-                "\tendColumn: 1}",
+            "error: there are no statements inside else",
             exception.message,
         )
+    }
+
+    @Test
+    fun `test 009 - else condition with code block`() {
+        val tokens =
+            listOf(
+                Token(position, "else", TokenType.FUNCTION_KEYWORD),
+                Token(position, "{", TokenType.BRACES),
+            )
+        val tokensDeclaration: List<Token> =
+            listOf(
+                Token(position, "let", TokenType.KEYWORD),
+                Token(position, "x", TokenType.SYMBOL),
+                Token(position, ":", TokenType.DECLARATION),
+                Token(position, "string", TokenType.TYPE),
+                Token(position, "", TokenType.DELIMITER),
+            )
+        val tokensLastBraces: List<Token> =
+            listOf(
+                Token(position, "}", TokenType.BRACES),
+            )
+        val astExpected: Statement =
+            Else(
+                listOf(
+                    Declaration(
+                        Keyword(Modifier.MUTABLE, "let", position),
+                        Variable("x", position),
+                        Type(TokenType.STRING, position),
+                        position,
+                    ),
+                ),
+            )
+        parserV2.parse(tokens)
+        parserV2.parse(tokensDeclaration)
+        assertEquals(astExpected.toString(), parserV2.parse(tokensLastBraces).toString())
     }
 }

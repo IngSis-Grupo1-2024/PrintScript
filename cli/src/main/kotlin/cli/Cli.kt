@@ -31,7 +31,7 @@ class Cli(outputEmitter: OutputEmitter, version: Version) {
     fun executeInputStream(inputStream: InputStream) {
         val inputReader = InputReader(inputStream)
         var tokens: List<Token>
-        var statement: Statement
+        var statement: Statement?
         var variableMap = HashMap<String, Result>()
         var line: String? = inputReader.nextLine()
         while (line != null) {
@@ -40,6 +40,7 @@ class Cli(outputEmitter: OutputEmitter, version: Version) {
                 tokens = tokenizeWithLexer(l)
                 if (tokens.isEmpty()) continue
                 statement = parse(tokens)
+                if (statement == null) continue
                 variableMap = interpreter.interpret(statement, variableMap)
             }
             line = inputReader.nextLine()
@@ -65,7 +66,7 @@ class Cli(outputEmitter: OutputEmitter, version: Version) {
             )
     }
 
-    private fun parse(tokens: List<Token>): Statement = parser.parse(tokens)
+    private fun parse(tokens: List<Token>): Statement? = parser.parse(tokens)
 
     private fun splitLines(codeLines: String): List<String> {
         val delimiter = ";"
@@ -126,7 +127,7 @@ class Cli(outputEmitter: OutputEmitter, version: Version) {
     ) {
         val lines = splitLines(codeLines)
         var tokens: List<Token>
-        var statement: Statement
+        var statement: Statement?
         val result = StringBuilder()
         if (lines.isEmpty()) return writeInFile(file.toString(), "empty file")
         for (line in lines) {
@@ -134,6 +135,7 @@ class Cli(outputEmitter: OutputEmitter, version: Version) {
             if (tokens.isEmpty()) continue
             try {
                 statement = parse(tokens)
+                if (statement == null) continue
                 result.append(
                     formatter.format(statement, rulePath),
                 )
@@ -158,13 +160,14 @@ class Cli(outputEmitter: OutputEmitter, version: Version) {
     ): String {
         val lines = splitLines(codeLines)
         var tokens: List<Token>
-        var statement: Statement
+        var statement: Statement?
         val result = StringBuilder()
         for (line in lines) {
             tokens = tokenizeWithLexer(line)
             if (tokens.isEmpty()) continue
             try {
                 statement = parse(tokens)
+                if (statement == null) continue
                 result.append(
                     sca.analyze(
                         statement,
