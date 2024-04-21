@@ -1,5 +1,6 @@
 package ingsis.interpreter.interpretStatement
 
+import ingsis.components.TokenType
 import ingsis.components.statement.*
 import ingsis.interpreter.operatorScanner.ScanOperatorType
 import ingsis.interpreter.valueAnalyzer.ValueAnalyzer
@@ -11,25 +12,19 @@ class AssignationInterpreter(private val scanners: List<ScanOperatorType>) : Sta
     override fun interpret(
         statement: Statement,
         previousState: HashMap<String, Result>,
-    ): Pair<HashMap<String, Result>, String?> {
+    ): HashMap<String, Result> {
         val assignation = statement as Assignation
         val variable = assignation.getVariable()
         val value = assignation.getValue()
 
-        var result = ValueAnalyzer(scanners).analyze(value, previousState)
-        result = result.updateModifier(previousState[variable.getName()]?.getModifier())
-        if (checkMutability(variable, previousState)) {
-            if (checkIfNewValueTypeMatchesType(variable, result, previousState)) {
-                previousState[variable.getName()] = result
-            } else {
-                throw Exception("Type mismatch")
-            }
+        val result = ValueAnalyzer(scanners).analyze(value, previousState)
+        if (checkIfNewValueTypeMatchesType(variable, result, previousState)) {
+            previousState[variable.getName()] = result
         } else {
-            throw Exception("You can't update the value of an immutable variable at line " +
-                    variable.getPosition().startLine + " at column " + variable.getPosition().startColumn)
+            throw Exception("Type mismatch")
         }
 
-        return Pair(previousState, null)
+        return previousState
     }
 
     private fun checkIfNewValueTypeMatchesType(
@@ -37,12 +32,13 @@ class AssignationInterpreter(private val scanners: List<ScanOperatorType>) : Sta
         result: Result,
         map: Map<String, Result>,
     ): Boolean {
+        if (isInteger(map[variable.getName()]?.getType()?.getValue())) {
+            return isDouble(result.getType().getValue()) || isInteger(map[variable.getName()]?.getType()?.getValue())
+        }
         return map[variable.getName()]?.getType()?.getValue() == result.getType().getValue()
     }
 
-    private fun checkMutability(variable: Variable, map: Map<String, Result>): Boolean {
-        return if (map[variable.getName()]?.getModifier() == null) {
-            true
-        } else map[variable.getName()]?.getModifier() == Modifier.MUTABLE
-    }
+    private fun isDouble(value: TokenType): Boolean = value == TokenType.DOUBLE
+
+    private fun isInteger(value: TokenType?): Boolean = value == TokenType.INTEGER
 }

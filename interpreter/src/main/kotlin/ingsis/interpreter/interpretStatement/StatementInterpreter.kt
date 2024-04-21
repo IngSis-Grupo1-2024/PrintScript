@@ -9,5 +9,5 @@ interface StatementInterpreter {
     fun interpret(
         statement: Statement,
         previousState: HashMap<String, Result>,
-    ): Pair<HashMap<String, Result>, String?>
+    ): HashMap<String, Result>
 }

@@ -1,6 +1,7 @@
 package app
 
 import cli.Cli
+import cli.PrintOutputEmitter
 import cli.Version
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
@@ -28,7 +29,6 @@ class Validate : CliktCommand(help = "Validates a PrintScript script file") {
 
     override fun run() {
         startCli()
-        echo("validation in progress...")
         if (outputPresent()) {
             cli.validateResultInFile(fileInput.readText(), fileOutput.toString())
         } else {
@@ -40,7 +40,7 @@ class Validate : CliktCommand(help = "Validates a PrintScript script file") {
 
     private fun startCli() {
         if (version == "v1") {
-            cli = Cli(Version.VERSION_1)
+            cli = Cli(PrintOutputEmitter(), Version.VERSION_1)
         }
     }
 }

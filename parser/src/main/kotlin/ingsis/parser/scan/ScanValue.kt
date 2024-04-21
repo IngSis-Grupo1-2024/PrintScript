@@ -12,7 +12,7 @@ import ingsis.parser.error.ParserError
 import kotlin.math.abs
 
 class ScanValue {
-    private val valueTypes = listOf(TokenType.INTEGER, TokenType.STRING, TokenType.IDENTIFIER)
+    private val valueTypes = listOf(TokenType.DOUBLE, TokenType.INTEGER, TokenType.STRING, TokenType.IDENTIFIER)
     private val twoChildrenType = listOf(TokenType.OPERATOR)
     private val typeComparator = ComparatorTokenType()
     private val valueComparator = ComparatorTokenValue()
