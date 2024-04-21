@@ -1,9 +1,6 @@
 package ingsis.parser.scan
 
-import ingsis.components.ComparatorTokenType
-import ingsis.components.ComparatorTokenValue
-import ingsis.components.Token
-import ingsis.components.TokenType
+import ingsis.components.*
 import ingsis.components.statement.EmptyValue
 import ingsis.components.statement.Operator
 import ingsis.components.statement.SingleValue
@@ -11,18 +8,32 @@ import ingsis.components.statement.Value
 import ingsis.parser.error.ParserError
 import kotlin.math.abs
 
-class ScanValue {
-    private val valueTypes = listOf(TokenType.DOUBLE, TokenType.INTEGER, TokenType.STRING, TokenType.IDENTIFIER)
+object PrintScriptScanValue{
+    fun createScanValue(version: String): ScanValue{
+        return when(version){
+            "VERSION_1" -> ScanValue(valueTypesV1(), comparatorTokenType(version))
+            "VERSION_2" -> ScanValue(valueTypesV2(), comparatorTokenType(version))
+            else -> ScanValue(valueTypesV1(), comparatorTokenType(version))
+        }
+    }
+
+    private fun comparatorTokenType(version: String) =
+        PrintScriptComparatorTokenType.createComparatorTokenType(version)
+
+    private fun valueTypesV1() = listOf(TokenType.DOUBLE, TokenType.INTEGER, TokenType.STRING, TokenType.IDENTIFIER)
+    private fun valueTypesV2() = valueTypesV1() + listOf(TokenType.BOOLEAN)
+}
+
+class ScanValue(private val valueTypes: List<TokenType>, private val typeComparator: ComparatorTokenType) {
     private val twoChildrenType = listOf(TokenType.OPERATOR)
-    private val typeComparator = ComparatorTokenType()
     private val valueComparator = ComparatorTokenValue()
 
     fun canHandle(tokens: List<Token>): Boolean {
-        val invalidValueTypes =
-            listOf(TokenType.TYPE, TokenType.DECLARATION, TokenType.ASSIGNATION, TokenType.DELIMITER, TokenType.KEYWORD)
+        val validTypes =
+            valueTypes + twoChildrenType + listOf(TokenType.PARENTHESIS)
 
         tokens
-            .filter { it.getType() in invalidValueTypes }
+            .filter { it.getType() !in validTypes }
             .forEach { throw ParserError("Invalid value type.", it) }
 
         return checkQtyOperatorsAndValues(getNumberOfOpp(tokens), getNumberOfValue(tokens), tokens.last())

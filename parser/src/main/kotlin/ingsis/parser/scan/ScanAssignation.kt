@@ -7,18 +7,15 @@ import ingsis.parser.error.ParserError
 
 object PSScanAssignation {
     fun createScanAssignation(version: String): ScanAssignation {
-        return when (version) {
-            "VERSION_1" -> ScanAssignation(scanDeclaration(version))
-            "VERSION_2" -> ScanAssignation(scanDeclaration(version))
-            else -> ScanAssignation(scanDeclaration(version))
-        }
+       return ScanAssignation(scanDeclaration(version), scanValue(version))
     }
+
+    private fun scanValue(version: String) = PrintScriptScanValue.createScanValue(version)
 
     private fun scanDeclaration(version: String) = PSScanDeclaration.createScanDeclaration(version)
 }
 
-class ScanAssignation(private val scanDeclaration: ScanDeclaration) : ScanStatement {
-    private val scanValue = ScanValue()
+class ScanAssignation(private val scanDeclaration: ScanDeclaration, private val scanValue: ScanValue) : ScanStatement {
 
     override fun canHandle(tokens: List<Token>): Boolean {
         if (checkIfThereIsNoDelimiter(tokens)) {

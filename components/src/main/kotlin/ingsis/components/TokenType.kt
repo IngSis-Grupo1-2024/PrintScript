@@ -23,7 +23,6 @@ enum class TokenType {
     // Types
     STRING,
     INTEGER,
-    BOOLEAN,
     DOUBLE,
     BOOLEAN,
 }
