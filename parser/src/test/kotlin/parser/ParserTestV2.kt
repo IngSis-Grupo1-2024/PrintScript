@@ -104,4 +104,43 @@ class ParserTestV2 {
         val exception = assertThrows<ParserError> { parserV1.parse(tokens) }
         assertEquals("error: invalid token", exception.message)
     }
+
+    @Test
+    fun `test 004 - compound assignation of x as boolean as let`() {
+        val tokens =
+            listOf(
+                Token(position, "let", TokenType.KEYWORD),
+                Token(position, "a", TokenType.SYMBOL),
+                Token(position, ":", TokenType.DECLARATION),
+                Token(position, "number", TokenType.TYPE),
+                Token(position, "=", TokenType.ASSIGNATION),
+                Token(position, "true", TokenType.SYMBOL),
+                Token(position, ";", TokenType.DELIMITER),
+            )
+        val astExpectedV2: Statement =
+            CompoundAssignation(
+                position,
+                Declaration(
+                    Keyword(Modifier.MUTABLE, "let", position),
+                    Variable("a", position),
+                    Type(TokenType.INTEGER, position),
+                    position,
+                ),
+                SingleValue(Token(position, "true", TokenType.BOOLEAN))
+            )
+
+        val astExpectedV1: Statement =
+            CompoundAssignation(
+                position,
+                Declaration(
+                    Keyword(Modifier.MUTABLE, "let", position),
+                    Variable("a", position),
+                    Type(TokenType.INTEGER, position),
+                    position,
+                ),
+                SingleValue(Token(position, "true", TokenType.IDENTIFIER))
+            )
+        assertEquals(astExpectedV2.toString(), parserV2.parse(tokens).toString())
+        assertEquals(astExpectedV1.toString(), parserV1.parse(tokens).toString())
+    }
 }
