@@ -2123,7 +2123,7 @@ class InterpreterTest {
                 AssignationInterpreter(scanners),
                 DeclarationInterpreter(),
                 CompoundAssignationInterpreter(scanners),
-                IfInterpreter(scanners, "VERSION_2"),
+                IfInterpreter(scanners, "VERSION_2", outputEmitter =),
             ),
         )
 
@@ -2517,7 +2517,7 @@ class InterpreterTest {
         )
         val map = hashMapOf<String, Result>()
         val variableMap = interpreter.interpret(declarationStatement, map)
-        assertEquals(Result())
+        assertEquals(Result(type, Modifier.MUTABLE, "hello"), variableMap["userName"])
 
     }
 }
