@@ -30,7 +30,7 @@ object PrintScriptLexer {
     private fun version2() =
         Lexer(
             listOf(
-                TokenAssignator(TokenType.KEYWORD, listOf("let", "const", "if", "else")),
+                TokenAssignator(TokenType.KEYWORD, listOf("let", "const")),
                 TokenAssignator(TokenType.FUNCTION, listOf("println", "readEnv", "readInput")),
                 TokenAssignator(TokenType.TYPE, listOf("number", "string", "boolean")),
                 TokenAssignator(TokenType.OPERATOR, listOf("+", "-", "/", "*", "==", "!=", ">", "<", ">=", "<=")),
@@ -39,6 +39,7 @@ object PrintScriptLexer {
                 TokenAssignator(TokenType.DECLARATION, listOf(":")),
                 TokenAssignator(TokenType.ASSIGNATION, listOf("=")),
                 TokenAssignator(TokenType.BRACES, listOf("{", "}")),
+                TokenAssignator(TokenType.FUNCTION_KEYWORD, listOf("if", "else")),
             ),
         )
 

@@ -564,7 +564,7 @@ class LexerTest {
                 Token(Position(23, 24, 1, 1, 23, 24), "9", TokenType.SYMBOL),
                 Token(Position(24, 25, 1, 1, 24, 25), ")", TokenType.PARENTHESIS),
                 Token(Position(25, 26, 1, 1, 25, 26), ";", TokenType.DELIMITER),
-                Token(Position(26, 28, 2, 2, 1, 3), "if", TokenType.KEYWORD),
+                Token(Position(26, 28, 2, 2, 1, 3), "if", TokenType.FUNCTION_KEYWORD),
                 Token(Position(29, 30, 2, 2, 4, 5), "(", TokenType.PARENTHESIS),
                 Token(Position(30, 31, 2, 2, 5, 6), "a", TokenType.SYMBOL),
                 Token(Position(31, 32, 2, 2, 6, 7), ")", TokenType.PARENTHESIS),
@@ -591,7 +591,7 @@ class LexerTest {
         val input = "if (a) {\n    println(a);\n} else {\n    println(b);\n}"
         val tokenList =
             listOf(
-                Token(Position(1, 3, 1, 1, 1, 3), "if", TokenType.KEYWORD),
+                Token(Position(1, 3, 1, 1, 1, 3), "if", TokenType.FUNCTION_KEYWORD),
                 Token(Position(4, 5, 1, 1, 4, 5), "(", TokenType.PARENTHESIS),
                 Token(Position(5, 6, 1, 1, 5, 6), "a", TokenType.SYMBOL),
                 Token(Position(6, 7, 1, 1, 6, 7), ")", TokenType.PARENTHESIS),
@@ -602,7 +602,7 @@ class LexerTest {
                 Token(Position(22, 23, 2, 2, 14, 15), ")", TokenType.PARENTHESIS),
                 Token(Position(23, 24, 2, 2, 15, 16), ";", TokenType.DELIMITER),
                 Token(Position(24, 25, 3, 3, 1, 2), "}", TokenType.BRACES),
-                Token(Position(26, 30, 3, 3, 3, 7), "else", TokenType.KEYWORD),
+                Token(Position(26, 30, 3, 3, 3, 7), "else", TokenType.FUNCTION_KEYWORD),
                 Token(Position(31, 32, 3, 3, 8, 9), "{", TokenType.BRACES),
                 Token(Position(36, 43, 4, 4, 5, 12), "println", TokenType.FUNCTION),
                 Token(Position(43, 44, 4, 4, 12, 13), "(", TokenType.PARENTHESIS),

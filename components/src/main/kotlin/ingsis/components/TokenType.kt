@@ -5,6 +5,7 @@ enum class TokenType {
     ASSIGNATION, // for the =
     DECLARATION, // for the :
     KEYWORD,
+    FUNCTION_KEYWORD,
 
     // when the lexer doesn't know what it is, then it's a SYMBOL.
     // Later on, the parser can tell if it's an identifier for example
