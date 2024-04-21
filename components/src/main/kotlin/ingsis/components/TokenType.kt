@@ -13,6 +13,7 @@ enum class TokenType {
 
     VALUE,
     FUNCTION,
+    FUNCTION_KEYWORDS,
 
     // Special characters
     PARENTHESIS, // can be either ( open or ) closed

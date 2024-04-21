@@ -143,4 +143,31 @@ class ParserTestV2 {
         assertEquals(astExpectedV2.toString(), parserV2.parse(tokens).toString())
         assertEquals(astExpectedV1.toString(), parserV1.parse(tokens).toString())
     }
+
+    @Test
+    fun `test 005 - declaration of x as boolean as const`() {
+        val tokens =
+            listOf(
+                Token(position, "if", TokenType.FUNCTION_KEYWORDS),
+                Token(position, "(", TokenType.PARENTHESIS),
+                Token(position, "true", TokenType.BOOLEAN),
+                Token(position, ")", TokenType.PARENTHESIS),
+                Token(position, "{", TokenType.BRACES),
+            )
+        val astExpected: Statement =
+            If(
+                SingleValue(Token(position, "true", TokenType.BOOLEAN)),
+                Else(emptyList()),
+                emptyList()
+            )
+        assertEquals(astExpected.toString(), parserV2.parse(tokens).toString())
+        val exception = assertThrows<ParserError> { parserV1.parse(tokens) }
+        assertEquals("error: delimiter (;) expected at {\n" +
+                "\tstartOffset: 1,\n" +
+                "\tendOffset: 1,\n" +
+                "\tstartLine: 1,\n" +
+                "\tendLine: 1,\n" +
+                "\tstartColumn: 1,\n" +
+                "\tendColumn: 1}", exception.message)
+    }
 }

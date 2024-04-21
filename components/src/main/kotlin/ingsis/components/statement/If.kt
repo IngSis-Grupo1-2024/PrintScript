@@ -20,4 +20,8 @@ class If(
     fun getIfBlock(): List<Statement> {
         return ifBlock
     }
+
+    override fun toString(): String {
+        return "If(\ncomparison=$comparison, \nelseStatement=$elseStatement, \nifBlock=$ifBlock)"
+    }
 }
