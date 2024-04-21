@@ -35,10 +35,8 @@ object PrintScriptInterpreter {
                         DeclarationInterpreter(),
                         AssignationInterpreter(scanners),
                         CompoundAssignationInterpreter(scanners),
-                        PrintLineInterpreter(scanners, outputEmitter),
-                        PrintLineInterpreter(scanners, outputEmitter),
                         IfInterpreter(scanners, version, outputEmitter),
-                        ReadEnvInterpreter(Environment(emptyMap()))
+                        PrintLineInterpreter(scanners, outputEmitter),
                     ),
                 )
             }
@@ -47,6 +45,8 @@ object PrintScriptInterpreter {
 }
 
 class Interpreter(private val interpreters: List<StatementInterpreter>) {
+    //    fun interpret(statement: Statement): Map<String, Result> =
+//        interpret(statement, emptyMap())
 
     fun interpret(
         statement: Statement,

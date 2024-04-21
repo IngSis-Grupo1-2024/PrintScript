@@ -9,5 +9,6 @@ enum class StatementType {
     READ_ENV,
     READ_INPUT,
     IF,
-    ELSE
+    ELSE,
+    READ_INPUT,
 }

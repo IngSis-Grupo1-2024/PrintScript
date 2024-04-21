@@ -15,7 +15,7 @@ class ScanMulOperator : ScanOperatorType {
         return operator == "*"
     }
 
-    val notAllowedTypes = listOf(TokenType.STRING)
+    val notAllowedTypes = listOf(TokenType.BOOLEAN, TokenType.STRING)
 
     override fun analyze(
         left: SingleValue,
@@ -29,8 +29,8 @@ class ScanMulOperator : ScanOperatorType {
         if (notAllowedTypes.contains(firstValue.getType().getValue()) ||
             notAllowedTypes.contains(secondValue.getType().getValue())
         ) {
-            throw Error(
-                "Can't do multiplication using no integer types in line " +
+            throw Exception(
+                "Can't do multiplication using no integer types or double types in line " +
                     operatorPosition.startLine + " at position " + operatorPosition.startColumn,
             )
         }

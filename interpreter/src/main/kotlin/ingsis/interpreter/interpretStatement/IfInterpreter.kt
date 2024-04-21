@@ -3,7 +3,6 @@ package ingsis.interpreter.interpretStatement
 import ingsis.components.statement.If
 import ingsis.components.statement.Statement
 import ingsis.components.statement.StatementType
-import ingsis.interpreter.Interpreter
 import ingsis.interpreter.PrintScriptInterpreter
 import ingsis.interpreter.operatorScanner.ScanOperatorType
 import ingsis.interpreter.valueAnalyzer.ValueAnalyzer
@@ -13,14 +12,13 @@ import ingsis.utils.Result
 class IfInterpreter(
     private val scanners: List<ScanOperatorType>,
     private val version: String,
-    private val outputEmitter: OutputEmitter
+    private val outputEmitter: OutputEmitter,
 ) : StatementInterpreter {
-
     override fun canHandle(statement: Statement): Boolean = statement.getStatementType() == StatementType.IF
 
     override fun interpret(
         statement: Statement,
-        previousState: HashMap<String, Result>
+        previousState: HashMap<String, Result>,
     ): HashMap<String, Result> {
         val interpreter = PrintScriptInterpreter.createInterpreter(version, outputEmitter)
         val ifStatement = statement as If
@@ -37,7 +35,7 @@ class IfInterpreter(
             }
         } else {
             for (block in getElseStatement) {
-               newState = interpreter.interpret(block, previousState)
+                newState = interpreter.interpret(block, previousState)
             }
         }
         return newState

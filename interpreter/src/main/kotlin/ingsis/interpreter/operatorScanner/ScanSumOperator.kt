@@ -26,17 +26,17 @@ class ScanSumOperator : ScanOperatorType {
         val firstType = firstValue.getType().getValue()
         val secondType = secondValue.getType().getValue()
 
+        if (firstType == TokenType.BOOLEAN || secondType == TokenType.BOOLEAN) {
+            throw Exception(
+                "Sum operation is just allowed between integers and strings in line " +
+                    operatorPosition.startLine + " at position " +
+                    operatorPosition.startColumn,
+            )
+        }
+
         if (firstType == TokenType.STRING || secondType == TokenType.STRING) {
             val finalValue = firstValue.getValue().toString() + secondValue.getValue().toString()
             return SingleValue(Token(Position(), finalValue, TokenType.STRING))
-        }
-
-        if (firstType != TokenType.INTEGER || secondType != TokenType.INTEGER) {
-            throw Exception(
-                "Sum operation is just allowed between integers and strings in line " +
-                        operatorPosition.startLine + " at position " +
-                        operatorPosition.startColumn
-            )
         }
 
         val resultType = getResultType(firstType, secondType)

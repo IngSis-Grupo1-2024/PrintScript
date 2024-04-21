@@ -17,13 +17,10 @@ class ScanEqualsOperator : ScanOperatorType {
         left: SingleValue,
         right: SingleValue,
         operatorPosition: Position,
-        map: Map<String, Result>
+        map: Map<String, Result>,
     ): Value {
         val firstValue = checkIfVariableDefined(left, map)
         val secondValue = checkIfVariableDefined(right, map)
-
-        val firstType = firstValue.getType().getValue()
-        val secondType = secondValue.getType().getValue()
 
         if (firstValue == secondValue) {
             return SingleValue(Token(Position(), "true", TokenType.BOOLEAN))
