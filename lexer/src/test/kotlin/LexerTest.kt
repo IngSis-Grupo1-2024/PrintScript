@@ -617,7 +617,7 @@ class LexerTest {
                 Token(Position(47, 48, 3, 3, 14, 15), ")", TokenType.PARENTHESIS),
                 Token(Position(48, 49, 3, 3, 15, 16), ";", TokenType.DELIMITER),
                 Token(Position(49, 50, 4, 4, 1, 2), "}", TokenType.BRACES),
-                )
+            )
         val result = lexer2.tokenize(input, Position())
         var i = 0
         while (i < result.size) {
@@ -652,7 +652,7 @@ class LexerTest {
                 Token(Position(45, 46, 4, 4, 14, 15), ")", TokenType.PARENTHESIS),
                 Token(Position(46, 47, 4, 4, 15, 16), ";", TokenType.DELIMITER),
                 Token(Position(47, 48, 5, 5, 1, 2), "}", TokenType.BRACES),
-                )
+            )
         val result = lexer2.tokenize(input, Position())
         var i = 0
         while (i < result.size) {
@@ -706,5 +706,4 @@ class LexerTest {
             i++
         }
     }
-
 }

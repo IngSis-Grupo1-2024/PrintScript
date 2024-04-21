@@ -14,6 +14,7 @@ enum class TokenType {
 
     VALUE,
     FUNCTION,
+
     // Special characters
     PARENTHESIS, // can be either ( open or ) closed
     OPERATOR,

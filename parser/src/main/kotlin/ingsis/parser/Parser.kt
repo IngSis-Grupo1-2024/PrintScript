@@ -18,42 +18,44 @@ object PrintScriptParser {
 
     private fun getSymbolChangersV1(): List<SymbolChanger> =
         listOf(
-            StringSymbolChanger(), DoubleSymbolChanger(),
-            IntegerSymbolChanger(), IdentifierSymbolChanger()
+            StringSymbolChanger(),
+            DoubleSymbolChanger(),
+            IntegerSymbolChanger(),
+            IdentifierSymbolChanger(),
         )
 
-    private fun getScannersOfV1(version: String) =
-        listOf(scanDeclaration(version), scanAssignation(version), scanPrintLine(version))
+    private fun getScannersOfV1(version: String) = listOf(scanDeclaration(version), scanAssignation(version), scanPrintLine(version))
 
-    private fun getScannersOfV2(version: String): List<ScanStatement> =
-        getScannersOfV1(version) + listOf(scanIf(version))
+    private fun getScannersOfV2(version: String): List<ScanStatement> = getScannersOfV1(version) + listOf(scanIf(version))
 
     private fun scanPrintLine(version: String) = PSScanPrintLine.createPrintLine(version)
 
     private fun getSymbolChangersV2(): List<SymbolChanger> =
         listOf(
-            StringSymbolChanger(), DoubleSymbolChanger(),
-            IntegerSymbolChanger(), BooleanSymbolChanger(),
-            IdentifierSymbolChanger())
+            StringSymbolChanger(),
+            DoubleSymbolChanger(),
+            IntegerSymbolChanger(),
+            BooleanSymbolChanger(),
+            IdentifierSymbolChanger(),
+        )
 
     private fun scanDeclaration(version: String) = PSScanDeclaration.createScanDeclaration(version)
 
     private fun scanAssignation(version: String) = PSScanAssignation.createScanAssignation(version)
 
     private fun scanIf(version: String) = PSScanIf.createIf(version)
-
 }
 
 class Parser(
     private val scanStatement: List<ScanStatement>,
-    private val symbolChangers: List<SymbolChanger>
+    private val symbolChangers: List<SymbolChanger>,
 ) {
-    private val ifIndex : Int = findIfIndex()
+    private val ifIndex: Int = findIfIndex()
 
     fun parse(tokensWSymbols: List<Token>): Statement {
         val tokens: List<Token> = changeSymbolType(tokensWSymbols)
 
-        if(ifCanHandle(tokens)) return ifMakeAst(tokens)
+        if (ifCanHandle(tokens)) return ifMakeAst(tokens)
 
         scanStatement.forEach {
             if (it.canHandle(tokens)) return it.makeAST(tokens)
@@ -62,15 +64,16 @@ class Parser(
         throw ParserError("PrintScript couldn't parse that code.", tokens[0])
     }
 
-    private fun ifMakeAst(tokens: List<Token>): Statement =
-        scanStatement[ifIndex].makeAST(tokens)
+    private fun ifMakeAst(tokens: List<Token>): Statement = scanStatement[ifIndex].makeAST(tokens)
 
     private fun ifCanHandle(tokens: List<Token>): Boolean =
-        if(checkIfIndex()) scanStatement[ifIndex].canHandle(tokens)
-        else false
+        if (checkIfIndex()) {
+            scanStatement[ifIndex].canHandle(tokens)
+        } else {
+            false
+        }
 
-    private fun checkIfIndex(): Boolean =
-        ifIndex != -1
+    private fun checkIfIndex(): Boolean = ifIndex != -1
 
     private fun changeSymbolType(tokens: List<Token>): List<Token> =
         tokens.map { token ->
@@ -92,9 +95,8 @@ class Parser(
 
     private fun findIfIndex(): Int {
         scanStatement.indices.forEach {
-            if(scanStatement[it] is ScanIf) return it
+            if (scanStatement[it] is ScanIf) return it
         }
         return -1
     }
-
 }

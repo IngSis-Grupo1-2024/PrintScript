@@ -8,19 +8,19 @@ import ingsis.components.statement.Value
 import ingsis.parser.error.ParserError
 import kotlin.math.abs
 
-object PrintScriptScanValue{
-    fun createScanValue(version: String): ScanValue{
-        return when(version){
+object PrintScriptScanValue {
+    fun createScanValue(version: String): ScanValue {
+        return when (version) {
             "VERSION_1" -> ScanValue(valueTypesV1(), comparatorTokenType(version))
             "VERSION_2" -> ScanValue(valueTypesV2(), comparatorTokenType(version))
             else -> ScanValue(valueTypesV1(), comparatorTokenType(version))
         }
     }
 
-    private fun comparatorTokenType(version: String) =
-        PrintScriptComparatorTokenType.createComparatorTokenType(version)
+    private fun comparatorTokenType(version: String) = PrintScriptComparatorTokenType.createComparatorTokenType(version)
 
     private fun valueTypesV1() = listOf(TokenType.DOUBLE, TokenType.INTEGER, TokenType.STRING, TokenType.IDENTIFIER)
+
     private fun valueTypesV2() = valueTypesV1() + listOf(TokenType.BOOLEAN)
 }
 

@@ -2,7 +2,6 @@ package ingsis.parser.symbolType
 
 import ingsis.components.Token
 
-
 interface SymbolChanger {
     fun canHandle(token: Token): Boolean
 

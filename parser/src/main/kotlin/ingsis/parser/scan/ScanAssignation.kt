@@ -7,7 +7,7 @@ import ingsis.parser.error.ParserError
 
 object PSScanAssignation {
     fun createScanAssignation(version: String): ScanAssignation {
-       return ScanAssignation(scanDeclaration(version), scanValue(version))
+        return ScanAssignation(scanDeclaration(version), scanValue(version))
     }
 
     private fun scanValue(version: String) = PrintScriptScanValue.createScanValue(version)
@@ -16,7 +16,6 @@ object PSScanAssignation {
 }
 
 class ScanAssignation(private val scanDeclaration: ScanDeclaration, private val scanValue: ScanValue) : ScanStatement {
-
     override fun canHandle(tokens: List<Token>): Boolean {
         if (checkIfThereIsNoDelimiter(tokens)) {
             throw ParserError("error: ';' expected  " + tokens.last().getPosition(), tokens.last())
