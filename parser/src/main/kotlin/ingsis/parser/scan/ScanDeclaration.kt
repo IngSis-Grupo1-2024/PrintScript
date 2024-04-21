@@ -11,7 +11,7 @@ class ScanDeclaration : ScanStatement {
 
     override fun canHandle(tokens: List<Token>): Boolean {
         if (checkIfThereIsNoDelimiter(tokens)) {
-            throw ParserError("error: ';' expected  " + tokens.last().getPosition(), tokens.last())
+            throw ParserError("error: delimiter (;) expected at " + tokens.last().getPosition(), tokens.last())
         }
 
         val tokWODelimiter = tokens.subList(0, tokens.size - 1)

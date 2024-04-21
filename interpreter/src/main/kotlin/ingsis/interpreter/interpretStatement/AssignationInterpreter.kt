@@ -1,5 +1,6 @@
 package ingsis.interpreter.interpretStatement
 
+import ingsis.components.TokenType
 import ingsis.components.statement.*
 import ingsis.interpreter.operatorScanner.ScanOperatorType
 import ingsis.interpreter.valueAnalyzer.ValueAnalyzer
@@ -11,7 +12,7 @@ class AssignationInterpreter(private val scanners: List<ScanOperatorType>) : Sta
     override fun interpret(
         statement: Statement,
         previousState: HashMap<String, Result>,
-    ): Pair<HashMap<String, Result>, String?> {
+    ): HashMap<String, Result> {
         val assignation = statement as Assignation
         val variable = assignation.getVariable()
         val value = assignation.getValue()
@@ -23,7 +24,7 @@ class AssignationInterpreter(private val scanners: List<ScanOperatorType>) : Sta
             throw Exception("Type mismatch")
         }
 
-        return Pair(previousState, null)
+        return previousState
     }
 
     private fun checkIfNewValueTypeMatchesType(
@@ -31,6 +32,13 @@ class AssignationInterpreter(private val scanners: List<ScanOperatorType>) : Sta
         result: Result,
         map: Map<String, Result>,
     ): Boolean {
+        if (isInteger(map[variable.getName()]?.getType()?.getValue())) {
+            return isDouble(result.getType().getValue()) || isInteger(map[variable.getName()]?.getType()?.getValue())
+        }
         return map[variable.getName()]?.getType()?.getValue() == result.getType().getValue()
     }
+
+    private fun isDouble(value: TokenType): Boolean = value == TokenType.DOUBLE
+
+    private fun isInteger(value: TokenType?): Boolean = value == TokenType.INTEGER
 }

@@ -1,5 +1,4 @@
 
-import com.sun.jdi.InvalidTypeException
 import ingsis.components.Position
 import ingsis.components.Token
 import ingsis.components.TokenType
@@ -17,6 +16,7 @@ import ingsis.utils.Result
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import util.PrintOutputEmitterTests
 
 class InterpreterTest {
     @Test
@@ -35,8 +35,7 @@ class InterpreterTest {
         val variable = Variable("a", position)
         val type = Type(TokenType.INTEGER, position)
         val declarationStatement = Declaration(keyword, variable, type, position)
-        val pair = interpreter.interpret(declarationStatement, HashMap())
-        val variableMap = pair.first
+        val variableMap = interpreter.interpret(declarationStatement, HashMap())
         assertEquals(1, variableMap.size)
         assertEquals(Result(type, null), variableMap["a"])
     }
@@ -57,11 +56,9 @@ class InterpreterTest {
         val variable = Variable("a", position)
         val type = Type(TokenType.INTEGER, position)
         val declarationStatement = Declaration(keyword, variable, type, position)
-        val pair = interpreter.interpret(declarationStatement, HashMap())
-        val variableMap1 = pair.first
+        val variableMap1 = interpreter.interpret(declarationStatement, HashMap())
         val assignationStatement = Assignation(position, variable, SingleValue(Token(position, "5", TokenType.INTEGER)))
-        val pair1 = interpreter.interpret(assignationStatement, variableMap1)
-        val variableMap2 = pair1.first
+        val variableMap2 = interpreter.interpret(assignationStatement, variableMap1)
         assertEquals(1, variableMap2.size)
         assertEquals(Result(type, "5"), variableMap2["a"])
     }
@@ -82,8 +79,7 @@ class InterpreterTest {
         val variable = Variable("a", position)
         val type = Type(TokenType.STRING, position)
         val declarationStatement = Declaration(keyword, variable, type, position)
-        val pair = interpreter.interpret(declarationStatement, HashMap())
-        val variableMap = pair.first
+        val variableMap = interpreter.interpret(declarationStatement, HashMap())
         assertEquals(1, variableMap.size)
         assertEquals(Result(type, null), variableMap["a"])
     }
@@ -106,8 +102,7 @@ class InterpreterTest {
         val declarationStatement = Declaration(keyword, variable, type, position)
         val compoundAssignation =
             CompoundAssignation(position, declarationStatement, SingleValue(Token(position, "5", TokenType.INTEGER)))
-        val pair = interpreter.interpret(compoundAssignation, HashMap())
-        val variableMap = pair.first
+        val variableMap = interpreter.interpret(compoundAssignation, HashMap())
         assertEquals(1, variableMap.size)
         assertEquals(Result(type, "5"), variableMap["a"])
     }
@@ -138,8 +133,7 @@ class InterpreterTest {
                     SingleValue(Token(position, "3", TokenType.INTEGER)),
                 ),
             )
-        val pair = interpreter.interpret(compoundAssignation, HashMap())
-        val variableMap = pair.first
+        val variableMap = interpreter.interpret(compoundAssignation, HashMap())
         assertEquals(1, variableMap.size)
         assertEquals(Result(type, "8"), variableMap["a"])
     }
@@ -170,8 +164,7 @@ class InterpreterTest {
                     SingleValue(Token(position, "3", TokenType.INTEGER)),
                 ),
             )
-        val pair = interpreter.interpret(compoundAssignation, HashMap())
-        val variableMap = pair.first
+        val variableMap = interpreter.interpret(compoundAssignation, HashMap())
         assertEquals(1, variableMap.size)
         assertEquals(Result(type, "2"), variableMap["a"])
     }
@@ -202,9 +195,10 @@ class InterpreterTest {
                     SingleValue(Token(position, "3", TokenType.STRING)),
                 ),
             )
-        val exception = assertThrows<Error> { interpreter.interpret(compoundAssignation, HashMap()) }
+        val exception = assertThrows<Exception> { interpreter.interpret(compoundAssignation, HashMap()) }
         assertEquals(
-            "Can't do subtraction using no integer types in line " + position.startLine + " at position " + position.startColumn,
+            "Can't do subtraction using no integer types or double types in line " +
+                position.startLine + " at position " + position.startColumn,
             exception.message,
         )
     }
@@ -235,8 +229,7 @@ class InterpreterTest {
                     SingleValue(Token(position, "3", TokenType.INTEGER)),
                 ),
             )
-        val pair = interpreter.interpret(compoundAssignation, HashMap())
-        val variableMap = pair.first
+        val variableMap = interpreter.interpret(compoundAssignation, HashMap())
         assertEquals(1, variableMap.size)
         assertEquals(Result(type, "15"), variableMap["a"])
     }
@@ -268,9 +261,10 @@ class InterpreterTest {
                 ),
             )
 
-        val exception = assertThrows<Error> { interpreter.interpret(compoundAssignation, HashMap()) }
+        val exception = assertThrows<Exception> { interpreter.interpret(compoundAssignation, HashMap()) }
         assertEquals(
-            "Can't do multiplication using no integer types in line " + position.startLine + " at position " + position.startColumn,
+            "Can't do multiplication using no integer types or double types in line " +
+                position.startLine + " at position " + position.startColumn,
             exception.message,
         )
     }
@@ -301,8 +295,7 @@ class InterpreterTest {
                     SingleValue(Token(position, "2", TokenType.INTEGER)),
                 ),
             )
-        val pair = interpreter.interpret(compoundAssignation, HashMap())
-        val variableMap = pair.first
+        val variableMap = interpreter.interpret(compoundAssignation, HashMap())
         assertEquals(1, variableMap.size)
         assertEquals(Result(type, "5"), variableMap["a"])
     }
@@ -334,9 +327,10 @@ class InterpreterTest {
                 ),
             )
 
-        val exception = assertThrows<InvalidTypeException> { interpreter.interpret(compoundAssignation, HashMap()) }
+        val exception = assertThrows<Exception> { interpreter.interpret(compoundAssignation, HashMap()) }
         assertEquals(
-            "Can't do division using no integer types in line " + position.startLine + " at position " + position.startColumn,
+            "Can't do division using no integer types or double types in line " +
+                position.startLine + " at position " + position.startColumn,
             exception.message,
         )
     }
@@ -371,8 +365,7 @@ class InterpreterTest {
                     ),
                 ),
             )
-        val pair = interpreter.interpret(compoundAssignation, HashMap())
-        val variableMap = pair.first
+        val variableMap = interpreter.interpret(compoundAssignation, HashMap())
         assertEquals(1, variableMap.size)
         assertEquals(Result(type, "13"), variableMap["a"])
     }
@@ -407,8 +400,7 @@ class InterpreterTest {
                     ),
                 ),
             )
-        val pair = interpreter.interpret(compoundAssignation, HashMap())
-        val variableMap = pair.first
+        val variableMap = interpreter.interpret(compoundAssignation, HashMap())
         assertEquals(1, variableMap.size)
         assertEquals(Result(type, "20"), variableMap["a"])
     }
@@ -443,8 +435,7 @@ class InterpreterTest {
                     ),
                 ),
             )
-        val pair = interpreter.interpret(compoundAssignation, HashMap())
-        val variableMap = pair.first
+        val variableMap = interpreter.interpret(compoundAssignation, HashMap())
         assertEquals(1, variableMap.size)
         assertEquals(Result(type, "7"), variableMap["a"])
     }
@@ -483,8 +474,7 @@ class InterpreterTest {
                     ),
                 ),
             )
-        val pair = interpreter.interpret(compoundAssignation, HashMap())
-        val variableMap = pair.first
+        val variableMap = interpreter.interpret(compoundAssignation, HashMap())
         assertEquals(1, variableMap.size)
         assertEquals(Result(type, "15"), variableMap["a"])
     }
@@ -523,8 +513,7 @@ class InterpreterTest {
                     ),
                 ),
             )
-        val pair = interpreter.interpret(compoundAssignation, HashMap())
-        val variableMap = pair.first
+        val variableMap = interpreter.interpret(compoundAssignation, HashMap())
         assertEquals(1, variableMap.size)
         assertEquals(Result(type, "25"), variableMap["a"])
     }
@@ -555,8 +544,7 @@ class InterpreterTest {
                     SingleValue(Token(position, "5", TokenType.INTEGER)),
                 ),
             )
-        val pair = interpreter.interpret(compoundAssignation, HashMap())
-        val variableMap = pair.first
+        val variableMap = interpreter.interpret(compoundAssignation, HashMap())
         assertEquals(1, variableMap.size)
         assertEquals(Result(type, "Hello5"), variableMap["a"])
     }
@@ -587,8 +575,7 @@ class InterpreterTest {
                     SingleValue(Token(position, "World", TokenType.STRING)),
                 ),
             )
-        val pair = interpreter.interpret(compoundAssignation, HashMap())
-        val variableMap = pair.first
+        val variableMap = interpreter.interpret(compoundAssignation, HashMap())
         assertEquals(1, variableMap.size)
         assertEquals(Result(type, "HelloWorld"), variableMap["a"])
     }
@@ -602,7 +589,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    PrintLineInterpreter(scanners),
+                    PrintLineInterpreter(scanners, PrintOutputEmitterTests()),
                 ),
             )
         val position = Position()
@@ -623,7 +610,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    PrintLineInterpreter(scanners),
+                    PrintLineInterpreter(scanners, PrintOutputEmitterTests()),
                 ),
             )
         val position = Position()
@@ -644,7 +631,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    PrintLineInterpreter(scanners),
+                    PrintLineInterpreter(scanners, PrintOutputEmitterTests()),
                 ),
             )
         val position = Position()
@@ -658,12 +645,11 @@ class InterpreterTest {
                 declarationStatement,
                 SingleValue(Token(position, "10", TokenType.INTEGER)),
             )
-        val variableMap = interpreter.interpret(compoundAssignation, HashMap()).first
+        val variableMap = interpreter.interpret(compoundAssignation, HashMap())
         val printLine = PrintLine(position, (SingleValue(Token(position, "a", TokenType.IDENTIFIER))))
         println()
         println()
-        val pair = interpreter.interpret(printLine, variableMap)
-        println(pair.second)
+        interpreter.interpret(printLine, variableMap)
         println()
         println()
     }
@@ -677,7 +663,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    PrintLineInterpreter(scanners),
+                    PrintLineInterpreter(scanners, PrintOutputEmitterTests()),
                 ),
             )
         val position = Position()
@@ -706,7 +692,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    PrintLineInterpreter(scanners),
+                    PrintLineInterpreter(scanners, PrintOutputEmitterTests()),
                 ),
             )
         val position = Position()
@@ -735,7 +721,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    PrintLineInterpreter(scanners),
+                    PrintLineInterpreter(scanners, PrintOutputEmitterTests()),
                 ),
             )
         val position = Position()
@@ -764,7 +750,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    PrintLineInterpreter(scanners),
+                    PrintLineInterpreter(scanners, PrintOutputEmitterTests()),
                 ),
             )
         val position = Position()
@@ -793,7 +779,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    PrintLineInterpreter(scanners),
+                    PrintLineInterpreter(scanners, PrintOutputEmitterTests()),
                 ),
             )
         val position = Position()
@@ -825,8 +811,8 @@ class InterpreterTest {
                 ),
             )
         var map = HashMap<String, Result>()
-        map = interpreter.interpret(compoundAssignationVarA, map).first
-        map = interpreter.interpret(compoundAssignationVarB, map).first
+        map = interpreter.interpret(compoundAssignationVarA, map)
+        map = interpreter.interpret(compoundAssignationVarB, map)
         println()
         println()
         interpreter.interpret(printLine, map)
@@ -843,7 +829,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    PrintLineInterpreter(scanners),
+                    PrintLineInterpreter(scanners, PrintOutputEmitterTests()),
                 ),
             )
         val position = Position()
@@ -871,8 +857,8 @@ class InterpreterTest {
                 SingleValue(Token(position, "b", TokenType.IDENTIFIER)),
             )
         var map = HashMap<String, Result>()
-        map = interpreter.interpret(compoundAssignationVarA, map).first
-        map = interpreter.interpret(compoundAssignationVarB, map).first
+        map = interpreter.interpret(compoundAssignationVarA, map)
+        map = interpreter.interpret(compoundAssignationVarB, map)
         println()
         println()
         interpreter.interpret(printLine, map)
@@ -889,7 +875,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    PrintLineInterpreter(scanners),
+                    PrintLineInterpreter(scanners, PrintOutputEmitterTests()),
                 ),
             )
         val position = Position()
@@ -921,8 +907,8 @@ class InterpreterTest {
                 ),
             )
         var map = HashMap<String, Result>()
-        map = interpreter.interpret(compoundAssignationVarA, map).first
-        map = interpreter.interpret(compoundAssignationVarB, map).first
+        map = interpreter.interpret(compoundAssignationVarA, map)
+        map = interpreter.interpret(compoundAssignationVarB, map)
         println()
         println()
         interpreter.interpret(printLine, map)
@@ -1048,5 +1034,384 @@ class InterpreterTest {
             "Type mismatch",
             exception.message,
         )
+    }
+
+    @Test
+    fun testDeclareAndAssignADouble() {
+        val scanners =
+            listOf(
+                ScanMulOperator(),
+                ScanSumOperator(),
+                ScanDivOperator(),
+                ScanSubOperator(),
+            )
+
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+
+        val position = Position()
+        val variableA = Variable("a", position)
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val type = Type(TokenType.DOUBLE, position)
+        val declarationStatement = Declaration(keyword, Variable("a", position), type, position)
+        val assignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                SingleValue(Token(position, "5.5", TokenType.DOUBLE)),
+            )
+
+        val variableMap = interpreter.interpret(assignation, HashMap())
+
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, "5.5"), variableMap["a"])
+    }
+
+    @Test
+    fun testSumTwoDoubles() {
+        val scanners =
+            listOf(
+                ScanMulOperator(),
+                ScanSumOperator(),
+                ScanDivOperator(),
+                ScanSubOperator(),
+            )
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.DOUBLE, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "+", TokenType.OPERATOR),
+                    SingleValue(Token(position, "5.5", TokenType.DOUBLE)),
+                    SingleValue(Token(position, "3.3", TokenType.DOUBLE)),
+                ),
+            )
+        val pair = interpreter.interpret(compoundAssignation, HashMap())
+        val variableMap = pair
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, "8.8"), variableMap["a"])
+    }
+
+    @Test
+    fun testSubtractTwoDoubles() {
+        val scanners =
+            listOf(
+                ScanMulOperator(),
+                ScanSumOperator(),
+                ScanDivOperator(),
+                ScanSubOperator(),
+            )
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.DOUBLE, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "-", TokenType.OPERATOR),
+                    SingleValue(Token(position, "5.5", TokenType.DOUBLE)),
+                    SingleValue(Token(position, "3.3", TokenType.DOUBLE)),
+                ),
+            )
+        val pair = interpreter.interpret(compoundAssignation, HashMap())
+        val variableMap = pair
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, "2.2"), variableMap["a"])
+    }
+
+    @Test
+    fun testDivideTwoDoubles() {
+        val scanners =
+            listOf(
+                ScanMulOperator(),
+                ScanSumOperator(),
+                ScanDivOperator(),
+                ScanSubOperator(),
+            )
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.DOUBLE, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "/", TokenType.OPERATOR),
+                    SingleValue(Token(position, "5.5", TokenType.DOUBLE)),
+                    SingleValue(Token(position, "2.2", TokenType.DOUBLE)),
+                ),
+            )
+        val pair = interpreter.interpret(compoundAssignation, HashMap())
+        val variableMap = pair
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, "2.5"), variableMap["a"])
+    }
+
+    @Test
+    fun testMultiplyTwoDoubles() {
+        val scanners =
+            listOf(
+                ScanMulOperator(),
+                ScanSumOperator(),
+                ScanDivOperator(),
+                ScanSubOperator(),
+            )
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.DOUBLE, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "*", TokenType.OPERATOR),
+                    SingleValue(Token(position, "5.5", TokenType.DOUBLE)),
+                    SingleValue(Token(position, "2.2", TokenType.DOUBLE)),
+                ),
+            )
+        val pair = interpreter.interpret(compoundAssignation, HashMap())
+        val variableMap = pair
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, "12.1"), variableMap["a"])
+    }
+
+    @Test
+    fun testSumBetweenDoubleAndInteger() {
+        val scanners =
+            listOf(
+                ScanMulOperator(),
+                ScanSumOperator(),
+                ScanDivOperator(),
+                ScanSubOperator(),
+            )
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.DOUBLE, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "+", TokenType.OPERATOR),
+                    SingleValue(Token(position, "5.5", TokenType.DOUBLE)),
+                    SingleValue(Token(position, "2", TokenType.INTEGER)),
+                ),
+            )
+        val pair = interpreter.interpret(compoundAssignation, HashMap())
+        val variableMap = pair
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, "7.5"), variableMap["a"])
+    }
+
+    @Test
+    fun testSubtractBetweenDoubleAndInteger() {
+        val scanners =
+            listOf(
+                ScanMulOperator(),
+                ScanSumOperator(),
+                ScanDivOperator(),
+                ScanSubOperator(),
+            )
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.DOUBLE, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "-", TokenType.OPERATOR),
+                    SingleValue(Token(position, "5.5", TokenType.DOUBLE)),
+                    SingleValue(Token(position, "2", TokenType.INTEGER)),
+                ),
+            )
+        val pair = interpreter.interpret(compoundAssignation, HashMap())
+        val variableMap = pair
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, "3.5"), variableMap["a"])
+    }
+
+    @Test
+    fun testMultiplyBetweenDoubleAndInteger() {
+        val scanners =
+            listOf(
+                ScanMulOperator(),
+                ScanSumOperator(),
+                ScanDivOperator(),
+                ScanSubOperator(),
+            )
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.DOUBLE, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "*", TokenType.OPERATOR),
+                    SingleValue(Token(position, "5.5", TokenType.DOUBLE)),
+                    SingleValue(Token(position, "2", TokenType.INTEGER)),
+                ),
+            )
+        val pair = interpreter.interpret(compoundAssignation, HashMap())
+        val variableMap = pair
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, "11.0"), variableMap["a"])
+    }
+
+    @Test
+    fun testDivideBetweenDoubleAndInteger() {
+        val scanners =
+            listOf(
+                ScanMulOperator(),
+                ScanSumOperator(),
+                ScanDivOperator(),
+                ScanSubOperator(),
+            )
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.DOUBLE, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "/", TokenType.OPERATOR),
+                    SingleValue(Token(position, "5.5", TokenType.DOUBLE)),
+                    SingleValue(Token(position, "2", TokenType.INTEGER)),
+                ),
+            )
+        val pair = interpreter.interpret(compoundAssignation, HashMap())
+        val variableMap = pair
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, "2.75"), variableMap["a"])
+    }
+
+    @Test
+    fun testSumDoubleAndString() {
+        val scanners =
+            listOf(
+                ScanMulOperator(),
+                ScanSumOperator(),
+                ScanDivOperator(),
+                ScanSubOperator(),
+            )
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.STRING, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val compoundAssignation =
+            CompoundAssignation(
+                position,
+                declarationStatement,
+                Operator(
+                    Token(position, "+", TokenType.OPERATOR),
+                    SingleValue(Token(position, "5.5", TokenType.DOUBLE)),
+                    SingleValue(Token(position, "hello", TokenType.STRING)),
+                ),
+            )
+        val result = interpreter.interpret(compoundAssignation, HashMap())
+        val variableMap = result
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, "5.5hello"), variableMap["a"])
     }
 }

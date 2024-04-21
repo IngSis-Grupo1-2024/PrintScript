@@ -22,8 +22,8 @@ class ScanDeclaration : ScanStatement {
         val variable = declaration.getVariable()
         val type = declaration.getType()
         val declarationSpaces = DeclarationSpaces(ruleMap)
-        val spacesBeforeDeclaration = declarationSpaces.getBeforeDeclarationSpaces()
-        val spacesAfterDeclaration = declarationSpaces.getAfterDeclarationSpaces()
+        val spacesBeforeDeclaration = declarationSpaces.getDeclarationSpaces("beforeDeclaration")
+        val spacesAfterDeclaration = declarationSpaces.getDeclarationSpaces("afterDeclaration")
         return buildDeclarationString(
             keyword.getValue(),
             variable.getName(),
