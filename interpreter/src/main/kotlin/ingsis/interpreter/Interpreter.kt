@@ -44,9 +44,6 @@ object PrintScriptInterpreter {
 }
 
 class Interpreter(private val interpreters: List<StatementInterpreter>) {
-    //    fun interpret(statement: Statement): Map<String, Result> =
-//        interpret(statement, emptyMap())
-
     fun interpret(
         statement: Statement,
         variableMap: HashMap<String, Result>,
