@@ -13,6 +13,7 @@ class IfInterpreter(
     private val scanners: List<ScanOperatorType>,
     private val version: String,
     private val outputEmitter: OutputEmitter,
+    private val input: Input,
 ) : StatementInterpreter {
     override fun canHandle(statement: Statement): Boolean = statement.getStatementType() == StatementType.IF
 
@@ -20,7 +21,7 @@ class IfInterpreter(
         statement: Statement,
         previousState: HashMap<String, Result>,
     ): HashMap<String, Result> {
-        val interpreter = PrintScriptInterpreter.createInterpreter(version, outputEmitter)
+        val interpreter = PrintScriptInterpreter.createInterpreter(version, outputEmitter, input)
         val ifStatement = statement as If
         var newState = previousState
         val getElseStatement = ifStatement.getElseStatement()

@@ -37,7 +37,7 @@ object PrintScriptInterpreter {
                         AssignationReadInputInterpreter(input, scanners),
                         CompoundAssignationInterpreter(scanners),
                         PrintLineInterpreter(scanners, outputEmitter),
-                        IfInterpreter(scanners, version, outputEmitter),
+                        IfInterpreter(scanners, version, outputEmitter, input),
                         CompoundAssignationReadInputInterpreter(input, scanners),
                     ),
                 )
@@ -50,7 +50,7 @@ object PrintScriptInterpreter {
                         DeclarationInterpreter(),
                         AssignationInterpreter(scanners),
                         CompoundAssignationInterpreter(scanners),
-                        IfInterpreter(scanners, version, outputEmitter),
+                        IfInterpreter(scanners, version, outputEmitter, input),
                         PrintLineInterpreter(scanners, outputEmitter),
                     ),
                 )
