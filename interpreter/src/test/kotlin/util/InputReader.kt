@@ -1,5 +1,6 @@
-package ingsis.interpreter.interpretStatement
+package util
 
+import ingsis.interpreter.interpretStatement.Input
 import java.util.Scanner
 
 class InputReader : Input {
