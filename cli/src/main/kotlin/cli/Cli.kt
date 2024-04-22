@@ -4,6 +4,7 @@ import ingsis.components.Position
 import ingsis.components.Token
 import ingsis.components.statement.Statement
 import ingsis.formatter.PrintScriptFormatter
+import ingsis.formatter.utils.readJsonAndStackMap
 import ingsis.interpreter.PrintScriptInterpreter
 import ingsis.interpreter.interpretStatement.Input
 import ingsis.lexer.PrintScriptLexer
@@ -129,6 +130,7 @@ class Cli(outputEmitter: OutputEmitter, version: Version, input: Input) {
         var tokens: List<Token>
         var statement: Statement
         val result = StringBuilder()
+        val formatterRuleMap = readJsonAndStackMap(rulePath)
         if (lines.isEmpty()) return writeInFile(file.toString(), "empty file")
         for (line in lines) {
             tokens = tokenizeWithLexer(line)
@@ -136,7 +138,7 @@ class Cli(outputEmitter: OutputEmitter, version: Version, input: Input) {
             try {
                 statement = parse(tokens)
                 result.append(
-                    formatter.format(statement, rulePath),
+                    formatter.format(statement, formatterRuleMap),
                 )
             } catch (e: ParserError) {
                 result.append("\n" + e.localizedMessage + " in position :" + e.getTokenPosition())

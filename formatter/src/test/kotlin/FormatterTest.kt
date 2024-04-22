@@ -1,13 +1,12 @@
+
 import ingsis.components.Position
 import ingsis.components.Token
 import ingsis.components.TokenType
 import ingsis.components.statement.*
 import ingsis.formatter.Formatter
-import ingsis.formatter.scan.ScanAssignation
-import ingsis.formatter.scan.ScanCompoundAssignation
-import ingsis.formatter.scan.ScanDeclaration
-import ingsis.formatter.scan.ScanPrintLine
+import ingsis.formatter.scan.*
 import ingsis.formatter.utils.FormatterRule
+import ingsis.formatter.utils.readJsonAndStackMap
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -28,7 +27,8 @@ class FormatterTest {
         val type = Type(TokenType.INTEGER, Position(14, 14, 1, 1, 14, 14))
         val position = Position(8, 8, 1, 1, 8, 8)
         val declaration = Declaration(keyword, variable, type, position)
-        val result = formatter.format(declaration, "src/main/kotlin/ingsis/formatter/rules/rules.json")
+        val ruleMap = readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")
+        val result = formatter.format(declaration, ruleMap)
         val expected = "let x: number;\n"
         assertEquals(expected, result)
     }
@@ -42,7 +42,8 @@ class FormatterTest {
         val value = SingleValue(token)
         val position = Position(2, 2, 1, 1, 2, 2)
         val assignation = Assignation(position, variable, value)
-        val result = formatter.format(assignation, "src/main/kotlin/ingsis/formatter/rules/rules.json")
+        val ruleMap = readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")
+        val result = formatter.format(assignation, ruleMap)
         val expected = "x  =  4;\n"
         assertEquals(expected, result)
     }
@@ -58,7 +59,8 @@ class FormatterTest {
         val value = Operator(plus, Operator(four), Operator(five))
         val position = Position(2, 2, 1, 1, 2, 2)
         val assignation = Assignation(position, variable, value)
-        val result = formatter.format(assignation, "src/main/kotlin/ingsis/formatter/rules/rules.json")
+        val ruleMap = readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")
+        val result = formatter.format(assignation, ruleMap)
         val expected = "x  =  4 + 5;\n"
         assertEquals(expected, result)
     }
@@ -76,7 +78,8 @@ class FormatterTest {
         val declaration = Declaration(keyword, variable, type, declarationPosition)
         val assignationPosition = Position(15, 15, 1, 1, 14, 14)
         val compoundAssignation = CompoundAssignation(assignationPosition, declaration, value)
-        val result = formatter.format(compoundAssignation, "src/main/kotlin/ingsis/formatter/rules/rules.json")
+        val ruleMap = readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")
+        val result = formatter.format(compoundAssignation, ruleMap)
         val expected = "let x: number  =  4;\n"
         assertEquals(expected, result)
     }
@@ -88,12 +91,37 @@ class FormatterTest {
         val token = Token(Position(8, 8, 1, 1, 8, 8), "4", TokenType.INTEGER)
         val value = SingleValue(token)
         val function = PrintLine(Position(0, 6, 1, 1, 0, 6), value)
-        val result = formatter.format(function, "src/main/kotlin/ingsis/formatter/rules/rules.json")
+        val ruleMap = readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")
+        val result = formatter.format(function, ruleMap)
         val expected =
             "\n" +
                 "\n" +
                 "println(4);" +
                 "\n"
         assertEquals(expected, result)
+    }
+
+    @Test
+    fun testIfWithTabsFromRules() {
+        val scanners = listOf(ScanIf())
+        val formatter = Formatter(scanners)
+        val booleanTrue = SingleValue(Token(Position(), "true", TokenType.BOOLEAN))
+        val keyword = Keyword(Modifier.MUTABLE, "let", Position())
+        val variable = Variable("x", Position(5, 5, 1, 1, 5, 5))
+        val type = Type(TokenType.INTEGER, Position(14, 14, 1, 1, 14, 14))
+        val position = Position(8, 8, 1, 1, 8, 8)
+        val declaration = Declaration(keyword, variable, type, position)
+        val token = Token(Position(8, 8, 1, 1, 8, 8), "4", TokenType.INTEGER)
+        val value = SingleValue(token)
+        val function = PrintLine(Position(0, 6, 1, 1, 0, 6), value)
+        val elseStatement = Else(listOf())
+        val ifStatement = If(booleanTrue, elseStatement, listOf(declaration, function))
+        val expected =
+            "if{\n" +
+                "\tlet x: number;\n\n\n" +
+                "\tprintln(4);\n" +
+                "}"
+
+        assertEquals(expected, formatter.format(ifStatement, readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")))
     }
 }

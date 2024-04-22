@@ -16,6 +16,10 @@ fun generateNewLines(numNewLines: Int): String {
     return "\n".repeat(numNewLines)
 }
 
+fun generateTabs(numTabs: Int): String {
+    return "\t".repeat(numTabs)
+}
+
 data class FormatterRule(
     val on: Boolean,
     val quantity: Int,
