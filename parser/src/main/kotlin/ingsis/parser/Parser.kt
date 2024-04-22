@@ -2,52 +2,13 @@ package ingsis.parser
 
 import ingsis.components.Token
 import ingsis.components.TokenType
+import ingsis.components.statement.Else
+import ingsis.components.statement.EmptyValue
+import ingsis.components.statement.If
 import ingsis.components.statement.Statement
 import ingsis.parser.error.ParserError
 import ingsis.parser.scan.*
 import ingsis.parser.symbolType.*
-
-object PrintScriptParser {
-    fun createParser(version: String): Parser {
-        return when (version) {
-            "VERSION_1" -> Parser(getScannersOfV1(version), getSymbolChangersV1())
-            "VERSION_2" -> Parser(getScannersOfV2(version), getSymbolChangersV2())
-            else -> Parser(getScannersOfV1(version), getSymbolChangersV1())
-        }
-    }
-
-    private fun getSymbolChangersV1(): List<SymbolChanger> =
-        listOf(
-            StringSymbolChanger(),
-            DoubleSymbolChanger(),
-            IntegerSymbolChanger(),
-            IdentifierSymbolChanger(),
-        )
-
-    private fun getScannersOfV1(version: String) = listOf(scanDeclaration(version), scanAssignation(version), scanPrintLine(version))
-
-    private fun getScannersOfV2(version: String): List<ScanStatement> =
-        getScannersOfV1(version) + listOf(scanIf(version), scanElse(version))
-
-    private fun scanElse(version: String) = PSScanElse.createScanElse(version)
-
-    private fun scanPrintLine(version: String) = PSScanPrintLine.createPrintLine(version)
-
-    private fun getSymbolChangersV2(): List<SymbolChanger> =
-        listOf(
-            StringSymbolChanger(),
-            DoubleSymbolChanger(),
-            IntegerSymbolChanger(),
-            BooleanSymbolChanger(),
-            IdentifierSymbolChanger(),
-        )
-
-    private fun scanDeclaration(version: String) = PSScanDeclaration.createScanDeclaration(version)
-
-    private fun scanAssignation(version: String) = PSScanAssignation.createScanAssignation(version)
-
-    private fun scanIf(version: String) = PSScanIf.createIf(version)
-}
 
 class Parser(
     private val scanStatement: List<ScanStatement>,
@@ -55,24 +16,66 @@ class Parser(
 ) {
     private val ifIndex: Int = findIfIndex()
     private val elseIndex: Int = findElseIndex()
+    private var mayHaveContinuousElse = false
+    private var ifStatement: If = If(EmptyValue(), Else(emptyList()), emptyList())
 
-    fun parse(tokensWSymbols: List<Token>): Statement? {
+    fun parse(tokensWSymbols: List<Token>): List<Statement?> {
         val tokens: List<Token> = changeSymbolType(tokensWSymbols)
 
-        if (ifCanHandle(tokens)) return ifMakeAst(tokens)
-
-        if (elseCanHandle(tokens)) {
-            return elseMakeAst(tokens)
-        } else {
-            scanStatement.forEach {
-                if (it.canHandle(tokens)) return it.makeAST(tokens)
-            }
+        if (ifCanHandle(tokens)) {
+            ifMakeAst(tokens)
+            return emptyList()
         }
 
-        throw ParserError("PrintScript couldn't parse that code.", tokens[0])
+        if (elseCanHandle(tokens)) {
+            val statement = elseMakeAst(tokens)
+            if(statement != null){
+                if(mayHaveContinuousElse) ifStatement.addElse(statement as Else)
+                else throw ParserError("You cannot implement an else statement without an if", tokens[0])
+                return listOf(ifStatement)
+            }
+            return emptyList()
+        } else {
+            val statements = scanStatementWOIfAndElse(tokens, mutableListOf<Statement?>())
+
+            if(statements.isEmpty())
+                throw ParserError("PrintScript couldn't parse that code.", tokens[0])
+            if(mayHaveContinuousElse){
+                statements.add(ifStatement)
+                mayHaveContinuousElse = false
+            }
+
+            return statements.toList()
+        }
+
     }
 
-    private fun ifMakeAst(tokens: List<Token>): Statement? = scanStatement[ifIndex].makeAST(tokens)
+    fun getIfStatement() = ifStatement
+    fun isThereAnIf() = mayHaveContinuousElse
+
+    private fun scanStatementWOIfAndElse(
+        tokens: List<Token>,
+        statements: MutableList<Statement?>
+    ) : MutableList<Statement?> {
+        if(!checkElseIndex() && !checkIfIndex())
+            scanStatement.forEach {
+                if (it.canHandle(tokens)) statements.add(it.makeAST(tokens))
+            }
+        else
+            for(index in scanStatement.indices){
+                if(index == elseIndex || index == ifIndex) continue
+                if (scanStatement[index].canHandle(tokens)) statements.add(scanStatement[index].makeAST(tokens))
+            }
+        return statements
+    }
+
+    private fun ifMakeAst(tokens: List<Token>) {
+        val statement = scanStatement[ifIndex].makeAST(tokens)
+        if(statement != null){
+            ifStatement = statement as If
+            mayHaveContinuousElse = true
+        }
+    }
 
     private fun elseMakeAst(tokens: List<Token>): Statement? = scanStatement[elseIndex].makeAST(tokens)
 

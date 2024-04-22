@@ -55,11 +55,19 @@ class ScanElse(private val version: String) : ScanStatement {
         if (!checkLastBrace(tokens)) {
             val parser = PrintScriptParser.createParser(version)
             val statement = parser.parse(tokens)
-            if (statement != null) statements.add(statement)
+            statement.forEach{
+                if (it != null) {
+                    statements.add(it)
+                }
+            }
         } else if (tokens.size > 1) {
             val parser = PrintScriptParser.createParser(version)
             val statement = parser.parse(tokens.subList(0, tokens.size - 1))
-            if (statement != null) statements.add(statement)
+            statement.forEach{
+                if (it != null) {
+                    statements.add(it)
+                }
+            }
         }
     }
 

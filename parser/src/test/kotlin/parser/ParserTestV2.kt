@@ -52,7 +52,7 @@ class ParserTestV2 {
                 Type(TokenType.INTEGER, position),
                 position,
             )
-        assertEquals(astExpected.toString(), parserV2.parse(tokens).toString())
+        assertEquals(listOf(astExpected).toString(), parserV2.parse(tokens).toString())
         val exception = assertThrows<ParserError> { parserV1.parse(tokens) }
         assertEquals("error: keyword not found", exception.message)
         assertEquals(
@@ -78,7 +78,7 @@ class ParserTestV2 {
                 Type(TokenType.BOOLEAN, position),
                 position,
             )
-        assertEquals(astExpected.toString(), parserV2.parse(tokens).toString())
+        assertEquals(listOf(astExpected).toString(), parserV2.parse(tokens).toString())
         val exception = assertThrows<ParserError> { parserV1.parse(tokens) }
         assertEquals("error: keyword not found", exception.message)
     }
@@ -100,7 +100,7 @@ class ParserTestV2 {
                 Type(TokenType.BOOLEAN, position),
                 position,
             )
-        assertEquals(astExpected.toString(), parserV2.parse(tokens).toString())
+        assertEquals(listOf(astExpected).toString(), parserV2.parse(tokens).toString())
         val exception = assertThrows<ParserError> { parserV1.parse(tokens) }
         assertEquals("error: invalid token", exception.message)
     }
@@ -140,8 +140,8 @@ class ParserTestV2 {
                 ),
                 SingleValue(Token(position, "true", TokenType.IDENTIFIER)),
             )
-        assertEquals(astExpectedV2.toString(), parserV2.parse(tokens).toString())
-        assertEquals(astExpectedV1.toString(), parserV1.parse(tokens).toString())
+        assertEquals(listOf(astExpectedV2).toString(), parserV2.parse(tokens).toString())
+        assertEquals(listOf(astExpectedV1).toString(), parserV1.parse(tokens).toString())
     }
 
     @Test
@@ -207,7 +207,8 @@ class ParserTestV2 {
 
         parserV2.parse(tokens)
         parserV2.parse(tokensDeclaration)
-        assertEquals(astExpected.toString(), parserV2.parse(tokensLastBraces).toString())
+        parserV2.parse(tokensLastBraces).toString()
+        assertEquals(astExpected.toString(), parserV2.getIfStatement().toString())
     }
 
     @Test
@@ -253,7 +254,8 @@ class ParserTestV2 {
             )
         parserV2.parse(tokens)
         parserV2.parse(tokensDeclaration)
-        assertEquals(astExpected.toString(), parserV2.parse(tokensLastBraces).toString())
+        parserV2.parse(tokensLastBraces)
+        assertEquals(astExpected.toString(), parserV2.getIfStatement().toString())
     }
 
     @Test
@@ -277,12 +279,15 @@ class ParserTestV2 {
 
     @Test
     fun `test 009 - else condition with code block`() {
-        val tokens =
+        val ifTokens =
             listOf(
-                Token(position, "else", TokenType.FUNCTION_KEYWORD),
+                Token(position, "if", TokenType.FUNCTION_KEYWORD),
+                Token(position, "(", TokenType.PARENTHESIS),
+                Token(position, "true", TokenType.BOOLEAN),
+                Token(position, ")", TokenType.PARENTHESIS),
                 Token(position, "{", TokenType.BRACES),
             )
-        val tokensDeclaration: List<Token> =
+        val ifTokensDeclaration: List<Token> =
             listOf(
                 Token(position, "let", TokenType.KEYWORD),
                 Token(position, "x", TokenType.SYMBOL),
@@ -290,12 +295,40 @@ class ParserTestV2 {
                 Token(position, "string", TokenType.TYPE),
                 Token(position, "", TokenType.DELIMITER),
             )
-        val tokensLastBraces: List<Token> =
+        val ifTokensLastBraces: List<Token> =
+            listOf(
+                Token(position, "}", TokenType.BRACES),
+            )
+
+        val elseTokens =
+            listOf(
+                Token(position, "else", TokenType.FUNCTION_KEYWORD),
+                Token(position, "{", TokenType.BRACES),
+            )
+        val elseTokensDeclaration: List<Token> =
+            listOf(
+                Token(position, "let", TokenType.KEYWORD),
+                Token(position, "x", TokenType.SYMBOL),
+                Token(position, ":", TokenType.DECLARATION),
+                Token(position, "string", TokenType.TYPE),
+                Token(position, "", TokenType.DELIMITER),
+            )
+        val elseTokensLastBraces: List<Token> =
             listOf(
                 Token(position, "}", TokenType.BRACES),
             )
         val astExpected: Statement =
-            Else(
+            If(
+                SingleValue(Token(position, "true", TokenType.BOOLEAN)),
+                Else(
+                    listOf(
+                        Declaration(
+                            Keyword(Modifier.MUTABLE, "let", position),
+                            Variable("x", position),
+                            Type(TokenType.STRING, position),
+                            position,
+                        ),
+                    )),
                 listOf(
                     Declaration(
                         Keyword(Modifier.MUTABLE, "let", position),
@@ -305,8 +338,11 @@ class ParserTestV2 {
                     ),
                 ),
             )
-        parserV2.parse(tokens)
-        parserV2.parse(tokensDeclaration)
-        assertEquals(astExpected.toString(), parserV2.parse(tokensLastBraces).toString())
+        parserV2.parse(ifTokens)
+        parserV2.parse(ifTokensDeclaration)
+        parserV2.parse(ifTokensLastBraces)
+        parserV2.parse(elseTokens)
+        parserV2.parse(elseTokensDeclaration)
+        assertEquals(listOf(astExpected).toString(), parserV2.parse(elseTokensLastBraces).toString())
     }
 }
