@@ -35,20 +35,12 @@ class Sca(private val scanners: List<ScanStatement>) {
 
     fun analyze(
         statement: Statement,
-        jsonPath: String,
+        rules: ReadScaRulesFile,
     ): String {
         val result = StringBuilder()
-        var jsonReader = ReadScaRulesFile()
-        try {
-            jsonReader.readSCARulesAndStackMap(jsonPath)
-        } catch (
-            e: Exception,
-        ) {
-            println("Error reading the rules file")
-        }
         for (scan in scanners) {
             if (scan.canHandle(statement)) {
-                when (val scanResult = scan.analyze(statement, jsonReader)) {
+                when (val scanResult = scan.analyze(statement, rules)) {
                     is InvalidResult -> {
                         result.append(
                             "${scanResult.getMessage()} at line " +

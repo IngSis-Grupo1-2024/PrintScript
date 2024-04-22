@@ -8,6 +8,6 @@
   },
   "readinput":{
     "expression": false,
-    "literal": false
+    "literal": true
   }
 }

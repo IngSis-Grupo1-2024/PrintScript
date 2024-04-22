@@ -10,6 +10,7 @@ import ingsis.parser.PrintScriptParser
 import ingsis.parser.error.ParserError
 import ingsis.sca.PrintScriptSca
 import ingsis.utils.OutputEmitter
+import ingsis.utils.ReadScaRulesFile
 import ingsis.utils.Result
 import java.io.FileInputStream
 import java.io.InputStream
@@ -160,6 +161,8 @@ class Cli(outputEmitter: OutputEmitter, version: Version) {
         var tokens: List<Token>
         var statement: Statement
         val result = StringBuilder()
+        val scaRules = ReadScaRulesFile()
+        scaRules.readSCARulesAndStackMap(rulePath)
         for (line in lines) {
             tokens = tokenizeWithLexer(line)
             if (tokens.isEmpty()) continue
@@ -168,7 +171,7 @@ class Cli(outputEmitter: OutputEmitter, version: Version) {
                 result.append(
                     sca.analyze(
                         statement,
-                        rulePath,
+                        scaRules,
                     ),
                 )
             } catch (e: ParserError) {

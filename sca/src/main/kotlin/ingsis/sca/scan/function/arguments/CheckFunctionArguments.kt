@@ -3,7 +3,6 @@ package ingsis.sca.scan.function.arguments
 import ingsis.components.Position
 import ingsis.components.TokenType
 import ingsis.components.statement.*
-import ingsis.components.statement.Function
 import ingsis.sca.defaultConfig.getDefaultBooleanValue
 import ingsis.sca.result.InvalidResult
 import ingsis.sca.result.Result
@@ -13,45 +12,57 @@ import ingsis.utils.ReadScaRulesFile
 fun checkFunctionArguments(
     statement: Statement,
     jsonReader: ReadScaRulesFile,
-    literalsAllowed: ArrayList<TokenType>,
+    literalsAllowed: List<TokenType>,
 ): Result {
     return when (statement) {
-        is Function -> handleFunction(statement, jsonReader.getFunctionRuleMap(), literalsAllowed)
+        is AssignationReadInput -> handleAssignationReadInput(statement, jsonReader.getFunctionRuleMap(), literalsAllowed)
+        is CompoundAssignationReadInput -> handleCompoundAssignationReadInput(statement, jsonReader.getFunctionRuleMap(), literalsAllowed)
         is PrintLine -> handlePrintLine(statement, jsonReader.getPrintLnRuleMap(), literalsAllowed)
         else -> InvalidResult(Position(), "no type allowed")
     }
 }
 
-private fun handleFunction(
-    function: Function,
+private fun handleAssignationReadInput(
+    readInput: AssignationReadInput,
     ruleMap: Map<String, Boolean>,
-    literalsAllowed: ArrayList<TokenType>,
+    literalsAllowed: List<TokenType>,
 ): Result {
-    val value = function.getValue()
-    return when (value) {
-        is SingleValue -> handleSingleValue(value, ruleMap, literalsAllowed, function)
-        is Operator -> handleType("expression", ruleMap, value, function)
-        else -> InvalidResult(function.getToken().getPosition(), "${function.getValue()} with unknown value type")
+    return when (val value = readInput.getArgument()) {
+        is SingleValue -> handleSingleValue(value, ruleMap, literalsAllowed, readInput)
+        is Operator -> handleType("expression", ruleMap, value, readInput)
+        else -> InvalidResult(readInput.getPosition(), "${readInput.getStatementType()} with unknown value type")
+    }
+}
+
+private fun handleCompoundAssignationReadInput(
+    readInput: CompoundAssignationReadInput,
+    ruleMap: Map<String, Boolean>,
+    literalsAllowed: List<TokenType>,
+): Result {
+    return when (val value = readInput.getArgument()) {
+        is SingleValue -> handleSingleValue(value, ruleMap, literalsAllowed, readInput)
+        is Operator -> handleType("expression", ruleMap, value, readInput)
+        else -> InvalidResult(readInput.getPosition(), "${readInput.getStatementType()} with unknown value type")
     }
 }
 
 private fun handlePrintLine(
     printLine: PrintLine,
     ruleMap: Map<String, Boolean>,
-    literalsAllowed: ArrayList<TokenType>,
+    literalsAllowed: List<TokenType>,
 ): Result {
     val value = printLine.getValue()
     return when (value) {
         is SingleValue -> handleSingleValue(value, ruleMap, literalsAllowed, printLine)
         is Operator -> handleType("expression", ruleMap, value, printLine)
-        else -> InvalidResult(printLine.getPosition(), "${printLine.getValue()} with unknown value type")
+        else -> InvalidResult(printLine.getPosition(), "${printLine.getStatementType()} with unknown value type")
     }
 }
 
 private fun handleSingleValue(
     value: SingleValue,
     ruleMap: Map<String, Boolean>,
-    literalsAllowed: ArrayList<TokenType>,
+    literalsAllowed: List<TokenType>,
     statement: Statement,
 ): Result {
     val tokenType = value.getToken().getType()
