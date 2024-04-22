@@ -8,5 +8,6 @@ enum class StatementType {
     PRINT_LINE,
     IF,
     ELSE,
-    READ_INPUT,
+    COMPOUND_ASSIGNATION_READ_INPUT,
+    ASSIGNATION_READ_INPUT,
 }

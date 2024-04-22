@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import util.InputReader
 import util.PrintOutputEmitterTests
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -1755,7 +1756,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
 
@@ -1808,7 +1809,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
 
@@ -1861,7 +1862,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
 
@@ -1914,7 +1915,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
 
@@ -1973,7 +1974,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
 
@@ -2037,7 +2038,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
 
@@ -2095,7 +2096,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
 
@@ -2155,7 +2156,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
 
@@ -2193,7 +2194,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
         val position = Position()
@@ -2233,7 +2234,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
         val position = Position()
@@ -2273,7 +2274,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
         val position = Position()
@@ -2313,7 +2314,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
         val position = Position()
@@ -2353,7 +2354,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
         val position = Position()
@@ -2393,7 +2394,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
         val position = Position()
@@ -2433,7 +2434,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
         val position = Position()
@@ -2473,7 +2474,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
         val position = Position()
@@ -2513,7 +2514,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
         val position = Position()
@@ -2553,7 +2554,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
         val position = Position()
@@ -2597,7 +2598,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
         val position = Position()
@@ -2641,7 +2642,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
         val position = Position()
@@ -2685,7 +2686,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
         val position = Position()
@@ -2735,8 +2736,8 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
-                    ReadInputInterpreter(InputReader()),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
+                    CompoundAssignationReadInputInterpreter(InputReader(), scanners),
                 ),
             )
         val position = Position()
@@ -2744,10 +2745,12 @@ class InterpreterTest {
         val variable = Variable("a", position)
         val type = Type(TokenType.INTEGER, position)
         val declarationStatement = Declaration(keyword, variable, type, position)
+        val argument = SingleValue(Token(position, "Write your input", TokenType.STRING))
         val readInput =
-            ReadInput(
+            CompoundAssignationReadInput(
                 position,
                 declarationStatement,
+                argument,
             )
         val pair = interpreter.interpret(readInput, HashMap())
 
@@ -2781,8 +2784,8 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
-                    ReadInputInterpreter(InputReader()),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
+                    CompoundAssignationReadInputInterpreter(InputReader(), scanners),
                 ),
             )
         val position = Position()
@@ -2790,10 +2793,12 @@ class InterpreterTest {
         val variable = Variable("a", position)
         val type = Type(TokenType.DOUBLE, position)
         val declarationStatement = Declaration(keyword, variable, type, position)
+        val argument = SingleValue(Token(position, "Write your input", TokenType.STRING))
         val readInput =
-            ReadInput(
+            CompoundAssignationReadInput(
                 position,
                 declarationStatement,
+                argument,
             )
         val pair = interpreter.interpret(readInput, HashMap())
 
@@ -2827,8 +2832,8 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
-                    ReadInputInterpreter(InputReader()),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
+                    CompoundAssignationReadInputInterpreter(InputReader(), scanners),
                 ),
             )
         val position = Position()
@@ -2836,10 +2841,12 @@ class InterpreterTest {
         val variable = Variable("a", position)
         val type = Type(TokenType.STRING, position)
         val declarationStatement = Declaration(keyword, variable, type, position)
+        val argument = SingleValue(Token(position, "Write your input", TokenType.STRING))
         val readInput =
-            ReadInput(
+            CompoundAssignationReadInput(
                 position,
                 declarationStatement,
+                argument,
             )
         val pair = interpreter.interpret(readInput, HashMap())
 
@@ -2873,8 +2880,8 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
-                    ReadInputInterpreter(InputReader()),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
+                    CompoundAssignationReadInputInterpreter(InputReader(), scanners),
                 ),
             )
         val position = Position()
@@ -2882,10 +2889,12 @@ class InterpreterTest {
         val variable = Variable("a", position)
         val type = Type(TokenType.INTEGER, position)
         val declarationStatement = Declaration(keyword, variable, type, position)
+        val argument = SingleValue(Token(position, "Write your input", TokenType.STRING))
         val readInput =
-            ReadInput(
+            CompoundAssignationReadInput(
                 position,
                 declarationStatement,
+                argument,
             )
         val exception = assertThrows<Exception> { interpreter.interpret(readInput, HashMap()) }
 
@@ -2921,8 +2930,8 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
-                    ReadInputInterpreter(InputReader()),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
+                    CompoundAssignationReadInputInterpreter(InputReader(), scanners),
                 ),
             )
         val position = Position()
@@ -2930,10 +2939,12 @@ class InterpreterTest {
         val variable = Variable("a", position)
         val type = Type(TokenType.DOUBLE, position)
         val declarationStatement = Declaration(keyword, variable, type, position)
+        val argument = SingleValue(Token(position, "Write your input", TokenType.STRING))
         val readInput =
-            ReadInput(
+            CompoundAssignationReadInput(
                 position,
                 declarationStatement,
+                argument,
             )
         val exception = assertThrows<Exception> { interpreter.interpret(readInput, HashMap()) }
 
@@ -2969,8 +2980,8 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
-                    ReadInputInterpreter(InputReader()),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
+                    CompoundAssignationReadInputInterpreter(InputReader(), scanners),
                 ),
             )
         val position = Position()
@@ -2978,10 +2989,12 @@ class InterpreterTest {
         val variable = Variable("a", position)
         val type = Type(TokenType.BOOLEAN, position)
         val declarationStatement = Declaration(keyword, variable, type, position)
+        val argument = SingleValue(Token(position, "Write your input", TokenType.STRING))
         val readInput =
-            ReadInput(
+            CompoundAssignationReadInput(
                 position,
                 declarationStatement,
+                argument,
             )
         val exception = assertThrows<Exception> { interpreter.interpret(readInput, HashMap()) }
 
@@ -3017,8 +3030,8 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
-                    ReadInputInterpreter(InputReader()),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
+                    CompoundAssignationReadInputInterpreter(InputReader(), scanners),
                 ),
             )
         val position = Position()
@@ -3026,10 +3039,12 @@ class InterpreterTest {
         val variable = Variable("a", position)
         val type = Type(TokenType.BOOLEAN, position)
         val declarationStatement = Declaration(keyword, variable, type, position)
+        val argument = SingleValue(Token(position, "Write your input", TokenType.STRING))
         val readInput =
-            ReadInput(
+            CompoundAssignationReadInput(
                 position,
                 declarationStatement,
+                argument,
             )
         val pair = interpreter.interpret(readInput, HashMap())
 
@@ -3063,8 +3078,8 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
-                    ReadInputInterpreter(InputReader()),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
+                    CompoundAssignationReadInputInterpreter(InputReader(), scanners),
                 ),
             )
         val position = Position()
@@ -3072,10 +3087,12 @@ class InterpreterTest {
         val variable = Variable("a", position)
         val type = Type(TokenType.STRING, position)
         val declarationStatement = Declaration(keyword, variable, type, position)
+        val argument = SingleValue(Token(position, "Write your input", TokenType.STRING))
         val readInput =
-            ReadInput(
+            CompoundAssignationReadInput(
                 position,
                 declarationStatement,
+                argument,
             )
         val pair = interpreter.interpret(readInput, HashMap())
 
@@ -3084,5 +3101,311 @@ class InterpreterTest {
 
         assertEquals(1, pair.size)
         assertEquals(Result(type, Modifier.MUTABLE, "true"), pair["a"])
+    }
+
+    @Test
+    fun testAssignationReadInputWithInteger() {
+        val input = ByteArrayInputStream("123".toByteArray())
+        System.setIn(input)
+
+        val output = ByteArrayOutputStream()
+        System.setOut(PrintStream(output))
+
+        val scanners =
+            listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanEqualsOperator())
+        val outputEmitter = PrintOutputEmitterTests()
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
+                    CompoundAssignationReadInputInterpreter(InputReader(), scanners),
+                    AssignationReadInputInterpreter(InputReader(), scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.INTEGER, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+
+        val declarationMap = interpreter.interpret(declarationStatement, HashMap())
+
+        val argument = SingleValue(Token(position, "Write your input", TokenType.STRING))
+
+        val assignationReadInput = AssignationReadInput(position, variable, argument)
+        val variableMap = interpreter.interpret(assignationReadInput, declarationMap)
+
+        System.setIn(System.`in`)
+        System.setOut(System.out)
+
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "123"), variableMap["a"])
+    }
+
+    @Test
+    fun testAssignationReadInputWithDouble() {
+        val input = ByteArrayInputStream("123.456".toByteArray())
+        System.setIn(input)
+
+        val output = ByteArrayOutputStream()
+        System.setOut(PrintStream(output))
+
+        val scanners =
+            listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanEqualsOperator())
+        val outputEmitter = PrintOutputEmitterTests()
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
+                    CompoundAssignationReadInputInterpreter(InputReader(), scanners),
+                    AssignationReadInputInterpreter(InputReader(), scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.DOUBLE, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+
+        val declarationMap = interpreter.interpret(declarationStatement, HashMap())
+
+        val argument = SingleValue(Token(position, "Write your input", TokenType.STRING))
+
+        val assignationReadInput = AssignationReadInput(position, variable, argument)
+        val variableMap = interpreter.interpret(assignationReadInput, declarationMap)
+
+        System.setIn(System.`in`)
+        System.setOut(System.out)
+
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "123.456"), variableMap["a"])
+    }
+
+    @Test
+    fun testAssignationReadInputWithString() {
+        val input = ByteArrayInputStream("hello".toByteArray())
+        System.setIn(input)
+
+        val output = ByteArrayOutputStream()
+        System.setOut(PrintStream(output))
+
+        val scanners =
+            listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanEqualsOperator())
+        val outputEmitter = PrintOutputEmitterTests()
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
+                    CompoundAssignationReadInputInterpreter(InputReader(), scanners),
+                    AssignationReadInputInterpreter(InputReader(), scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.STRING, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+
+        val declarationMap = interpreter.interpret(declarationStatement, HashMap())
+
+        val argument = SingleValue(Token(position, "Write your input", TokenType.STRING))
+
+        val assignationReadInput = AssignationReadInput(position, variable, argument)
+        val variableMap = interpreter.interpret(assignationReadInput, declarationMap)
+
+        System.setIn(System.`in`)
+        System.setOut(System.out)
+
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "hello"), variableMap["a"])
+    }
+
+    @Test
+    fun testAssignationReadInputWithBoolean() {
+        val input = ByteArrayInputStream("true".toByteArray())
+        System.setIn(input)
+
+        val output = ByteArrayOutputStream()
+        System.setOut(PrintStream(output))
+
+        val scanners =
+            listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanEqualsOperator())
+        val outputEmitter = PrintOutputEmitterTests()
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
+                    CompoundAssignationReadInputInterpreter(InputReader(), scanners),
+                    AssignationReadInputInterpreter(InputReader(), scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.BOOLEAN, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+
+        val declarationMap = interpreter.interpret(declarationStatement, HashMap())
+
+        val argument = SingleValue(Token(position, "Write your input", TokenType.STRING))
+
+        val assignationReadInput = AssignationReadInput(position, variable, argument)
+        val variableMap = interpreter.interpret(assignationReadInput, declarationMap)
+
+        System.setIn(System.`in`)
+        System.setOut(System.out)
+
+        assertEquals(1, variableMap.size)
+        assertEquals(Result(type, Modifier.MUTABLE, "true"), variableMap["a"])
+    }
+
+    @Test
+    fun testTryingToAssignAStringToAnIntegerVariable() {
+        val input = ByteArrayInputStream("hello".toByteArray())
+        System.setIn(input)
+
+        val output = ByteArrayOutputStream()
+        System.setOut(PrintStream(output))
+
+        val scanners =
+            listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanEqualsOperator())
+        val outputEmitter = PrintOutputEmitterTests()
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
+                    AssignationReadInputInterpreter(InputReader(), scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.INTEGER, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+
+        val declarationMap = interpreter.interpret(declarationStatement, HashMap())
+
+        val argument = SingleValue(Token(position, "Write your input", TokenType.STRING))
+
+        val assignationReadInput = AssignationReadInput(position, variable, argument)
+        val exception =
+            assertThrows<Exception> {
+                interpreter.interpret(assignationReadInput, declarationMap)
+            }
+
+        System.setIn(System.`in`)
+        System.setOut(System.out)
+
+        assertEquals(
+            "Invalid input",
+            exception.message,
+        )
+    }
+
+    @Test
+    fun testTryingToAssignAStringToADoubleVariable() {
+        val input = ByteArrayInputStream("hello".toByteArray())
+        System.setIn(input)
+
+        val output = ByteArrayOutputStream()
+        System.setOut(PrintStream(output))
+
+        val scanners =
+            listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanEqualsOperator())
+        val outputEmitter = PrintOutputEmitterTests()
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
+                    AssignationReadInputInterpreter(InputReader(), scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.DOUBLE, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+
+        val declarationMap = interpreter.interpret(declarationStatement, HashMap())
+
+        val argument = SingleValue(Token(position, "Write your input", TokenType.STRING))
+
+        val assignationReadInput = AssignationReadInput(position, variable, argument)
+        val exception =
+            assertThrows<Exception> {
+                interpreter.interpret(assignationReadInput, declarationMap)
+            }
+
+        System.setIn(System.`in`)
+        System.setOut(System.out)
+
+        assertEquals(
+            "Invalid input",
+            exception.message,
+        )
+    }
+
+    @Test
+    fun testTryingToAssignAStringToABooleanVariable() {
+        val input = ByteArrayInputStream("hello".toByteArray())
+        System.setIn(input)
+
+        val output = ByteArrayOutputStream()
+        System.setOut(PrintStream(output))
+
+        val scanners =
+            listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator(), ScanEqualsOperator())
+        val outputEmitter = PrintOutputEmitterTests()
+        val interpreter =
+            Interpreter(
+                listOf(
+                    AssignationInterpreter(scanners),
+                    DeclarationInterpreter(),
+                    CompoundAssignationInterpreter(scanners),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
+                    AssignationReadInputInterpreter(InputReader(), scanners),
+                ),
+            )
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("a", position)
+        val type = Type(TokenType.BOOLEAN, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+
+        val declarationMap = interpreter.interpret(declarationStatement, HashMap())
+
+        val argument = SingleValue(Token(position, "Write your input", TokenType.STRING))
+
+        val assignationReadInput = AssignationReadInput(position, variable, argument)
+        val exception =
+            assertThrows<Exception> {
+                interpreter.interpret(assignationReadInput, declarationMap)
+            }
+
+        System.setIn(System.`in`)
+        System.setOut(System.out)
+
+        assertEquals(
+            "Invalid input",
+            exception.message,
+        )
     }
 }

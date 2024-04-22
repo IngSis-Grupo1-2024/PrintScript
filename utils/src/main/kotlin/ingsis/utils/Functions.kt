@@ -1,9 +1,7 @@
 package ingsis.utils
 
 import ingsis.components.TokenType
-import ingsis.components.statement.Modifier
-import ingsis.components.statement.Type
-import ingsis.components.statement.Value
+import ingsis.components.statement.*
 
 fun checkIfVariableDefined(
     value: Value,
@@ -29,4 +27,56 @@ fun getResultType(
         return TokenType.DOUBLE
     }
     return TokenType.INTEGER
+}
+
+fun checkIfNewValueTypeMatchesType(
+    variable: Variable,
+    result: Result,
+    map: Map<String, Result>,
+): Boolean {
+    if (isInteger(map[variable.getName()]?.getType()?.getValue())) {
+        return isDouble(result.getType().getValue()) || isInteger(map[variable.getName()]?.getType()?.getValue())
+    }
+    return map[variable.getName()]?.getType()?.getValue() == result.getType().getValue()
+}
+
+fun isDouble(value: TokenType): Boolean = value == TokenType.DOUBLE
+
+fun isInteger(value: TokenType?): Boolean = value == TokenType.INTEGER
+
+fun checkMutability(
+    variable: Variable,
+    map: Map<String, Result>,
+): Boolean {
+    return if (map[variable.getName()]?.getModifier() == null) {
+        true
+    } else {
+        map[variable.getName()]?.getModifier() == Modifier.MUTABLE
+    }
+}
+
+fun getInputResult(
+    type: Type,
+    input: String,
+    modifier: Modifier,
+): Result {
+    if (type.getValue() == TokenType.BOOLEAN) {
+        if (input == "true" || input == "false") {
+            return Result(type, modifier, input)
+        }
+    }
+    if (type.getValue() == TokenType.INTEGER) {
+        if (input.toIntOrNull() != null) {
+            return Result(type, modifier, input)
+        }
+    }
+    if (type.getValue() == TokenType.STRING) {
+        return Result(type, modifier, input)
+    }
+    if (type.getValue() == TokenType.DOUBLE) {
+        if (input.toDoubleOrNull() != null) {
+            return Result(type, modifier, input)
+        }
+    }
+    throw Exception("Invalid input")
 }

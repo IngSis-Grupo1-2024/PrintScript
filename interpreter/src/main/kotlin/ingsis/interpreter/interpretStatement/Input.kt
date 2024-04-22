@@ -1,5 +1,5 @@
 package ingsis.interpreter.interpretStatement
 
 interface Input {
-    fun readInput(): String
+    fun readInput(string: String): String
 }
