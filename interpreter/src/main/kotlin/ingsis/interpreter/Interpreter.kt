@@ -13,6 +13,7 @@ object PrintScriptInterpreter {
     fun createInterpreter(
         version: String,
         outputEmitter: OutputEmitter,
+        input: Input,
     ): Interpreter {
         return when (version) {
             "VERSION_1" -> {
@@ -27,6 +28,21 @@ object PrintScriptInterpreter {
                 )
             }
 
+            "VERSION_2" -> {
+                val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
+                Interpreter(
+                    listOf(
+                        DeclarationInterpreter(),
+                        AssignationInterpreter(scanners),
+                        AssignationReadInputInterpreter(input, scanners),
+                        CompoundAssignationInterpreter(scanners),
+                        PrintLineInterpreter(scanners, outputEmitter),
+                        IfInterpreter(scanners, version, outputEmitter),
+                        CompoundAssignationReadInputInterpreter(input, scanners),
+                    ),
+                )
+            }
+
             else -> {
                 val scanners = listOf(ScanMulOperator(), ScanSumOperator(), ScanDivOperator(), ScanSubOperator())
                 Interpreter(
@@ -34,6 +50,7 @@ object PrintScriptInterpreter {
                         DeclarationInterpreter(),
                         AssignationInterpreter(scanners),
                         CompoundAssignationInterpreter(scanners),
+                        IfInterpreter(scanners, version, outputEmitter),
                         PrintLineInterpreter(scanners, outputEmitter),
                     ),
                 )
@@ -43,9 +60,6 @@ object PrintScriptInterpreter {
 }
 
 class Interpreter(private val interpreters: List<StatementInterpreter>) {
-    //    fun interpret(statement: Statement): Map<String, Result> =
-//        interpret(statement, emptyMap())
-
     fun interpret(
         statement: Statement,
         variableMap: HashMap<String, Result>,
