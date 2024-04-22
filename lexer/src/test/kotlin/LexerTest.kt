@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test
 
 class LexerTest {
     private val lexer = PrintScriptLexer.createLexer("VERSION_1")
+    private val lexer2 = PrintScriptLexer.createLexer("VERSION_2")
 
     @Test
     fun testTokenizeADeclaration() {
@@ -431,6 +432,302 @@ class LexerTest {
             assertEquals(tokenList[i].getType(), result[i].getType())
             assertEquals(tokenList[i].getValue(), result[i].getValue())
             assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
+    }
+
+    @Test
+    fun testForBooleanAssignationAndDeclarationShouldTokenizeAsSymbol() {
+        val input = "let a:boolean = true;"
+        val tokenList =
+            listOf(
+                Token(Position(1, 4, 1, 1, 1, 4), "let", TokenType.KEYWORD),
+                Token(Position(5, 6, 1, 1, 5, 6), "a", TokenType.SYMBOL),
+                Token(Position(6, 7, 1, 1, 6, 7), ":", TokenType.DECLARATION),
+                Token(Position(7, 14, 1, 1, 7, 14), "boolean", TokenType.TYPE),
+                Token(Position(15, 16, 1, 1, 15, 16), "=", TokenType.ASSIGNATION),
+                Token(Position(17, 21, 1, 1, 17, 21), "true", TokenType.SYMBOL),
+                Token(Position(21, 22, 1, 1, 21, 22), ";", TokenType.DELIMITER),
+            )
+        val result = lexer2.tokenize(input, Position())
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
+    }
+
+    @Test
+    fun testConstAssignationAndDeclaration() {
+        val input = "const a:number = 8;"
+        val tokenList =
+            listOf(
+                Token(Position(1, 6, 1, 1, 1, 6), "const", TokenType.KEYWORD),
+                Token(Position(7, 8, 1, 1, 7, 8), "a", TokenType.SYMBOL),
+                Token(Position(8, 9, 1, 1, 8, 9), ":", TokenType.DECLARATION),
+                Token(Position(9, 15, 1, 1, 9, 15), "number", TokenType.TYPE),
+                Token(Position(16, 17, 1, 1, 16, 17), "=", TokenType.ASSIGNATION),
+                Token(Position(18, 19, 1, 1, 18, 19), "8", TokenType.SYMBOL),
+                Token(Position(19, 20, 1, 1, 19, 20), ";", TokenType.DELIMITER),
+            )
+        val result = lexer2.tokenize(input, Position())
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
+    }
+
+    @Test
+    fun testEqualsComparatorInsideAssignationAndDeclaration() {
+        val input = "let a:boolean = (8 == 9);"
+        val tokenList =
+            listOf(
+                Token(Position(1, 4, 1, 1, 1, 4), "let", TokenType.KEYWORD),
+                Token(Position(5, 6, 1, 1, 5, 6), "a", TokenType.SYMBOL),
+                Token(Position(6, 7, 1, 1, 6, 7), ":", TokenType.DECLARATION),
+                Token(Position(7, 14, 1, 1, 7, 14), "boolean", TokenType.TYPE),
+                Token(Position(15, 16, 1, 1, 15, 16), "=", TokenType.ASSIGNATION),
+                Token(Position(17, 18, 1, 1, 17, 18), "(", TokenType.PARENTHESIS),
+                Token(Position(18, 19, 1, 1, 18, 19), "8", TokenType.SYMBOL),
+                Token(Position(20, 22, 1, 1, 20, 22), "==", TokenType.OPERATOR),
+                Token(Position(23, 24, 1, 1, 23, 24), "9", TokenType.SYMBOL),
+                Token(Position(24, 25, 1, 1, 24, 25), ")", TokenType.PARENTHESIS),
+                Token(Position(25, 26, 1, 1, 25, 26), ";", TokenType.DELIMITER),
+            )
+        val result = lexer2.tokenize(input, Position())
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
+    }
+
+    @Test
+    fun testNotEqualsComparatorInsideAssignationAndDeclaration() {
+        val input = "let a:boolean = (8 != 9);"
+        val tokenList =
+            listOf(
+                Token(Position(1, 4, 1, 1, 1, 4), "let", TokenType.KEYWORD),
+                Token(Position(5, 6, 1, 1, 5, 6), "a", TokenType.SYMBOL),
+                Token(Position(6, 7, 1, 1, 6, 7), ":", TokenType.DECLARATION),
+                Token(Position(7, 14, 1, 1, 7, 14), "boolean", TokenType.TYPE),
+                Token(Position(15, 16, 1, 1, 15, 16), "=", TokenType.ASSIGNATION),
+                Token(Position(17, 18, 1, 1, 17, 18), "(", TokenType.PARENTHESIS),
+                Token(Position(18, 19, 1, 1, 18, 19), "8", TokenType.SYMBOL),
+                Token(Position(20, 22, 1, 1, 20, 22), "!=", TokenType.OPERATOR),
+                Token(Position(23, 24, 1, 1, 23, 24), "9", TokenType.SYMBOL),
+                Token(Position(24, 25, 1, 1, 24, 25), ")", TokenType.PARENTHESIS),
+                Token(Position(25, 26, 1, 1, 25, 26), ";", TokenType.DELIMITER),
+            )
+        val result = lexer2.tokenize(input, Position())
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
+    }
+
+    @Test
+    fun testGreaterThanComparatorInsideAssignationAndDeclaration() {
+        val input = "let a:boolean = (8 >= 9);"
+        val tokenList =
+            listOf(
+                Token(Position(1, 4, 1, 1, 1, 4), "let", TokenType.KEYWORD),
+                Token(Position(5, 6, 1, 1, 5, 6), "a", TokenType.SYMBOL),
+                Token(Position(6, 7, 1, 1, 6, 7), ":", TokenType.DECLARATION),
+                Token(Position(7, 14, 1, 1, 7, 14), "boolean", TokenType.TYPE),
+                Token(Position(15, 16, 1, 1, 15, 16), "=", TokenType.ASSIGNATION),
+                Token(Position(17, 18, 1, 1, 17, 18), "(", TokenType.PARENTHESIS),
+                Token(Position(18, 19, 1, 1, 18, 19), "8", TokenType.SYMBOL),
+                Token(Position(20, 22, 1, 1, 20, 22), ">=", TokenType.OPERATOR),
+                Token(Position(23, 24, 1, 1, 23, 24), "9", TokenType.SYMBOL),
+                Token(Position(24, 25, 1, 1, 24, 25), ")", TokenType.PARENTHESIS),
+                Token(Position(25, 26, 1, 1, 25, 26), ";", TokenType.DELIMITER),
+            )
+        val result = lexer2.tokenize(input, Position())
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
+    }
+
+    @Test
+    fun testLessThanComparatorInsideAssignationAndDeclaration() {
+        val input = "let a:boolean = (8 <= 9);"
+        val tokenList =
+            listOf(
+                Token(Position(1, 4, 1, 1, 1, 4), "let", TokenType.KEYWORD),
+                Token(Position(5, 6, 1, 1, 5, 6), "a", TokenType.SYMBOL),
+                Token(Position(6, 7, 1, 1, 6, 7), ":", TokenType.DECLARATION),
+                Token(Position(7, 14, 1, 1, 7, 14), "boolean", TokenType.TYPE),
+                Token(Position(15, 16, 1, 1, 15, 16), "=", TokenType.ASSIGNATION),
+                Token(Position(17, 18, 1, 1, 17, 18), "(", TokenType.PARENTHESIS),
+                Token(Position(18, 19, 1, 1, 18, 19), "8", TokenType.SYMBOL),
+                Token(Position(20, 22, 1, 1, 20, 22), "<=", TokenType.OPERATOR),
+                Token(Position(23, 24, 1, 1, 23, 24), "9", TokenType.SYMBOL),
+                Token(Position(24, 25, 1, 1, 24, 25), ")", TokenType.PARENTHESIS),
+                Token(Position(25, 26, 1, 1, 25, 26), ";", TokenType.DELIMITER),
+            )
+        val result = lexer2.tokenize(input, Position())
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
+    }
+
+    @Test
+    fun testifTokenization() {
+        val input = "let a:boolean = (8 >= 9);\nif (a) {\n    println(a);\n}"
+        val tokenList =
+            listOf(
+                Token(Position(1, 4, 1, 1, 1, 4), "let", TokenType.KEYWORD),
+                Token(Position(5, 6, 1, 1, 5, 6), "a", TokenType.SYMBOL),
+                Token(Position(6, 7, 1, 1, 6, 7), ":", TokenType.DECLARATION),
+                Token(Position(7, 14, 1, 1, 7, 14), "boolean", TokenType.TYPE),
+                Token(Position(15, 16, 1, 1, 15, 16), "=", TokenType.ASSIGNATION),
+                Token(Position(17, 18, 1, 1, 17, 18), "(", TokenType.PARENTHESIS),
+                Token(Position(18, 19, 1, 1, 18, 19), "8", TokenType.SYMBOL),
+                Token(Position(20, 22, 1, 1, 20, 22), ">=", TokenType.OPERATOR),
+                Token(Position(23, 24, 1, 1, 23, 24), "9", TokenType.SYMBOL),
+                Token(Position(24, 25, 1, 1, 24, 25), ")", TokenType.PARENTHESIS),
+                Token(Position(25, 26, 1, 1, 25, 26), ";", TokenType.DELIMITER),
+                Token(Position(26, 28, 2, 2, 1, 3), "if", TokenType.FUNCTION_KEYWORD),
+                Token(Position(29, 30, 2, 2, 4, 5), "(", TokenType.PARENTHESIS),
+                Token(Position(30, 31, 2, 2, 5, 6), "a", TokenType.SYMBOL),
+                Token(Position(31, 32, 2, 2, 6, 7), ")", TokenType.PARENTHESIS),
+                Token(Position(33, 34, 2, 2, 8, 9), "{", TokenType.BRACES),
+                Token(Position(38, 45, 3, 3, 5, 12), "println", TokenType.FUNCTION),
+                Token(Position(45, 46, 3, 3, 12, 13), "(", TokenType.PARENTHESIS),
+                Token(Position(46, 47, 3, 3, 13, 14), "a", TokenType.SYMBOL),
+                Token(Position(47, 48, 3, 3, 14, 15), ")", TokenType.PARENTHESIS),
+                Token(Position(48, 49, 3, 3, 15, 16), ";", TokenType.DELIMITER),
+                Token(Position(49, 50, 4, 4, 1, 2), "}", TokenType.BRACES),
+                )
+        val result = lexer2.tokenize(input, Position())
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
+    }
+
+    @Test
+    fun testIfAndElseTogether() {
+        val input = "if (a) {\n    println(a);\n} else {\n    println(b);\n}"
+        val tokenList =
+            listOf(
+                Token(Position(1, 3, 1, 1, 1, 3), "if", TokenType.FUNCTION_KEYWORD),
+                Token(Position(4, 5, 1, 1, 4, 5), "(", TokenType.PARENTHESIS),
+                Token(Position(5, 6, 1, 1, 5, 6), "a", TokenType.SYMBOL),
+                Token(Position(6, 7, 1, 1, 6, 7), ")", TokenType.PARENTHESIS),
+                Token(Position(8, 9, 1, 1, 8, 9), "{", TokenType.BRACES),
+                Token(Position(13, 20, 2, 2, 5, 12), "println", TokenType.FUNCTION),
+                Token(Position(20, 21, 2, 2, 12, 13), "(", TokenType.PARENTHESIS),
+                Token(Position(21, 22, 2, 2, 13, 14), "a", TokenType.SYMBOL),
+                Token(Position(22, 23, 2, 2, 14, 15), ")", TokenType.PARENTHESIS),
+                Token(Position(23, 24, 2, 2, 15, 16), ";", TokenType.DELIMITER),
+                Token(Position(24, 25, 3, 3, 1, 2), "}", TokenType.BRACES),
+                Token(Position(26, 30, 3, 3, 3, 7), "else", TokenType.FUNCTION_KEYWORD),
+                Token(Position(31, 32, 3, 3, 8, 9), "{", TokenType.BRACES),
+                Token(Position(36, 43, 4, 4, 5, 12), "println", TokenType.FUNCTION),
+                Token(Position(43, 44, 4, 4, 12, 13), "(", TokenType.PARENTHESIS),
+                Token(Position(44, 45, 4, 4, 13, 14), "b", TokenType.SYMBOL),
+                Token(Position(45, 46, 4, 4, 14, 15), ")", TokenType.PARENTHESIS),
+                Token(Position(46, 47, 4, 4, 15, 16), ";", TokenType.DELIMITER),
+                Token(Position(47, 48, 5, 5, 1, 2), "}", TokenType.BRACES),
+                )
+        val result = lexer2.tokenize(input, Position())
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
+    }
+
+    @Test
+    fun testRareVariableNames() {
+        val input = "let numberResult:number;"
+        val tokenList =
+            listOf(
+                Token(Position(1, 4, 1, 1, 1, 4), "let", TokenType.KEYWORD),
+                Token(Position(5, 17, 1, 1, 5, 17), "numberResult", TokenType.SYMBOL),
+                Token(Position(17, 18, 1, 1, 17, 18), ":", TokenType.DECLARATION),
+                Token(Position(18, 24, 1, 1, 18, 24), "number", TokenType.TYPE),
+                Token(Position(24, 25, 1, 1, 24, 25), ";", TokenType.DELIMITER),
+            )
+        val result = lexer2.tokenize(input, Position())
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
+    }
+
+    @Test
+    fun testWithDoubleNumber() {
+        val input = "let a:number = 8.5;"
+        val tokenList =
+            listOf(
+                Token(Position(1, 4, 1, 1, 1, 4), "let", TokenType.KEYWORD),
+                Token(Position(5, 6, 1, 1, 5, 6), "a", TokenType.SYMBOL),
+                Token(Position(6, 7, 1, 1, 6, 7), ":", TokenType.DECLARATION),
+                Token(Position(7, 13, 1, 1, 7, 13), "number", TokenType.TYPE),
+                Token(Position(14, 15, 1, 1, 14, 15), "=", TokenType.ASSIGNATION),
+                Token(Position(16, 19, 1, 1, 16, 19), "8.5", TokenType.SYMBOL),
+                Token(Position(19, 20, 1, 1, 19, 20), ";", TokenType.DELIMITER),
+            )
+        val result = lexer2.tokenize(input, Position())
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
+    }
+
+    @Test
+    fun testReadEnvFunctionTokenization() {
+        val input = "let a:string = readEnv('hola');"
+        val tokenList =
+            listOf(
+                Token(Position(1, 4, 1, 1, 1, 4), "let", TokenType.KEYWORD),
+                Token(Position(5, 6, 1, 1, 5, 6), "a", TokenType.SYMBOL),
+                Token(Position(6, 7, 1, 1, 6, 7), ":", TokenType.DECLARATION),
+                Token(Position(7, 13, 1, 1, 7, 13), "string", TokenType.TYPE),
+                Token(Position(14, 15, 1, 1, 14, 15), "=", TokenType.ASSIGNATION),
+                Token(Position(16, 19, 1, 1, 16, 19), "readEnv", TokenType.FUNCTION),
+                Token(Position(), "(", TokenType.PARENTHESIS),
+                Token(Position(), "'hola'", TokenType.SYMBOL),
+                Token(Position(), ")", TokenType.PARENTHESIS),
+                Token(Position(19, 20, 1, 1, 19, 20), ";", TokenType.DELIMITER),
+            )
+        val result = lexer2.tokenize(input, Position())
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
             i++
         }
     }
