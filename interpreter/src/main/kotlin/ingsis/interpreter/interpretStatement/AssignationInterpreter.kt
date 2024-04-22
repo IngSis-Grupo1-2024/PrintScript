@@ -1,10 +1,11 @@
 package ingsis.interpreter.interpretStatement
 
-import ingsis.components.TokenType
 import ingsis.components.statement.*
 import ingsis.interpreter.operatorScanner.ScanOperatorType
 import ingsis.interpreter.valueAnalyzer.ValueAnalyzer
 import ingsis.utils.Result
+import ingsis.utils.checkIfNewValueTypeMatchesType
+import ingsis.utils.checkMutability
 
 class AssignationInterpreter(private val scanners: List<ScanOperatorType>) : StatementInterpreter {
     override fun canHandle(statement: Statement): Boolean = statement.getStatementType() == StatementType.ASSIGNATION
@@ -33,31 +34,5 @@ class AssignationInterpreter(private val scanners: List<ScanOperatorType>) : Sta
         }
 
         return previousState
-    }
-
-    private fun checkIfNewValueTypeMatchesType(
-        variable: Variable,
-        result: Result,
-        map: Map<String, Result>,
-    ): Boolean {
-        if (isInteger(map[variable.getName()]?.getType()?.getValue())) {
-            return isDouble(result.getType().getValue()) || isInteger(map[variable.getName()]?.getType()?.getValue())
-        }
-        return map[variable.getName()]?.getType()?.getValue() == result.getType().getValue()
-    }
-
-    private fun isDouble(value: TokenType): Boolean = value == TokenType.DOUBLE
-
-    private fun isInteger(value: TokenType?): Boolean = value == TokenType.INTEGER
-
-    private fun checkMutability(
-        variable: Variable,
-        map: Map<String, Result>,
-    ): Boolean {
-        return if (map[variable.getName()]?.getModifier() == null) {
-            true
-        } else {
-            map[variable.getName()]?.getModifier() == Modifier.MUTABLE
-        }
     }
 }

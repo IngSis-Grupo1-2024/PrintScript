@@ -15,7 +15,7 @@ class DeclarationInterpreter : StatementInterpreter {
         val declaration = statement as Declaration
         val variable = declaration.getVariable()
         val type = declaration.getType()
-        previousState[variable.getName()] = Result(type, null, null)
+        previousState[variable.getName()] = Result(type, declaration.getKeyword().getModifier(), null)
         return previousState
     }
 }

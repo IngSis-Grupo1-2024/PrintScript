@@ -10,5 +10,6 @@ enum class StatementType {
     READ_INPUT,
     IF,
     ELSE,
-    READ_INPUT,
+    COMPOUND_ASSIGNATION_READ_INPUT,
+    ASSIGNATION_READ_INPUT,
 }
