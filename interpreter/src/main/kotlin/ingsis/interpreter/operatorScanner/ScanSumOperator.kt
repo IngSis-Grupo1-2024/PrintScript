@@ -7,6 +7,7 @@ import ingsis.components.statement.SingleValue
 import ingsis.components.statement.Value
 import ingsis.utils.Result
 import ingsis.utils.checkIfVariableDefined
+import ingsis.utils.getResultType
 
 class ScanSumOperator : ScanOperatorType {
     override fun canHandle(operator: String): Boolean {
@@ -22,19 +23,29 @@ class ScanSumOperator : ScanOperatorType {
         val firstValue = checkIfVariableDefined(left, map)
         val secondValue = checkIfVariableDefined(right, map)
 
-        if (firstValue.getType().getValue() == TokenType.STRING || secondValue.getType().getValue() == TokenType.STRING) {
-            val finalValue = firstValue.getValue() + secondValue.getValue()
-            return SingleValue(token = Token(Position(), finalValue, TokenType.STRING))
-        } else if (firstValue.getType().getValue() != TokenType.INTEGER ||
-            secondValue.getType().getValue() != TokenType.INTEGER
-        ) {
-            throw Error(
-                "Can't do addition using no integer types or string types in line " +
+        val firstType = firstValue.getType().getValue()
+        val secondType = secondValue.getType().getValue()
+
+        if (firstType == TokenType.BOOLEAN || secondType == TokenType.BOOLEAN) {
+            throw Exception(
+                "Sum operation is just allowed between integers and strings in line " +
                     operatorPosition.startLine + " at position " +
                     operatorPosition.startColumn,
             )
         }
-        val finalValue = firstValue.getValue()!!.toInt() + secondValue.getValue()!!.toInt()
-        return SingleValue(token = Token(Position(), finalValue.toString(), TokenType.INTEGER))
+
+        if (firstType == TokenType.STRING || secondType == TokenType.STRING) {
+            val finalValue = firstValue.getValue().toString() + secondValue.getValue().toString()
+            return SingleValue(Token(Position(), finalValue, TokenType.STRING))
+        }
+
+        val resultType = getResultType(firstType, secondType)
+        if (resultType == TokenType.DOUBLE) {
+            val finalValue = firstValue.getValue()!!.toDouble() + secondValue.getValue()!!.toDouble()
+            return SingleValue(Token(Position(), finalValue.toString(), TokenType.DOUBLE))
+        } else {
+            val finalValue = firstValue.getValue()!!.toInt() + secondValue.getValue()!!.toInt()
+            return SingleValue(Token(Position(), finalValue.toString(), TokenType.INTEGER))
+        }
     }
 }

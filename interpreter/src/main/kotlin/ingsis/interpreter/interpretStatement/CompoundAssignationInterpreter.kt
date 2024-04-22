@@ -11,18 +11,20 @@ class CompoundAssignationInterpreter(private val scanners: List<ScanOperatorType
     override fun interpret(
         statement: Statement,
         previousState: HashMap<String, Result>,
-    ): Pair<HashMap<String, Result>, String?> {
+    ): HashMap<String, Result> {
         val compoundAssignation = statement as CompoundAssignation
         val variable = compoundAssignation.getDeclaration().getVariable()
+        val variableModifier = compoundAssignation.getDeclaration().getKeyword().getModifier()
         val value = compoundAssignation.getValue()
-        val result = ValueAnalyzer(scanners).analyze(value, previousState)
+        var result = ValueAnalyzer(scanners).analyze(value, previousState)
+        result = result.updateModifier(variableModifier)
         if (checkIfNewValueTypeMatchesType(compoundAssignation.getDeclaration(), result)) {
             previousState[variable.getName()] = result
         } else {
             throw Exception("Type mismatch")
         }
 
-        return Pair(previousState, null)
+        return previousState
     }
 
     private fun checkIfNewValueTypeMatchesType(

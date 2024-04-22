@@ -1,4 +1,5 @@
 package ingsis.sca.defaultConfig
+
 import ingsis.sca.scan.cases.ScanCamelCase
 
 fun getDefaultBooleanValue(name: String): Boolean {

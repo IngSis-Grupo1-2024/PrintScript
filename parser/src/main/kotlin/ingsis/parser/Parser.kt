@@ -43,6 +43,8 @@ class Parser(private val scanStatement: List<ScanStatement>) {
     private fun getTokenWithRightType(token: Token): Token {
         if (checkIfString(token) || checkIfChar(token)) {
             return Token(token.getPosition(), getStringWithoutQuotes(token), TokenType.STRING)
+        } else if (checkIfDouble(token)) {
+            return Token(token.getPosition(), token.getValue(), TokenType.DOUBLE)
         } else if (checkIfNumber(token)) {
             return Token(token.getPosition(), token.getValue(), TokenType.INTEGER)
         }
@@ -52,6 +54,8 @@ class Parser(private val scanStatement: List<ScanStatement>) {
     private fun getStringWithoutQuotes(token: Token): String = token.getValue().substring(1, token.getValue().length - 1)
 
     private fun checkIfNumber(token: Token): Boolean = token.getValue().toIntOrNull() != null
+
+    private fun checkIfDouble(token: Token): Boolean = token.getValue().contains(".") && (token.getValue().toDoubleOrNull() != null)
 
     private fun checkIfString(token: Token) = token.getValue()[0] == '"' && token.getValue().last() == '"'
 

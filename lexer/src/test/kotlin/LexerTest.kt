@@ -320,6 +320,48 @@ class LexerTest {
     }
 
     @Test
+    fun testPrintlinFunctionWithOneString() {
+        val input = "println(\"hello world\");"
+        val tokenList =
+            listOf(
+                Token(Position(1, 8, 1, 1, 1, 8), "println", TokenType.FUNCTION),
+                Token(Position(8, 9, 1, 1, 8, 9), "(", TokenType.PARENTHESIS),
+                Token(Position(9, 22, 1, 1, 9, 22), "\"hello world\"", TokenType.SYMBOL),
+                Token(Position(22, 23, 1, 1, 22, 23), ")", TokenType.PARENTHESIS),
+                Token(Position(23, 24, 1, 1, 23, 24), ";", TokenType.DELIMITER),
+            )
+        val result = lexer.tokenize(input, Position())
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
+    }
+
+    @Test
+    fun testPrintlinFunctionWithMultipleSpacesInsideString() {
+        val input = "println(\" hello   world \");"
+        val tokenList =
+            listOf(
+                Token(Position(1, 8, 1, 1, 1, 8), "println", TokenType.FUNCTION),
+                Token(Position(8, 9, 1, 1, 8, 9), "(", TokenType.PARENTHESIS),
+                Token(Position(9, 26, 1, 1, 9, 26), "\" hello   world \"", TokenType.SYMBOL),
+                Token(Position(26, 27, 1, 1, 26, 27), ")", TokenType.PARENTHESIS),
+                Token(Position(27, 28, 1, 1, 27, 28), ";", TokenType.DELIMITER),
+            )
+        val result = lexer.tokenize(input, Position())
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
+    }
+
+    @Test
     fun testPrintlnFunctionWithVariable() {
         val input = "println(x);"
         val tokenList =

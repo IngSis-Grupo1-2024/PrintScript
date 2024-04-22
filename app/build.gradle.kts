@@ -5,6 +5,8 @@
 plugins {
     application
     id("PrintScript.kotlin-application-conventions")
+    id("publish-plugin")
+    java
 }
 
 dependencies {

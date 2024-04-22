@@ -5,6 +5,7 @@
 plugins {
     // Apply the common convention plugin for shared build configuration between library and application projects.
     id("PrintScript.kotlin-common-conventions")
+    id("publish-plugin")
 
     // Apply the java-library plugin for API and implementation separation.
     `java-library`
