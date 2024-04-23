@@ -382,7 +382,7 @@ class ParserTestV2 {
                 Token(position, "readInput", TokenType.FUNCTION),
                 SingleValue(
                     Token(position, "this is a text", TokenType.STRING),
-                )
+                ),
             )
         assertTrue(scanFunction.canHandle(tokens))
         assertEquals(astExpected.toString(), scanFunction.makeValue(tokens).toString())
@@ -407,7 +407,7 @@ class ParserTestV2 {
                     Token(position, "+", TokenType.OPERATOR),
                     SingleValue(Token(position, "this is ", TokenType.STRING)),
                     SingleValue(Token(position, "a text", TokenType.STRING)),
-                )
+                ),
             )
         assertTrue(scanFunction.canHandle(tokens))
         assertEquals(astExpected.toString(), scanFunction.makeValue(tokens).toString())
@@ -480,6 +480,7 @@ class ParserTestV2 {
             )
         assertEquals(listOf(astExpected).toString(), parserV2.parse(tokens).toString())
     }
+
     @Test
     fun `test 016 - function read env with an string value in simple assignation`() {
         val tokens =
@@ -546,12 +547,13 @@ class ParserTestV2 {
                     Keyword(Modifier.MUTABLE, "let", position),
                     Variable("x", position),
                     Type(TokenType.STRING, position),
-                    position
+                    position,
                 ),
                 "",
             )
         assertEquals(listOf(astExpected).toString(), parserV2.parse(tokens).toString())
     }
+
     @Test
     fun `test 019 - function read env with an string value in compound assignation`() {
         val tokens =
@@ -574,7 +576,7 @@ class ParserTestV2 {
                     Keyword(Modifier.MUTABLE, "let", position),
                     Variable("x", position),
                     Type(TokenType.STRING, position),
-                    position
+                    position,
                 ),
                 "GITHUB",
             )
@@ -643,7 +645,7 @@ class ParserTestV2 {
                     Keyword(Modifier.MUTABLE, "let", position),
                     Variable("x", position),
                     Type(TokenType.STRING, position),
-                    position
+                    position,
                 ),
                 SingleValue(Token(position, "", TokenType.STRING)),
             )
@@ -672,7 +674,7 @@ class ParserTestV2 {
                     Keyword(Modifier.MUTABLE, "let", position),
                     Variable("x", position),
                     Type(TokenType.STRING, position),
-                    position
+                    position,
                 ),
                 SingleValue(Token(position, "this is a text", TokenType.STRING)),
             )
@@ -703,7 +705,7 @@ class ParserTestV2 {
                     Keyword(Modifier.MUTABLE, "let", position),
                     Variable("x", position),
                     Type(TokenType.STRING, position),
-                    position
+                    position,
                 ),
                 Operator(
                     Token(position, "+", TokenType.OPERATOR),

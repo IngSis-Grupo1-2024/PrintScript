@@ -18,6 +18,4 @@ class CompoundAssignationReadInput(
     override fun toString(): String {
         return "CompoundAssignationReadInput(declaration=$declaration, argument=$argument)"
     }
-
-
 }

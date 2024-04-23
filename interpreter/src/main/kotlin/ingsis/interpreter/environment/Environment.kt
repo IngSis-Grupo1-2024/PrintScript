@@ -6,8 +6,7 @@ import ingsis.components.TokenType
 import ingsis.components.statement.SingleValue
 import ingsis.interpreter.interpretStatement.VariableType
 
-class Environment (private val variables: Map<String, EnvironmentVariable> = emptyMap()){
-
+class Environment(private val variables: Map<String, EnvironmentVariable> = emptyMap()) {
     fun getVariable(name: String): EnvironmentVariable? {
         return try {
             variables[name]
@@ -38,5 +37,4 @@ class Environment (private val variables: Map<String, EnvironmentVariable> = emp
             else -> VariableType.STRING
         }
     }
-
 }

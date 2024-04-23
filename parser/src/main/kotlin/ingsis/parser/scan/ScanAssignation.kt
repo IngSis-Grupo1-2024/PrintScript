@@ -94,8 +94,11 @@ class ScanAssignation(private val scanDeclaration: ScanDeclaration, private val 
         return CompoundAssignationReadEnv(position, decl, value.getLeftOperator().getToken().getValue())
     }
 
-
-    private fun getAssignationReadEnv(position: Position, variable: Variable, value: Operator): Statement {
+    private fun getAssignationReadEnv(
+        position: Position,
+        variable: Variable,
+        value: Operator,
+    ): Statement {
         return AssignationReadEnv(position, variable, value.getLeftOperator().getToken().getValue())
     }
 
