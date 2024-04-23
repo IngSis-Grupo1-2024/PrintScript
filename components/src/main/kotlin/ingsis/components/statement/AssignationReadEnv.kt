@@ -14,4 +14,8 @@ class AssignationReadEnv(
     fun getVariable(): Variable = variable
     fun getVariableName(): String = envVariableName
     fun getPosition(): Position = position
+    override fun toString(): String {
+        return "AssignationReadEnv(variable=$variable, envVariableName='$envVariableName')"
+    }
+
 }

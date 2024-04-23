@@ -40,9 +40,14 @@ class ScanFunction(private val scanValue: ScanValue) : ValueScanner {
     }
 
     override fun makeValue(tokens: List<Token>): Value {
-        val value = scanValue.makeValue(tokens.subList(2, tokens.size - 1))
-        if (value.isEmpty()) return SingleValue(Token(Position(), "", TokenType.STRING))
+        var value = scanValue.makeValue(tokens.subList(2, tokens.size - 1))
+        if (value.isEmpty()) value = SingleValue(Token(Position(), "", TokenType.STRING))
+        if(isReadEnv(tokens[0])) checkValueReadEnv(value, tokens)
         return Operator(tokens[0], value)
+    }
+
+    private fun checkValueReadEnv(value: Value, tokens: List<Token>) {
+        if(value.getChildrenAmount() > 1) throw ParserError("error: the function readEnv can only have 1 string as an argument", tokens[3])
     }
 
     private fun checkFirstPart(tokens: List<Token>): Boolean {

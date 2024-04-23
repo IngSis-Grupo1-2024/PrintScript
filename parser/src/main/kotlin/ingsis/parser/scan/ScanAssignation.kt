@@ -71,8 +71,12 @@ class ScanAssignation(private val scanDeclaration: ScanDeclaration, private val 
         val decl: Declaration = scanDeclaration.makeAST(tokens.subList(0, assignIndex)) as Declaration
         val value: Value = makeValue(tokens.subList(assignIndex + 1, tokens.size - 1))
         if (readInput(value)) return getCompoundAssignationReadInput(tokens[assignIndex].getPosition(), decl, value as Operator)
+        if (readEnv(value)) return getCompoundAssignationReadEnv(tokens[assignIndex].getPosition(), decl, value as Operator)
         return CompoundAssignation(tokens[assignIndex].getPosition(), decl, value)
     }
+
+    private fun readEnv(value: Value): Boolean =
+        value.getToken().getValue() == "readEnv" && value.getToken().getType() == TokenType.FUNCTION
 
     private fun getCompoundAssignationReadInput(
         position: Position,
@@ -82,7 +86,21 @@ class ScanAssignation(private val scanDeclaration: ScanDeclaration, private val 
         return CompoundAssignationReadInput(position, decl, value.getLeftOperator())
     }
 
-    private fun readInput(value: Value): Boolean = value.getToken().getValue() == "readInput"
+    private fun getCompoundAssignationReadEnv(
+        position: Position,
+        decl: Declaration,
+        value: Operator,
+    ): Statement {
+        return CompoundAssignationReadEnv(position, decl, value.getLeftOperator().getToken().getValue())
+    }
+
+
+    private fun getAssignationReadEnv(position: Position, variable: Variable, value: Operator): Statement {
+        return AssignationReadEnv(position, variable, value.getLeftOperator().getToken().getValue())
+    }
+
+    private fun readInput(value: Value): Boolean =
+        value.getToken().getValue() == "readInput" && value.getToken().getType() == TokenType.FUNCTION
 
     private fun makeValue(tokens: List<Token>): Value {
         valueScanners.forEach {
@@ -101,6 +119,7 @@ class ScanAssignation(private val scanDeclaration: ScanDeclaration, private val 
         val variable = getVariable(tokens[0])
         val value: Value = makeValue(tokens.subList(assignIndex + 1, tokens.size - 1))
         if (readInput(value)) return getAssignationReadInput(position, variable, value as Operator)
+        if (readEnv(value)) return getAssignationReadEnv(tokens[assignIndex].getPosition(), variable, value as Operator)
         return Assignation(
             position,
             variable,

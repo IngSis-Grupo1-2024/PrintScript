@@ -16,5 +16,9 @@ class CompoundAssignationReadEnv(
     fun getPosition(): Position = position
 
     fun getParam(): String = param
+    override fun toString(): String {
+        return "CompoundAssignationReadEnv(declaration=$declaration, param='$param')"
+    }
+
 
 }

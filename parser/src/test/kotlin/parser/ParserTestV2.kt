@@ -358,7 +358,11 @@ class ParserTestV2 {
                 Token(position, "(", TokenType.PARENTHESIS),
                 Token(position, ")", TokenType.PARENTHESIS),
             )
-        val astExpected: Value = EmptyValue()
+        val astExpected: Value =
+            Operator(
+                Token(position, "readInput", TokenType.FUNCTION),
+                SingleValue(Token(position, "", TokenType.STRING)),
+            )
         assertTrue(scanFunction.canHandle(tokens))
         assertEquals(astExpected.toString(), scanFunction.makeValue(tokens).toString())
     }
@@ -374,8 +378,11 @@ class ParserTestV2 {
                 Token(position, ")", TokenType.PARENTHESIS),
             )
         val astExpected: Value =
-            SingleValue(
-                Token(position, "this is a text", TokenType.STRING),
+            Operator(
+                Token(position, "readInput", TokenType.FUNCTION),
+                SingleValue(
+                    Token(position, "this is a text", TokenType.STRING),
+                )
             )
         assertTrue(scanFunction.canHandle(tokens))
         assertEquals(astExpected.toString(), scanFunction.makeValue(tokens).toString())
@@ -395,9 +402,12 @@ class ParserTestV2 {
             )
         val astExpected: Value =
             Operator(
-                Token(position, "+", TokenType.OPERATOR),
-                SingleValue(Token(position, "this is ", TokenType.STRING)),
-                SingleValue(Token(position, "a text", TokenType.STRING)),
+                Token(position, "readInput", TokenType.FUNCTION),
+                Operator(
+                    Token(position, "+", TokenType.OPERATOR),
+                    SingleValue(Token(position, "this is ", TokenType.STRING)),
+                    SingleValue(Token(position, "a text", TokenType.STRING)),
+                )
             )
         assertTrue(scanFunction.canHandle(tokens))
         assertEquals(astExpected.toString(), scanFunction.makeValue(tokens).toString())
@@ -421,6 +431,280 @@ class ParserTestV2 {
             AssignationReadInput(
                 position,
                 Variable("x", position),
+                Operator(
+                    Token(position, "+", TokenType.OPERATOR),
+                    SingleValue(Token(position, "this is ", TokenType.STRING)),
+                    SingleValue(Token(position, "a text", TokenType.STRING)),
+                ),
+            )
+        assertEquals(listOf(astExpected).toString(), parserV2.parse(tokens).toString())
+    }
+
+    @Test
+    fun `test 014 - function read env with an operation as value in simple assignation`() {
+        val tokens =
+            listOf(
+                Token(position, "x", TokenType.IDENTIFIER),
+                Token(position, "=", TokenType.ASSIGNATION),
+                Token(position, "readEnv", TokenType.FUNCTION),
+                Token(position, "(", TokenType.PARENTHESIS),
+                Token(position, "this is ", TokenType.STRING),
+                Token(position, "+", TokenType.OPERATOR),
+                Token(position, "a text", TokenType.STRING),
+                Token(position, ")", TokenType.PARENTHESIS),
+                Token(position, ";", TokenType.DELIMITER),
+            )
+        val exception = assertThrows<ParserError> { parserV2.parse(tokens) }
+        assertEquals(
+            "error: the function readEnv can only have 1 string as an argument",
+            exception.message,
+        )
+    }
+
+    @Test
+    fun `test 015 - function read env with an empty value in simple assignation`() {
+        val tokens =
+            listOf(
+                Token(position, "x", TokenType.IDENTIFIER),
+                Token(position, "=", TokenType.ASSIGNATION),
+                Token(position, "readEnv", TokenType.FUNCTION),
+                Token(position, "(", TokenType.PARENTHESIS),
+                Token(position, ")", TokenType.PARENTHESIS),
+                Token(position, ";", TokenType.DELIMITER),
+            )
+        val astExpected: Statement =
+            AssignationReadEnv(
+                position,
+                Variable("x", position),
+                "",
+            )
+        assertEquals(listOf(astExpected).toString(), parserV2.parse(tokens).toString())
+    }
+    @Test
+    fun `test 016 - function read env with an string value in simple assignation`() {
+        val tokens =
+            listOf(
+                Token(position, "x", TokenType.IDENTIFIER),
+                Token(position, "=", TokenType.ASSIGNATION),
+                Token(position, "readEnv", TokenType.FUNCTION),
+                Token(position, "(", TokenType.PARENTHESIS),
+                Token(position, "GITHUB", TokenType.STRING),
+                Token(position, ")", TokenType.PARENTHESIS),
+                Token(position, ";", TokenType.DELIMITER),
+            )
+        val astExpected: Statement =
+            AssignationReadEnv(
+                position,
+                Variable("x", position),
+                "GITHUB",
+            )
+        assertEquals(listOf(astExpected).toString(), parserV2.parse(tokens).toString())
+    }
+
+    @Test
+    fun `test 017 - function read env with an operation as value in compound assignation`() {
+        val tokens =
+            listOf(
+                Token(position, "let", TokenType.KEYWORD),
+                Token(position, "x", TokenType.IDENTIFIER),
+                Token(position, ":", TokenType.DECLARATION),
+                Token(position, "string", TokenType.TYPE),
+                Token(position, "=", TokenType.ASSIGNATION),
+                Token(position, "readEnv", TokenType.FUNCTION),
+                Token(position, "(", TokenType.PARENTHESIS),
+                Token(position, "this is ", TokenType.STRING),
+                Token(position, "+", TokenType.OPERATOR),
+                Token(position, "a text", TokenType.STRING),
+                Token(position, ")", TokenType.PARENTHESIS),
+                Token(position, ";", TokenType.DELIMITER),
+            )
+        val exception = assertThrows<ParserError> { parserV2.parse(tokens) }
+        assertEquals(
+            "error: the function readEnv can only have 1 string as an argument",
+            exception.message,
+        )
+    }
+
+    @Test
+    fun `test 018 - function read env with an empty value in compound assignation`() {
+        val tokens =
+            listOf(
+                Token(position, "let", TokenType.KEYWORD),
+                Token(position, "x", TokenType.IDENTIFIER),
+                Token(position, ":", TokenType.DECLARATION),
+                Token(position, "string", TokenType.TYPE),
+                Token(position, "=", TokenType.ASSIGNATION),
+                Token(position, "readEnv", TokenType.FUNCTION),
+                Token(position, "(", TokenType.PARENTHESIS),
+                Token(position, ")", TokenType.PARENTHESIS),
+                Token(position, ";", TokenType.DELIMITER),
+            )
+        val astExpected: Statement =
+            CompoundAssignationReadEnv(
+                position,
+                Declaration(
+                    Keyword(Modifier.MUTABLE, "let", position),
+                    Variable("x", position),
+                    Type(TokenType.STRING, position),
+                    position
+                ),
+                "",
+            )
+        assertEquals(listOf(astExpected).toString(), parserV2.parse(tokens).toString())
+    }
+    @Test
+    fun `test 019 - function read env with an string value in compound assignation`() {
+        val tokens =
+            listOf(
+                Token(position, "let", TokenType.KEYWORD),
+                Token(position, "x", TokenType.IDENTIFIER),
+                Token(position, ":", TokenType.DECLARATION),
+                Token(position, "string", TokenType.TYPE),
+                Token(position, "=", TokenType.ASSIGNATION),
+                Token(position, "readEnv", TokenType.FUNCTION),
+                Token(position, "(", TokenType.PARENTHESIS),
+                Token(position, "GITHUB", TokenType.STRING),
+                Token(position, ")", TokenType.PARENTHESIS),
+                Token(position, ";", TokenType.DELIMITER),
+            )
+        val astExpected: Statement =
+            CompoundAssignationReadEnv(
+                position,
+                Declaration(
+                    Keyword(Modifier.MUTABLE, "let", position),
+                    Variable("x", position),
+                    Type(TokenType.STRING, position),
+                    position
+                ),
+                "GITHUB",
+            )
+        assertEquals(listOf(astExpected).toString(), parserV2.parse(tokens).toString())
+    }
+
+    @Test
+    fun `test 020 - function read input with an string as value in simple assignation`() {
+        val tokens =
+            listOf(
+                Token(position, "x", TokenType.IDENTIFIER),
+                Token(position, "=", TokenType.ASSIGNATION),
+                Token(position, "readInput", TokenType.FUNCTION),
+                Token(position, "(", TokenType.PARENTHESIS),
+                Token(position, "this is a text", TokenType.STRING),
+                Token(position, ")", TokenType.PARENTHESIS),
+                Token(position, ";", TokenType.DELIMITER),
+            )
+        val astExpected: Statement =
+            AssignationReadInput(
+                position,
+                Variable("x", position),
+                SingleValue(Token(position, "this is a text", TokenType.STRING)),
+            )
+        assertEquals(listOf(astExpected).toString(), parserV2.parse(tokens).toString())
+    }
+
+    @Test
+    fun `test 021 - function read input with an string as value in simple assignation`() {
+        val tokens =
+            listOf(
+                Token(position, "x", TokenType.IDENTIFIER),
+                Token(position, "=", TokenType.ASSIGNATION),
+                Token(position, "readInput", TokenType.FUNCTION),
+                Token(position, "(", TokenType.PARENTHESIS),
+                Token(position, ")", TokenType.PARENTHESIS),
+                Token(position, ";", TokenType.DELIMITER),
+            )
+        val astExpected: Statement =
+            AssignationReadInput(
+                position,
+                Variable("x", position),
+                SingleValue(Token(position, "", TokenType.STRING)),
+            )
+        assertEquals(listOf(astExpected).toString(), parserV2.parse(tokens).toString())
+    }
+
+    @Test
+    fun `test 022 - function read input with an empty value in compound assignation`() {
+        val tokens =
+            listOf(
+                Token(position, "let", TokenType.KEYWORD),
+                Token(position, "x", TokenType.IDENTIFIER),
+                Token(position, ":", TokenType.DECLARATION),
+                Token(position, "string", TokenType.TYPE),
+                Token(position, "=", TokenType.ASSIGNATION),
+                Token(position, "readInput", TokenType.FUNCTION),
+                Token(position, "(", TokenType.PARENTHESIS),
+                Token(position, ")", TokenType.PARENTHESIS),
+                Token(position, ";", TokenType.DELIMITER),
+            )
+        val astExpected: Statement =
+            CompoundAssignationReadInput(
+                position,
+                Declaration(
+                    Keyword(Modifier.MUTABLE, "let", position),
+                    Variable("x", position),
+                    Type(TokenType.STRING, position),
+                    position
+                ),
+                SingleValue(Token(position, "", TokenType.STRING)),
+            )
+        assertEquals(listOf(astExpected).toString(), parserV2.parse(tokens).toString())
+    }
+
+    @Test
+    fun `test 022 - function read input with an string value in compound assignation`() {
+        val tokens =
+            listOf(
+                Token(position, "let", TokenType.KEYWORD),
+                Token(position, "x", TokenType.IDENTIFIER),
+                Token(position, ":", TokenType.DECLARATION),
+                Token(position, "string", TokenType.TYPE),
+                Token(position, "=", TokenType.ASSIGNATION),
+                Token(position, "readInput", TokenType.FUNCTION),
+                Token(position, "(", TokenType.PARENTHESIS),
+                Token(position, "this is a text", TokenType.STRING),
+                Token(position, ")", TokenType.PARENTHESIS),
+                Token(position, ";", TokenType.DELIMITER),
+            )
+        val astExpected: Statement =
+            CompoundAssignationReadInput(
+                position,
+                Declaration(
+                    Keyword(Modifier.MUTABLE, "let", position),
+                    Variable("x", position),
+                    Type(TokenType.STRING, position),
+                    position
+                ),
+                SingleValue(Token(position, "this is a text", TokenType.STRING)),
+            )
+        assertEquals(listOf(astExpected).toString(), parserV2.parse(tokens).toString())
+    }
+
+    @Test
+    fun `test 023 - function read input with an o as value in simple assignation`() {
+        val tokens =
+            listOf(
+                Token(position, "let", TokenType.KEYWORD),
+                Token(position, "x", TokenType.IDENTIFIER),
+                Token(position, ":", TokenType.DECLARATION),
+                Token(position, "string", TokenType.TYPE),
+                Token(position, "=", TokenType.ASSIGNATION),
+                Token(position, "readInput", TokenType.FUNCTION),
+                Token(position, "(", TokenType.PARENTHESIS),
+                Token(position, "this is ", TokenType.STRING),
+                Token(position, "+", TokenType.OPERATOR),
+                Token(position, "a text", TokenType.STRING),
+                Token(position, ")", TokenType.PARENTHESIS),
+                Token(position, ";", TokenType.DELIMITER),
+            )
+        val astExpected: Statement =
+            CompoundAssignationReadInput(
+                position,
+                Declaration(
+                    Keyword(Modifier.MUTABLE, "let", position),
+                    Variable("x", position),
+                    Type(TokenType.STRING, position),
+                    position
+                ),
                 Operator(
                     Token(position, "+", TokenType.OPERATOR),
                     SingleValue(Token(position, "this is ", TokenType.STRING)),
