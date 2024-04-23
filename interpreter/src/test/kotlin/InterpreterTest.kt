@@ -3417,11 +3417,12 @@ class InterpreterTest {
         val variableA = Variable("userName", position)
         val type = Type(TokenType.STRING, position)
         val declarationStatement = Declaration(keyword, variableA, type, position)
-        val interpreter = Interpreter(
-            listOf(
-                CompoundAssignationReadEnvInterpreter()
+        val interpreter =
+            Interpreter(
+                listOf(
+                    CompoundAssignationReadEnvInterpreter(),
+                ),
             )
-        )
         val compoundAssignation = CompoundAssignationReadEnv(position, declarationStatement, "USER_NAME")
         val map = hashMapOf<String, Result>()
         val variableMap = interpreter.interpret(compoundAssignation, map)
@@ -3438,12 +3439,13 @@ class InterpreterTest {
         val variable = Variable("userName", position)
         val type = Type(TokenType.STRING, position)
         val declarationStatement = Declaration(keyword, variable, type, position)
-        val interpreter = Interpreter(
-            listOf(
-                DeclarationInterpreter(),
-                AssignationReadEnvInterpreter()
+        val interpreter =
+            Interpreter(
+                listOf(
+                    DeclarationInterpreter(),
+                    AssignationReadEnvInterpreter(),
+                ),
             )
-        )
         val declarationMap = interpreter.interpret(declarationStatement, hashMapOf())
         val assignationReadEnv = AssignationReadEnv(position, variable, "USER_NAME")
         val variableMap = interpreter.interpret(assignationReadEnv, declarationMap)

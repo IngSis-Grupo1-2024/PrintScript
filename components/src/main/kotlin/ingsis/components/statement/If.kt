@@ -2,7 +2,7 @@ package ingsis.components.statement
 
 class If(
     private val comparison: Value,
-    private val elseStatement: Else,
+    private var elseStatement: Else,
     private val ifBlock: List<Statement>,
 ) : Statement {
     override fun getStatementType(): StatementType {
@@ -19,5 +19,13 @@ class If(
 
     fun getIfBlock(): List<Statement> {
         return ifBlock
+    }
+
+    fun addElse(elseStat: Else) {
+        this.elseStatement = elseStat
+    }
+
+    override fun toString(): String {
+        return "If(\ncomparison=$comparison, \nelseStatement=$elseStatement, \nifBlock=$ifBlock)"
     }
 }

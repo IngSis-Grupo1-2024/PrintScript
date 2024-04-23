@@ -2,7 +2,7 @@ package ingsis.components.statement
 
 import ingsis.components.Token
 
-class FunctionValue (private val value: Function): Value {
+class FunctionValue(private val value: Function) : Value {
     override fun isEmpty(): Boolean {
         return value.getValue() == EmptyValue()
     }

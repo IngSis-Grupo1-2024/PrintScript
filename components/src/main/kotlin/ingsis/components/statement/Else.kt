@@ -6,4 +6,8 @@ class Else(private val elseBlock: List<Statement>) : Statement {
     fun getElseBlock(): List<Statement> {
         return elseBlock
     }
+
+    override fun toString(): String {
+        return "Else(elseBlock=$elseBlock)"
+    }
 }

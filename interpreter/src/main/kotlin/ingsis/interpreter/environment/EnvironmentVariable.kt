@@ -7,7 +7,6 @@ class EnvironmentVariable(
     private val type: VariableType,
     private val value: Value,
 ) {
-
     fun getType(): VariableType {
         return type
     }
@@ -15,5 +14,4 @@ class EnvironmentVariable(
     fun getValue(): Any {
         return value
     }
-
 }

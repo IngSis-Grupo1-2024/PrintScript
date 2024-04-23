@@ -12,7 +12,7 @@ class AssignationReadEnvInterpreter : StatementInterpreter {
 
     override fun interpret(
         statement: Statement,
-        previousState: HashMap<String, Result>
+        previousState: HashMap<String, Result>,
     ): HashMap<String, Result> {
         statement as AssignationReadEnv
         val variable = statement.getVariable()

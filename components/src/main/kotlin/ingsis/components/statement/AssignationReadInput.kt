@@ -14,4 +14,8 @@ class AssignationReadInput(
     fun getPosition(): Position = position
 
     fun getArgument(): Value = argument
+
+    override fun toString(): String {
+        return "AssignationReadInput(variable=$variable, argument=$argument)"
+    }
 }

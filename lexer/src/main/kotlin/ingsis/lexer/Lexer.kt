@@ -42,7 +42,6 @@ object PrintScriptLexer {
                 TokenAssignator(TokenType.FUNCTION_KEYWORD, listOf("if", "else")),
             ),
         )
-
 }
 
 class Lexer(

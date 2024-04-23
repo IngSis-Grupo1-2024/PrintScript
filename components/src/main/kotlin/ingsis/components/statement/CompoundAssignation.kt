@@ -2,7 +2,11 @@ package ingsis.components.statement
 
 import ingsis.components.Position
 
-class CompoundAssignation(private val position: Position, private val declaration: Declaration, private val value: Value) :
+class CompoundAssignation(
+    private val position: Position,
+    private val declaration: Declaration,
+    private val value: Value,
+) :
     Statement {
     override fun getStatementType(): StatementType {
         return StatementType.COMPOUND_ASSIGNATION

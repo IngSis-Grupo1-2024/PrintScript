@@ -12,7 +12,10 @@ class CompoundAssignationReadEnvInterpreter : StatementInterpreter {
         return statement.getStatementType() == StatementType.COMPOUND_ASSIGNATION_READ_ENV
     }
 
-    override fun interpret(statement: Statement, previousState: HashMap<String, Result>): HashMap<String, Result> {
+    override fun interpret(
+        statement: Statement,
+        previousState: HashMap<String, Result>,
+    ): HashMap<String, Result> {
         statement as CompoundAssignationReadEnv
         val declaration = statement.getDeclaration()
         val param = statement.getParam()
@@ -21,10 +24,9 @@ class CompoundAssignationReadEnvInterpreter : StatementInterpreter {
             Result(
                 Type(TokenType.STRING, statement.getPosition()),
                 declaration.getKeyword().getModifier(),
-                envValue
+                envValue,
             )
         previousState[declaration.getVariable().getName()] = result
         return previousState
     }
-
 }
