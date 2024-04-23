@@ -21,7 +21,7 @@ class If(
         return ifBlock
     }
 
-    fun addElse(elseStat: Else){
+    fun addElse(elseStat: Else) {
         this.elseStatement = elseStat
     }
 

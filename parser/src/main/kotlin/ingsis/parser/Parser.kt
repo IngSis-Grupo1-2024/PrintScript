@@ -29,49 +29,54 @@ class Parser(
 
         if (elseCanHandle(tokens)) {
             val statement = elseMakeAst(tokens)
-            if(statement != null){
-                if(mayHaveContinuousElse) ifStatement.addElse(statement as Else)
-                else throw ParserError("You cannot implement an else statement without an if", tokens[0])
+            if (statement != null) {
+                if (mayHaveContinuousElse) {
+                    ifStatement.addElse(statement as Else)
+                } else {
+                    throw ParserError("You cannot implement an else statement without an if", tokens[0])
+                }
                 return listOf(ifStatement)
             }
             return emptyList()
         } else {
             val statements = scanStatementWOIfAndElse(tokens, mutableListOf<Statement?>())
 
-            if(statements.isEmpty())
+            if (statements.isEmpty()) {
                 throw ParserError("PrintScript couldn't parse that code.", tokens[0])
-            if(mayHaveContinuousElse){
+            }
+            if (mayHaveContinuousElse) {
                 statements.add(ifStatement)
                 mayHaveContinuousElse = false
             }
 
             return statements.toList()
         }
-
     }
 
     fun getIfStatement() = ifStatement
+
     fun isThereAnIf() = mayHaveContinuousElse
 
     private fun scanStatementWOIfAndElse(
         tokens: List<Token>,
-        statements: MutableList<Statement?>
-    ) : MutableList<Statement?> {
-        if(!checkElseIndex() && !checkIfIndex())
+        statements: MutableList<Statement?>,
+    ): MutableList<Statement?> {
+        if (!checkElseIndex() && !checkIfIndex()) {
             scanStatement.forEach {
                 if (it.canHandle(tokens)) statements.add(it.makeAST(tokens))
             }
-        else
-            for(index in scanStatement.indices){
-                if(index == elseIndex || index == ifIndex) continue
+        } else {
+            for (index in scanStatement.indices) {
+                if (index == elseIndex || index == ifIndex) continue
                 if (scanStatement[index].canHandle(tokens)) statements.add(scanStatement[index].makeAST(tokens))
             }
+        }
         return statements
     }
 
     private fun ifMakeAst(tokens: List<Token>) {
         val statement = scanStatement[ifIndex].makeAST(tokens)
-        if(statement != null){
+        if (statement != null) {
             ifStatement = statement as If
             mayHaveContinuousElse = true
         }

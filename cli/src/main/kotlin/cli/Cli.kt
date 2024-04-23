@@ -32,7 +32,7 @@ class Cli(outputEmitter: OutputEmitter, version: Version, input: Input) {
     fun executeInputStream(inputStream: InputStream) {
         val inputReader = InputReader(inputStream)
         var tokens: List<Token>
-        var statement: Statement?
+        var statement: List<Statement?>
         var variableMap = HashMap<String, Result>()
         var line: String? = inputReader.nextLine()
         while (line != null) {
@@ -41,12 +41,23 @@ class Cli(outputEmitter: OutputEmitter, version: Version, input: Input) {
                 tokens = tokenizeWithLexer(l)
                 if (tokens.isEmpty()) continue
                 statement = parse(tokens)
-                if (statement == null) continue
-                variableMap = interpreter.interpret(statement, variableMap)
+                if (statement.isEmpty()) continue
+                variableMap = interpret(statement, variableMap)
             }
             line = inputReader.nextLine()
             incrementOneLine()
         }
+    }
+
+    private fun interpret(
+        statements: List<Statement?>,
+        variableMap: HashMap<String, Result>,
+    ): java.util.HashMap<String, Result> {
+        var map = variableMap
+        statements.forEach { statement ->
+            if (statement != null) map = interpreter.interpret(statement, map)
+        }
+        return map
     }
 
     private fun tokenizeWithLexer(line: String): List<Token> {
@@ -67,7 +78,7 @@ class Cli(outputEmitter: OutputEmitter, version: Version, input: Input) {
             )
     }
 
-    private fun parse(tokens: List<Token>): Statement? = parser.parse(tokens)
+    private fun parse(tokens: List<Token>): List<Statement?> = parser.parse(tokens)
 
     private fun splitLines(codeLines: String): List<String> {
         val delimiter = ";"
@@ -128,23 +139,36 @@ class Cli(outputEmitter: OutputEmitter, version: Version, input: Input) {
     ) {
         val lines = splitLines(codeLines)
         var tokens: List<Token>
-        var statement: Statement?
-        val result = StringBuilder()
+        var statement: List<Statement?>
+        var result = StringBuilder()
         if (lines.isEmpty()) return writeInFile(file.toString(), "empty file")
         for (line in lines) {
             tokens = tokenizeWithLexer(line)
             if (tokens.isEmpty()) continue
             try {
                 statement = parse(tokens)
-                if (statement == null) continue
-                result.append(
-                    formatter.format(statement, rulePath),
-                )
+                if (statement.isEmpty()) continue
+                result = format(result, statement, rulePath)
             } catch (e: ParserError) {
                 result.append("\n" + e.localizedMessage + " in position :" + e.getTokenPosition())
             }
         }
         writeInFile(file.toString(), result.toString())
+    }
+
+    private fun format(
+        result: StringBuilder,
+        statements: List<Statement?>,
+        rulePath: String,
+    ): StringBuilder {
+        statements.forEach { statement ->
+            if (statement != null) {
+                result.append(
+                    formatter.format(statement, rulePath),
+                )
+            }
+        }
+        return result
     }
 
     fun analyzeFileInFileOutput(
@@ -161,20 +185,15 @@ class Cli(outputEmitter: OutputEmitter, version: Version, input: Input) {
     ): String {
         val lines = splitLines(codeLines)
         var tokens: List<Token>
-        var statement: Statement?
-        val result = StringBuilder()
+        var statement: List<Statement?>
+        var result = StringBuilder()
         for (line in lines) {
             tokens = tokenizeWithLexer(line)
             if (tokens.isEmpty()) continue
             try {
                 statement = parse(tokens)
-                if (statement == null) continue
-                result.append(
-                    sca.analyze(
-                        statement,
-                        rulePath,
-                    ),
-                )
+                if (statement.isEmpty()) continue
+                result = analyze(result, statement, rulePath)
             } catch (e: ParserError) {
                 result.append("\n" + e.localizedMessage + " in position :" + e.getTokenPosition())
             }
@@ -183,5 +202,23 @@ class Cli(outputEmitter: OutputEmitter, version: Version, input: Input) {
             return "SUCCESSFUL ANALYSIS"
         }
         return result.toString()
+    }
+
+    private fun analyze(
+        result: StringBuilder,
+        statements: List<Statement?>,
+        rulePath: String,
+    ): StringBuilder {
+        statements.forEach { statement ->
+            if (statement != null) {
+                result.append(
+                    sca.analyze(
+                        statement,
+                        rulePath,
+                    ),
+                )
+            }
+        }
+        return result
     }
 }

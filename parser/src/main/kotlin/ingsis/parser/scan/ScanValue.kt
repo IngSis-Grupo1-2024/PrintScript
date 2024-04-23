@@ -24,11 +24,12 @@ object PrintScriptScanValue {
     private fun valueTypesV2() = valueTypesV1() + listOf(TokenType.BOOLEAN)
 }
 
-class ScanValue(private val valueTypes: List<TokenType>, private val typeComparator: ComparatorTokenType) {
+class ScanValue(private val valueTypes: List<TokenType>, private val typeComparator: ComparatorTokenType) : ValueScanner {
     private val twoChildrenType = listOf(TokenType.OPERATOR)
     private val valueComparator = ComparatorTokenValue()
 
-    fun canHandle(tokens: List<Token>): Boolean {
+    override fun canHandle(tokens: List<Token>): Boolean {
+        if (tokens.isEmpty()) return true
         val validTypes =
             valueTypes + twoChildrenType + listOf(TokenType.PARENTHESIS)
 
@@ -39,7 +40,8 @@ class ScanValue(private val valueTypes: List<TokenType>, private val typeCompara
         return checkQtyOperatorsAndValues(getNumberOfOpp(tokens), getNumberOfValue(tokens), tokens.last())
     }
 
-    fun makeValue(tokens: List<Token>): Value {
+    override fun makeValue(tokens: List<Token>): Value {
+        if (tokens.isEmpty()) return EmptyValue()
         if (tokens.size == 1) return getSingleValue(tokens[0])
         return getOperator(tokens)
     }

@@ -1,5 +1,6 @@
 package ingsis.parser.scan
 
+import ingsis.components.Position
 import ingsis.components.Token
 import ingsis.components.TokenType
 import ingsis.components.statement.*
@@ -7,15 +8,21 @@ import ingsis.parser.error.ParserError
 
 object PSScanAssignation {
     fun createScanAssignation(version: String): ScanAssignation {
-        return ScanAssignation(scanDeclaration(version), scanValue(version))
+        return when (version) {
+            "VERSION_1" -> ScanAssignation(scanDeclaration(version), listOf(scanValue(version)))
+            "VERSION_2" -> ScanAssignation(scanDeclaration(version), listOf(scanFunction(version), scanValue(version)))
+            else -> ScanAssignation(scanDeclaration(version), listOf(scanValue(version)))
+        }
     }
+
+    private fun scanFunction(version: String) = PSScanFunction.createScanFunction(version)
 
     private fun scanValue(version: String) = PrintScriptScanValue.createScanValue(version)
 
     private fun scanDeclaration(version: String) = PSScanDeclaration.createScanDeclaration(version)
 }
 
-class ScanAssignation(private val scanDeclaration: ScanDeclaration, private val scanValue: ScanValue) : ScanStatement {
+class ScanAssignation(private val scanDeclaration: ScanDeclaration, private val valueScanners: List<ValueScanner>) : ScanStatement {
     override fun canHandle(tokens: List<Token>): Boolean {
         if (checkIfThereIsNoDelimiter(tokens)) {
             throw ParserError("error: ';' expected  " + tokens.last().getPosition(), tokens.last())
@@ -31,7 +38,14 @@ class ScanAssignation(private val scanDeclaration: ScanDeclaration, private val 
         if (assignIndex == -1) return false
         if (checkFirstPartOfAssignation(tokens, assignIndex)) {
             if (emptyValue(tokens, assignIndex)) throw ParserError("error: expected value", tokens[assignIndex])
-            return scanValue.canHandle(tokens.subList(assignIndex + 1, tokens.size))
+            return valueScannersCanHandle(tokens.subList(assignIndex + 1, tokens.size))
+        }
+        return false
+    }
+
+    private fun valueScannersCanHandle(tokens: List<Token>): Boolean {
+        valueScanners.forEach {
+            if (it.canHandle(tokens)) return true
         }
         return false
     }
@@ -55,19 +69,52 @@ class ScanAssignation(private val scanDeclaration: ScanDeclaration, private val 
         assignIndex: Int,
     ): Statement {
         val decl: Declaration = scanDeclaration.makeAST(tokens.subList(0, assignIndex)) as Declaration
-        val value: Value = scanValue.makeValue(tokens.subList(assignIndex + 1, tokens.size - 1))
+        val value: Value = makeValue(tokens.subList(assignIndex + 1, tokens.size - 1))
+        if (readInput(value)) return getCompoundAssignationReadInput(tokens[assignIndex].getPosition(), decl, value as Operator)
         return CompoundAssignation(tokens[assignIndex].getPosition(), decl, value)
+    }
+
+    private fun getCompoundAssignationReadInput(
+        position: Position,
+        decl: Declaration,
+        value: Operator,
+    ): Statement {
+        return CompoundAssignationReadInput(position, decl, value.getLeftOperator())
+    }
+
+    private fun readInput(value: Value): Boolean = value.getToken().getValue() == "readInput"
+
+    private fun makeValue(tokens: List<Token>): Value {
+        valueScanners.forEach {
+            if (it.canHandle(tokens)) {
+                return it.makeValue(tokens)
+            }
+        }
+        return SingleValue(Token(Position(), "", TokenType.STRING))
     }
 
     private fun simpleAssignation(
         tokens: List<Token>,
         assignIndex: Int,
-    ): Statement =
-        Assignation(
-            tokens[assignIndex].getPosition(),
-            getVariable(tokens[0]),
-            scanValue.makeValue(tokens.subList(assignIndex + 1, tokens.size)),
+    ): Statement {
+        val position = tokens[assignIndex].getPosition()
+        val variable = getVariable(tokens[0])
+        val value: Value = makeValue(tokens.subList(assignIndex + 1, tokens.size - 1))
+        if (readInput(value)) return getAssignationReadInput(position, variable, value as Operator)
+        return Assignation(
+            position,
+            variable,
+            makeValue(tokens.subList(assignIndex + 1, tokens.size - 1)),
         )
+    }
+
+    private fun getAssignationReadInput(
+        position: Position,
+        variable: Variable,
+        operator: Operator,
+    ): Statement {
+        return AssignationReadInput(position, variable, operator.getLeftOperator())
+    }
 
     private fun checkIfCompound(
         tokens: List<Token>,

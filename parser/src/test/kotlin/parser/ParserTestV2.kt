@@ -6,7 +6,9 @@ import ingsis.components.TokenType
 import ingsis.components.statement.*
 import ingsis.parser.PrintScriptParser
 import ingsis.parser.error.ParserError
+import ingsis.parser.scan.PSScanFunction
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
@@ -328,7 +330,8 @@ class ParserTestV2 {
                             Type(TokenType.STRING, position),
                             position,
                         ),
-                    )),
+                    ),
+                ),
                 listOf(
                     Declaration(
                         Keyword(Modifier.MUTABLE, "let", position),
@@ -344,5 +347,86 @@ class ParserTestV2 {
         parserV2.parse(elseTokens)
         parserV2.parse(elseTokensDeclaration)
         assertEquals(listOf(astExpected).toString(), parserV2.parse(elseTokensLastBraces).toString())
+    }
+
+    @Test
+    fun `test 010 - function read input without a value`() {
+        val scanFunction = PSScanFunction.createScanFunction("VERSION_2")
+        val tokens =
+            listOf(
+                Token(position, "readInput", TokenType.FUNCTION),
+                Token(position, "(", TokenType.PARENTHESIS),
+                Token(position, ")", TokenType.PARENTHESIS),
+            )
+        val astExpected: Value = EmptyValue()
+        assertTrue(scanFunction.canHandle(tokens))
+        assertEquals(astExpected.toString(), scanFunction.makeValue(tokens).toString())
+    }
+
+    @Test
+    fun `test 011 - function read input with a string as value`() {
+        val scanFunction = PSScanFunction.createScanFunction("VERSION_2")
+        val tokens =
+            listOf(
+                Token(position, "readInput", TokenType.FUNCTION),
+                Token(position, "(", TokenType.PARENTHESIS),
+                Token(position, "this is a text", TokenType.STRING),
+                Token(position, ")", TokenType.PARENTHESIS),
+            )
+        val astExpected: Value =
+            SingleValue(
+                Token(position, "this is a text", TokenType.STRING),
+            )
+        assertTrue(scanFunction.canHandle(tokens))
+        assertEquals(astExpected.toString(), scanFunction.makeValue(tokens).toString())
+    }
+
+    @Test
+    fun `test 012 - function read input with an operation as value`() {
+        val scanFunction = PSScanFunction.createScanFunction("VERSION_2")
+        val tokens =
+            listOf(
+                Token(position, "readInput", TokenType.FUNCTION),
+                Token(position, "(", TokenType.PARENTHESIS),
+                Token(position, "this is ", TokenType.STRING),
+                Token(position, "+", TokenType.OPERATOR),
+                Token(position, "a text", TokenType.STRING),
+                Token(position, ")", TokenType.PARENTHESIS),
+            )
+        val astExpected: Value =
+            Operator(
+                Token(position, "+", TokenType.OPERATOR),
+                SingleValue(Token(position, "this is ", TokenType.STRING)),
+                SingleValue(Token(position, "a text", TokenType.STRING)),
+            )
+        assertTrue(scanFunction.canHandle(tokens))
+        assertEquals(astExpected.toString(), scanFunction.makeValue(tokens).toString())
+    }
+
+    @Test
+    fun `test 013 - function read input with an operation as value in simple assignation`() {
+        val tokens =
+            listOf(
+                Token(position, "x", TokenType.IDENTIFIER),
+                Token(position, "=", TokenType.ASSIGNATION),
+                Token(position, "readInput", TokenType.FUNCTION),
+                Token(position, "(", TokenType.PARENTHESIS),
+                Token(position, "this is ", TokenType.STRING),
+                Token(position, "+", TokenType.OPERATOR),
+                Token(position, "a text", TokenType.STRING),
+                Token(position, ")", TokenType.PARENTHESIS),
+                Token(position, ";", TokenType.DELIMITER),
+            )
+        val astExpected: Statement =
+            AssignationReadInput(
+                position,
+                Variable("x", position),
+                Operator(
+                    Token(position, "+", TokenType.OPERATOR),
+                    SingleValue(Token(position, "this is ", TokenType.STRING)),
+                    SingleValue(Token(position, "a text", TokenType.STRING)),
+                ),
+            )
+        assertEquals(listOf(astExpected).toString(), parserV2.parse(tokens).toString())
     }
 }
