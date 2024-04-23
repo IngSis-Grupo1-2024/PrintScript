@@ -1,4 +1,3 @@
-
 import ingsis.components.Position
 import ingsis.components.Token
 import ingsis.components.TokenType
@@ -198,7 +197,7 @@ class InterpreterTest {
         val exception = assertThrows<Exception> { interpreter.interpret(compoundAssignation, HashMap()) }
         assertEquals(
             "Can't do subtraction using no integer types or double types in line " +
-                position.startLine + " at position " + position.startColumn,
+                    position.startLine + " at position " + position.startColumn,
             exception.message,
         )
     }
@@ -264,7 +263,7 @@ class InterpreterTest {
         val exception = assertThrows<Exception> { interpreter.interpret(compoundAssignation, HashMap()) }
         assertEquals(
             "Can't do multiplication using no integer types or double types in line " +
-                position.startLine + " at position " + position.startColumn,
+                    position.startLine + " at position " + position.startColumn,
             exception.message,
         )
     }
@@ -330,7 +329,7 @@ class InterpreterTest {
         val exception = assertThrows<Exception> { interpreter.interpret(compoundAssignation, HashMap()) }
         assertEquals(
             "Can't do division using no integer types or double types in line " +
-                position.startLine + " at position " + position.startColumn,
+                    position.startLine + " at position " + position.startColumn,
             exception.message,
         )
     }
