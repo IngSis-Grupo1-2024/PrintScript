@@ -47,6 +47,9 @@ class Cli(outputEmitter: OutputEmitter, version: Version, input: Input) {
             line = inputReader.nextLine()
             incrementOneLine()
         }
+        if (parser.isThereAnIf()) {
+            interpreter.interpret(parser.getIfStatement(), variableMap)
+        }
     }
 
     private fun interpret(
@@ -153,6 +156,11 @@ class Cli(outputEmitter: OutputEmitter, version: Version, input: Input) {
                 result.append("\n" + e.localizedMessage + " in position :" + e.getTokenPosition())
             }
         }
+        if (parser.isThereAnIf()) {
+            result.append(
+                formatter.format(parser.getIfStatement(), rulePath),
+            )
+        }
         writeInFile(file.toString(), result.toString())
     }
 
@@ -198,6 +206,13 @@ class Cli(outputEmitter: OutputEmitter, version: Version, input: Input) {
                 result.append("\n" + e.localizedMessage + " in position :" + e.getTokenPosition())
             }
         }
+
+        if (parser.isThereAnIf()) {
+            result.append(
+                sca.analyze(parser.getIfStatement(), rulePath),
+            )
+        }
+
         if (result.isEmpty()) {
             return "SUCCESSFUL ANALYSIS"
         }
