@@ -34,10 +34,12 @@ class IfInterpreter(
             for (block in ifBlock) {
                 newState = interpreter.interpret(block, previousState)
             }
-        } else {
+        } else if (comparisonValue == "false") {
             for (block in getElseStatement) {
                 newState = interpreter.interpret(block, previousState)
             }
+        } else {
+            throw Error("IfStatements can only have a boolean condition")
         }
         return newState
     }
