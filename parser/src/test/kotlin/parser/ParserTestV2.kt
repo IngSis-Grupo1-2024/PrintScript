@@ -715,4 +715,70 @@ class ParserTestV2 {
             )
         assertEquals(listOf(astExpected).toString(), parserV2.parse(tokens).toString())
     }
+
+    @Test
+    fun `test 024 - else condition with code block`() {
+        val ifTokens =
+            listOf(
+                Token(position, "if", TokenType.FUNCTION_KEYWORD),
+                Token(position, "(", TokenType.PARENTHESIS),
+                Token(position, "true", TokenType.BOOLEAN),
+                Token(position, ")", TokenType.PARENTHESIS),
+                Token(position, "{", TokenType.BRACES),
+            )
+        val ifTokensDeclaration: List<Token> =
+            listOf(
+                Token(position, "let", TokenType.KEYWORD),
+                Token(position, "x", TokenType.SYMBOL),
+                Token(position, ":", TokenType.DECLARATION),
+                Token(position, "string", TokenType.TYPE),
+                Token(position, "", TokenType.DELIMITER),
+            )
+        val ifTokensLastBraces: List<Token> =
+            listOf(
+                Token(position, "}", TokenType.BRACES),
+                Token(position, "else", TokenType.FUNCTION_KEYWORD),
+                Token(position, "{", TokenType.BRACES),
+            )
+
+        val elseTokensDeclaration: List<Token> =
+            listOf(
+                Token(position, "let", TokenType.KEYWORD),
+                Token(position, "x", TokenType.SYMBOL),
+                Token(position, ":", TokenType.DECLARATION),
+                Token(position, "string", TokenType.TYPE),
+                Token(position, "", TokenType.DELIMITER),
+            )
+        val elseTokensLastBraces: List<Token> =
+            listOf(
+                Token(position, "}", TokenType.BRACES),
+            )
+        val astExpected: Statement =
+            If(
+                SingleValue(Token(position, "true", TokenType.BOOLEAN)),
+                Else(
+                    listOf(
+                        Declaration(
+                            Keyword(Modifier.MUTABLE, "let", position),
+                            Variable("x", position),
+                            Type(TokenType.STRING, position),
+                            position,
+                        ),
+                    ),
+                ),
+                listOf(
+                    Declaration(
+                        Keyword(Modifier.MUTABLE, "let", position),
+                        Variable("x", position),
+                        Type(TokenType.STRING, position),
+                        position,
+                    ),
+                ),
+            )
+        parserV2.parse(ifTokens)
+        parserV2.parse(ifTokensDeclaration)
+        parserV2.parse(ifTokensLastBraces)
+        parserV2.parse(elseTokensDeclaration)
+        assertEquals(listOf(astExpected).toString(), parserV2.parse(elseTokensLastBraces).toString())
+    }
 }

@@ -23,8 +23,7 @@ class Parser(
         val tokens: List<Token> = changeSymbolType(tokensWSymbols)
 
         if (ifCanHandle(tokens)) {
-            ifMakeAst(tokens)
-            return emptyList()
+            return ifMakeAst(tokens)
         }
 
         if (elseCanHandle(tokens)) {
@@ -55,6 +54,8 @@ class Parser(
 
     fun getIfStatement() = ifStatement
 
+    fun isThereAnIf() = mayHaveContinuousElse
+
     private fun scanStatementWOIfAndElse(tokens: List<Token>): Statement? {
         if (!checkElseIndex() && !checkIfIndex()) {
             scanStatement.forEach {
@@ -69,12 +70,41 @@ class Parser(
         return null
     }
 
-    private fun ifMakeAst(tokens: List<Token>) {
-        val statement = scanStatement[ifIndex].makeAST(tokens)
+    private fun tokensHasLastBrace(
+        index: Int,
+        tokens: List<Token>,
+    ): Boolean = index != -1 && index != tokens.size - 1
+
+    private fun ifMakeAst(tokens: List<Token>): List<Statement?> {
+        val lastBraceIndex: Int = searchLastBrace(tokens)
+        val statement: Statement? =
+            if (tokensHasLastBrace(lastBraceIndex, tokens)) {
+                scanWithIfUntilTheLastBrace(tokens, lastBraceIndex)
+            } else {
+                scanStatement[ifIndex].makeAST(tokens)
+            }
         if (statement != null) {
             ifStatement = statement as If
             mayHaveContinuousElse = true
+            if (tokensHasLastBrace(lastBraceIndex, tokens)) {
+                return parse(tokens.subList(lastBraceIndex + 1, tokens.size))
+            }
         }
+        return emptyList()
+    }
+
+    private fun scanWithIfUntilTheLastBrace(
+        tokens: List<Token>,
+        lastBraceIndex: Int,
+    ): Statement? {
+        return scanStatement[ifIndex].makeAST(tokens.subList(0, lastBraceIndex + 1))
+    }
+
+    private fun searchLastBrace(tokens: List<Token>): Int {
+        tokens.indices.forEach {
+            if (tokens[it].getType() == TokenType.BRACES && tokens[it].getValue() == "}") return it
+        }
+        return -1
     }
 
     private fun elseMakeAst(tokens: List<Token>): Statement? = scanStatement[elseIndex].makeAST(tokens)
