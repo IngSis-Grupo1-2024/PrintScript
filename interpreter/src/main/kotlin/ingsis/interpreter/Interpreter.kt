@@ -34,11 +34,11 @@ object PrintScriptInterpreter {
                     listOf(
                         DeclarationInterpreter(),
                         AssignationInterpreter(scanners),
-                        AssignationReadInputInterpreter(input, scanners),
+                        AssignationReadInputInterpreter(input, scanners, outputEmitter),
                         CompoundAssignationInterpreter(scanners),
                         PrintLineInterpreter(scanners, outputEmitter),
                         IfInterpreter(scanners, version, outputEmitter, input),
-                        CompoundAssignationReadInputInterpreter(input, scanners),
+                        CompoundAssignationReadInputInterpreter(input, scanners, outputEmitter),
                     ),
                 )
             }
