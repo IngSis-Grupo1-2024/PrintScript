@@ -32,6 +32,7 @@ class Parser(
             if (statement != null) {
                 if (mayHaveContinuousElse) {
                     ifStatement.addElse(statement as Else)
+                    mayHaveContinuousElse = false
                 } else {
                     throw ParserError("You cannot implement an else statement without an if", tokens[0])
                 }
@@ -39,39 +40,33 @@ class Parser(
             }
             return emptyList()
         } else {
-            val statements = scanStatementWOIfAndElse(tokens, mutableListOf<Statement?>())
+            val statement = scanStatementWOIfAndElse(tokens)
 
-            if (statements.isEmpty()) {
+            if (statement == null) {
                 throw ParserError("PrintScript couldn't parse that code.", tokens[0])
-            }
-            if (mayHaveContinuousElse) {
-                statements.add(ifStatement)
+            } else if (mayHaveContinuousElse) {
                 mayHaveContinuousElse = false
+                return listOf(ifStatement, statement)
             }
 
-            return statements.toList()
+            return listOf(statement)
         }
     }
 
     fun getIfStatement() = ifStatement
 
-    fun isThereAnIf() = mayHaveContinuousElse
-
-    private fun scanStatementWOIfAndElse(
-        tokens: List<Token>,
-        statements: MutableList<Statement?>,
-    ): MutableList<Statement?> {
+    private fun scanStatementWOIfAndElse(tokens: List<Token>): Statement? {
         if (!checkElseIndex() && !checkIfIndex()) {
             scanStatement.forEach {
-                if (it.canHandle(tokens)) statements.add(it.makeAST(tokens))
+                if (it.canHandle(tokens)) return it.makeAST(tokens)
             }
         } else {
             for (index in scanStatement.indices) {
                 if (index == elseIndex || index == ifIndex) continue
-                if (scanStatement[index].canHandle(tokens)) statements.add(scanStatement[index].makeAST(tokens))
+                if (scanStatement[index].canHandle(tokens)) return scanStatement[index].makeAST(tokens)
             }
         }
-        return statements
+        return null
     }
 
     private fun ifMakeAst(tokens: List<Token>) {

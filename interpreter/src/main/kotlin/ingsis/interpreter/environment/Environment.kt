@@ -33,7 +33,7 @@ class Environment(private val variables: Map<String, EnvironmentVariable> = empt
     private fun getVariableType(value: String): VariableType {
         return when {
             value.toIntOrNull() != null -> VariableType.NUMBER
-            value.toBoolean() != null -> VariableType.BOOLEAN
+            value.toBooleanStrictOrNull() != null -> VariableType.BOOLEAN
             else -> VariableType.STRING
         }
     }
