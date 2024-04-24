@@ -10,7 +10,7 @@ import ingsis.utils.*
 class AssignationReadInputInterpreter(
     private val input: Input,
     private val scanners: List<ScanOperatorType>,
-    private val output: OutputEmitter
+    private val output: OutputEmitter,
 ) :
     StatementInterpreter {
     override fun canHandle(statement: Statement): Boolean {

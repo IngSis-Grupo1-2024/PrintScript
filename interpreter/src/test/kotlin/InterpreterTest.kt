@@ -2737,7 +2737,7 @@ class InterpreterTest {
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
                     IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
-                    CompoundAssignationReadInputInterpreter(InputReader(), scanners),
+                    CompoundAssignationReadInputInterpreter(InputReader(), scanners, outputEmitter),
                 ),
             )
         val position = Position()
@@ -2785,7 +2785,7 @@ class InterpreterTest {
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
                     IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
-                    CompoundAssignationReadInputInterpreter(InputReader(), scanners),
+                    CompoundAssignationReadInputInterpreter(InputReader(), scanners, outputEmitter),
                 ),
             )
         val position = Position()
@@ -2833,7 +2833,7 @@ class InterpreterTest {
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
                     IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
-                    CompoundAssignationReadInputInterpreter(InputReader(), scanners),
+                    CompoundAssignationReadInputInterpreter(InputReader(), scanners, outputEmitter),
                 ),
             )
         val position = Position()
@@ -2881,7 +2881,7 @@ class InterpreterTest {
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
                     IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
-                    CompoundAssignationReadInputInterpreter(InputReader(), scanners),
+                    CompoundAssignationReadInputInterpreter(InputReader(), scanners, outputEmitter),
                 ),
             )
         val position = Position()
@@ -2931,7 +2931,7 @@ class InterpreterTest {
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
                     IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
-                    CompoundAssignationReadInputInterpreter(InputReader(), scanners),
+                    CompoundAssignationReadInputInterpreter(InputReader(), scanners, outputEmitter),
                 ),
             )
         val position = Position()
@@ -2981,7 +2981,7 @@ class InterpreterTest {
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
                     IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
-                    CompoundAssignationReadInputInterpreter(InputReader(), scanners),
+                    CompoundAssignationReadInputInterpreter(InputReader(), scanners, outputEmitter),
                 ),
             )
         val position = Position()
@@ -3031,7 +3031,7 @@ class InterpreterTest {
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
                     IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
-                    CompoundAssignationReadInputInterpreter(InputReader(), scanners),
+                    CompoundAssignationReadInputInterpreter(InputReader(), scanners, outputEmitter),
                 ),
             )
         val position = Position()
@@ -3079,7 +3079,7 @@ class InterpreterTest {
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
                     IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
-                    CompoundAssignationReadInputInterpreter(InputReader(), scanners),
+                    CompoundAssignationReadInputInterpreter(InputReader(), scanners, outputEmitter),
                 ),
             )
         val position = Position()
@@ -3121,8 +3121,8 @@ class InterpreterTest {
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
                     IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
-                    CompoundAssignationReadInputInterpreter(InputReader(), scanners),
-                    AssignationReadInputInterpreter(InputReader(), scanners),
+                    CompoundAssignationReadInputInterpreter(InputReader(), scanners, outputEmitter),
+                    AssignationReadInputInterpreter(InputReader(), scanners, outputEmitter),
                 ),
             )
         val position = Position()
@@ -3163,8 +3163,8 @@ class InterpreterTest {
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
                     IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
-                    CompoundAssignationReadInputInterpreter(InputReader(), scanners),
-                    AssignationReadInputInterpreter(InputReader(), scanners),
+                    CompoundAssignationReadInputInterpreter(InputReader(), scanners, outputEmitter),
+                    AssignationReadInputInterpreter(InputReader(), scanners, outputEmitter),
                 ),
             )
         val position = Position()
@@ -3205,8 +3205,8 @@ class InterpreterTest {
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
                     IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
-                    CompoundAssignationReadInputInterpreter(InputReader(), scanners),
-                    AssignationReadInputInterpreter(InputReader(), scanners),
+                    CompoundAssignationReadInputInterpreter(InputReader(), scanners, outputEmitter),
+                    AssignationReadInputInterpreter(InputReader(), scanners, outputEmitter),
                 ),
             )
         val position = Position()
@@ -3247,8 +3247,8 @@ class InterpreterTest {
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
                     IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
-                    CompoundAssignationReadInputInterpreter(InputReader(), scanners),
-                    AssignationReadInputInterpreter(InputReader(), scanners),
+                    CompoundAssignationReadInputInterpreter(InputReader(), scanners, outputEmitter),
+                    AssignationReadInputInterpreter(InputReader(), scanners, outputEmitter),
                 ),
             )
         val position = Position()
@@ -3289,7 +3289,7 @@ class InterpreterTest {
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
                     IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
-                    AssignationReadInputInterpreter(InputReader(), scanners),
+                    AssignationReadInputInterpreter(InputReader(), scanners, outputEmitter),
                 ),
             )
         val position = Position()
@@ -3335,7 +3335,7 @@ class InterpreterTest {
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
                     IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
-                    AssignationReadInputInterpreter(InputReader(), scanners),
+                    AssignationReadInputInterpreter(InputReader(), scanners, outputEmitter),
                 ),
             )
         val position = Position()
@@ -3381,7 +3381,7 @@ class InterpreterTest {
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
                     IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
-                    AssignationReadInputInterpreter(InputReader(), scanners),
+                    AssignationReadInputInterpreter(InputReader(), scanners, outputEmitter),
                 ),
             )
         val position = Position()

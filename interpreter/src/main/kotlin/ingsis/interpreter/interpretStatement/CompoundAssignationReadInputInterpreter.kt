@@ -10,7 +10,8 @@ import ingsis.utils.getInputResult
 class CompoundAssignationReadInputInterpreter(
     private val input: Input,
     private val scanners: List<ScanOperatorType>,
-    private val output: OutputEmitter) :
+    private val output: OutputEmitter,
+) :
     StatementInterpreter {
     override fun canHandle(statement: Statement): Boolean {
         return statement.getStatementType() == StatementType.COMPOUND_ASSIGNATION_READ_INPUT
