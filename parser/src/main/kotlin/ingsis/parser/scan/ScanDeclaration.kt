@@ -6,7 +6,29 @@ import ingsis.components.TokenType
 import ingsis.components.statement.*
 import ingsis.parser.error.ParserError
 
-class ScanDeclaration : ScanStatement {
+object PSScanDeclaration {
+    fun createScanDeclaration(version: String): ScanDeclaration {
+        return when (version) {
+            "VERSION_1" -> ScanDeclaration(listOf("let"), emptyList(), variableTypes(version))
+            "VERSION_2" -> ScanDeclaration(listOf("let"), listOf("const"), variableTypes(version))
+            else -> ScanDeclaration(listOf("let"), emptyList(), variableTypes(version))
+        }
+    }
+
+    private fun variableTypes(version: String): Map<String, TokenType> {
+        return when (version) {
+            "VERSION_1" -> mapOf("string" to TokenType.STRING, "number" to TokenType.INTEGER)
+            "VERSION_2" -> variableTypes("VERSION_1") + mapOf("boolean" to TokenType.BOOLEAN)
+            else -> variableTypes("VERSION_1")
+        }
+    }
+}
+
+class ScanDeclaration(
+    private val mutableKeywords: List<String>,
+    private val immutableKeywords: List<String>,
+    private val variableTypes: Map<String, TokenType>,
+) : ScanStatement {
     private val declarationTypes = listOf(TokenType.KEYWORD, TokenType.IDENTIFIER, TokenType.DECLARATION, TokenType.TYPE)
 
     override fun canHandle(tokens: List<Token>): Boolean {
@@ -22,7 +44,7 @@ class ScanDeclaration : ScanStatement {
         if (declarationTypes == getTokenTypes(tokens)) {
             true
         } else {
-            checkIfDeclarationTypesMissing(tokens)
+            checkMissingTypes(tokens)
         }
 
     override fun makeAST(tokens: List<Token>): Statement {
@@ -33,7 +55,7 @@ class ScanDeclaration : ScanStatement {
         return Declaration(keyword, variable, type, declPosition)
     }
 
-    private fun checkIfDeclarationTypesMissing(tokens: List<Token>): Boolean {
+    private fun checkMissingTypes(tokens: List<Token>): Boolean {
         val declarationTypesPresent = declarationTypes.intersect(getTokenTypes(tokens).toSet())
         if (checkIfDeclarationTypesMissing(declarationTypesPresent, tokens)) {
             throw ParserError(
@@ -53,16 +75,21 @@ class ScanDeclaration : ScanStatement {
     private fun getTokenTypes(tokens: List<Token>): List<TokenType> = tokens.map { it.getType() }
 
     private fun getKeyword(token: Token): Keyword {
-        val modifier: Modifier = Modifier.MUTABLE
-        if (token.getValue() != "let") throw ParserError("error: keyword not found", token)
+        val modifier: Modifier =
+            if (token.getValue() in mutableKeywords) {
+                Modifier.MUTABLE
+            } else if (token.getValue() in immutableKeywords) {
+                Modifier.IMMUTABLE
+            } else {
+                throw ParserError("error: keyword not found", token)
+            }
         return Keyword(modifier, token.getValue(), token.getPosition())
     }
 
     private fun getType(token: Token): Type {
         val tokenType =
             when (token.getValue()) {
-                "string" -> TokenType.STRING
-                "number" -> TokenType.INTEGER
+                in variableTypes.keys -> variableTypes[token.getValue()]!!
                 else -> throw ParserError("error: invalid token", token)
             }
         return Type(tokenType, token.getPosition())

@@ -1,6 +1,7 @@
 package app
 
 import cli.Cli
+import cli.InputEmitter
 import cli.PrintOutputEmitter
 import cli.Version
 import com.github.ajalt.clikt.core.CliktCommand
@@ -16,7 +17,7 @@ class Execution : CliktCommand(help = "Executes a PrintScript script file") {
         .help { "the file path for the PrintScript code" }
 
     private val version by argument()
-        .choice("v1")
+        .choice("v1", "v2")
         .help { "Printscript version" }
 
     private val fileOutput by argument()
@@ -39,7 +40,8 @@ class Execution : CliktCommand(help = "Executes a PrintScript script file") {
 
     private fun startCli() {
         if (version == "v1") {
-            cli = Cli(PrintOutputEmitter(), Version.VERSION_1)
+            cli = Cli(PrintOutputEmitter(), Version.VERSION_1, InputEmitter())
         }
+        cli = Cli(PrintOutputEmitter(), Version.VERSION_2, InputEmitter())
     }
 }
