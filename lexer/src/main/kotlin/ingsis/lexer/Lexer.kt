@@ -112,7 +112,7 @@ class Lexer(
                     i++
                     continue
                 }
-                if (canCreateToken(nextChar.toString()) && currentToken.isNotEmpty()) { // current token is a symbol
+                if (canCreateToken(nextChar.toString()) && currentToken.isNotEmpty() && !isInsideString) { // current token is a symbol
                     tokens.add(Token(currentPosition, currentToken, TokenType.SYMBOL))
                     currentPosition =
                         currentPosition.copy(
