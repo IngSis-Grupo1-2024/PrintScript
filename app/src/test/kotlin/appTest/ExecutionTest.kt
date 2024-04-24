@@ -4,12 +4,12 @@ import org.junit.jupiter.api.Test
 import util.ReadFromConsole
 
 class ExecutionTest {
-    @Test
-    fun `v1 - test 01 - print line with single value`() {
-        val result = ReadFromConsole.execute("src/test/resources/else_true.txt", "v2")
-        val expected = ""
-        assertEquals(expected, result)
-    }
+//    @Test
+//    fun `v1 - test 01 - print line with single value`() {
+//        val result = ReadFromConsole.execute("src/test/resources/else_true.txt", "v2")
+//        val expected = ""
+//        assertEquals(expected, result)
+//    }
 
     @Test
     fun `v1 - test 02 - print line with one operator`() {

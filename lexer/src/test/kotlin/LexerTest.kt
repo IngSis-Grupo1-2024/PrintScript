@@ -731,6 +731,7 @@ class LexerTest {
             i++
         }
     }
+
     @Test
     fun `test 10001-  Declare And Assign A String Variable With Declaration Inside String`() {
         val input = "let a:string = \"Name:\";"
