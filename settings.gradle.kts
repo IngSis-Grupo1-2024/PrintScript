@@ -8,4 +8,15 @@
  */
 
 rootProject.name = "PrintScript"
-include("app", "parser", "lexer", "interpreter", "components", "utils", "code-coverage-report", "formatter", "sca", "cli")
+include(
+    "app",
+    "parser",
+    "lexer",
+    "interpreter",
+    "components",
+    "utils",
+    "code-coverage-report",
+    "formatter",
+    "sca",
+    "cli"
+)

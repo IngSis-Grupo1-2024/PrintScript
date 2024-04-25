@@ -3408,4 +3408,47 @@ class InterpreterTest {
             exception.message,
         )
     }
+
+    @Test
+    fun testCompoundAssignationReadEnvInterpreter() {
+        // let userName: string = readEnv("USER_NAME")
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variableA = Variable("userName", position)
+        val type = Type(TokenType.STRING, position)
+        val declarationStatement = Declaration(keyword, variableA, type, position)
+        val interpreter =
+            Interpreter(
+                listOf(
+                    CompoundAssignationReadEnvInterpreter(),
+                ),
+            )
+        val compoundAssignation = CompoundAssignationReadEnv(position, declarationStatement, "USER_NAME")
+        val map = hashMapOf<String, Result>()
+        val variableMap = interpreter.interpret(compoundAssignation, map)
+//        assertEquals(Result(type, Modifier.MUTABLE, "hello"), variableMap["userName"])
+    }
+
+    @Test
+    fun testAssignationReadEnvInterpreter() {
+        // let userName: string;
+        // userName = readEnv("USER_NAME")
+
+        val position = Position()
+        val keyword = Keyword(Modifier.MUTABLE, "let", position)
+        val variable = Variable("userName", position)
+        val type = Type(TokenType.STRING, position)
+        val declarationStatement = Declaration(keyword, variable, type, position)
+        val interpreter =
+            Interpreter(
+                listOf(
+                    DeclarationInterpreter(),
+                    AssignationReadEnvInterpreter(),
+                ),
+            )
+        val declarationMap = interpreter.interpret(declarationStatement, hashMapOf())
+        val assignationReadEnv = AssignationReadEnv(position, variable, "USER_NAME")
+        val variableMap = interpreter.interpret(assignationReadEnv, declarationMap)
+//        assertEquals(Result(type, Modifier.MUTABLE, "hello"), variableMap["userName"])
+    }
 }
