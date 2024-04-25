@@ -34,11 +34,11 @@ object PrintScriptInterpreter {
                     listOf(
                         DeclarationInterpreter(),
                         AssignationInterpreter(scanners),
-                        AssignationReadInputInterpreter(input, scanners),
+                        AssignationReadInputInterpreter(input, scanners, outputEmitter),
                         CompoundAssignationInterpreter(scanners),
                         PrintLineInterpreter(scanners, outputEmitter),
                         IfInterpreter(scanners, version, outputEmitter, input),
-                        CompoundAssignationReadInputInterpreter(input, scanners),
+                        CompoundAssignationReadInputInterpreter(input, scanners, outputEmitter),
                     ),
                 )
             }
@@ -70,6 +70,6 @@ class Interpreter(private val interpreters: List<StatementInterpreter>) {
             }
         }
 
-        throw IllegalArgumentException("No interpreter found for statement: $statement")
+        throw IllegalArgumentException("No interpreter found for statement: ${statement.getStatementType().name}")
     }
 }

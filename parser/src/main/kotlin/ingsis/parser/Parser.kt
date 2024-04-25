@@ -23,8 +23,7 @@ class Parser(
         val tokens: List<Token> = changeSymbolType(tokensWSymbols)
 
         if (ifCanHandle(tokens)) {
-            ifMakeAst(tokens)
-            return emptyList()
+            return ifMakeAst(tokens)
         }
 
         if (elseCanHandle(tokens)) {
@@ -32,6 +31,7 @@ class Parser(
             if (statement != null) {
                 if (mayHaveContinuousElse) {
                     ifStatement.addElse(statement as Else)
+                    mayHaveContinuousElse = false
                 } else {
                     throw ParserError("You cannot implement an else statement without an if", tokens[0])
                 }
@@ -39,17 +39,16 @@ class Parser(
             }
             return emptyList()
         } else {
-            val statements = scanStatementWOIfAndElse(tokens, mutableListOf<Statement?>())
+            val statement = scanStatementWOIfAndElse(tokens)
 
-            if (statements.isEmpty()) {
+            if (statement == null) {
                 throw ParserError("PrintScript couldn't parse that code.", tokens[0])
-            }
-            if (mayHaveContinuousElse) {
-                statements.add(ifStatement)
+            } else if (mayHaveContinuousElse) {
                 mayHaveContinuousElse = false
+                return listOf(ifStatement, statement)
             }
 
-            return statements.toList()
+            return listOf(statement)
         }
     }
 
@@ -57,29 +56,55 @@ class Parser(
 
     fun isThereAnIf() = mayHaveContinuousElse
 
-    private fun scanStatementWOIfAndElse(
-        tokens: List<Token>,
-        statements: MutableList<Statement?>,
-    ): MutableList<Statement?> {
+    private fun scanStatementWOIfAndElse(tokens: List<Token>): Statement? {
         if (!checkElseIndex() && !checkIfIndex()) {
             scanStatement.forEach {
-                if (it.canHandle(tokens)) statements.add(it.makeAST(tokens))
+                if (it.canHandle(tokens)) return it.makeAST(tokens)
             }
         } else {
             for (index in scanStatement.indices) {
                 if (index == elseIndex || index == ifIndex) continue
-                if (scanStatement[index].canHandle(tokens)) statements.add(scanStatement[index].makeAST(tokens))
+                if (scanStatement[index].canHandle(tokens)) return scanStatement[index].makeAST(tokens)
             }
         }
-        return statements
+        return null
     }
 
-    private fun ifMakeAst(tokens: List<Token>) {
-        val statement = scanStatement[ifIndex].makeAST(tokens)
+    private fun tokensHasLastBrace(
+        index: Int,
+        tokens: List<Token>,
+    ): Boolean = index != -1 && index != tokens.size - 1
+
+    private fun ifMakeAst(tokens: List<Token>): List<Statement?> {
+        val lastBraceIndex: Int = searchLastBrace(tokens)
+        val statement: Statement? =
+            if (tokensHasLastBrace(lastBraceIndex, tokens)) {
+                scanWithIfUntilTheLastBrace(tokens, lastBraceIndex)
+            } else {
+                scanStatement[ifIndex].makeAST(tokens)
+            }
         if (statement != null) {
             ifStatement = statement as If
             mayHaveContinuousElse = true
+            if (tokensHasLastBrace(lastBraceIndex, tokens)) {
+                return parse(tokens.subList(lastBraceIndex + 1, tokens.size))
+            }
         }
+        return emptyList()
+    }
+
+    private fun scanWithIfUntilTheLastBrace(
+        tokens: List<Token>,
+        lastBraceIndex: Int,
+    ): Statement? {
+        return scanStatement[ifIndex].makeAST(tokens.subList(0, lastBraceIndex + 1))
+    }
+
+    private fun searchLastBrace(tokens: List<Token>): Int {
+        tokens.indices.forEach {
+            if (tokens[it].getType() == TokenType.BRACES && tokens[it].getValue() == "}") return it
+        }
+        return -1
     }
 
     private fun elseMakeAst(tokens: List<Token>): Statement? = scanStatement[elseIndex].makeAST(tokens)

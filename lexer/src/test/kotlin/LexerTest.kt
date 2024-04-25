@@ -731,4 +731,50 @@ class LexerTest {
             i++
         }
     }
+
+    @Test
+    fun `test 10001-  Declare And Assign A String Variable With Declaration Inside String`() {
+        val input = "let a:string = \"Name:\";"
+        val tokenList =
+            listOf(
+                Token(Position(1, 4, 1, 1, 1, 4), "let", TokenType.KEYWORD),
+                Token(Position(5, 6, 1, 1, 5, 6), "a", TokenType.SYMBOL),
+                Token(Position(6, 7, 1, 1, 6, 7), ":", TokenType.DECLARATION),
+                Token(Position(7, 13, 1, 1, 7, 13), "string", TokenType.TYPE),
+                Token(Position(14, 15, 1, 1, 14, 15), "=", TokenType.ASSIGNATION),
+                Token(Position(16, 23, 1, 1, 16, 23), "\"Name:\"", TokenType.SYMBOL),
+                Token(Position(23, 24, 1, 1, 23, 24), ";", TokenType.DELIMITER),
+            )
+        val result = lexer.tokenize(input, Position())
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
+    }
+
+    @Test
+    fun `test 10002-  Declare And Assign A String Variable Using Special Symbols Inside String`() {
+        val input = "let a:string = \" N:()+/\";"
+        val tokenList =
+            listOf(
+                Token(Position(1, 4, 1, 1, 1, 4), "let", TokenType.KEYWORD),
+                Token(Position(5, 6, 1, 1, 5, 6), "a", TokenType.SYMBOL),
+                Token(Position(6, 7, 1, 1, 6, 7), ":", TokenType.DECLARATION),
+                Token(Position(7, 13, 1, 1, 7, 13), "string", TokenType.TYPE),
+                Token(Position(14, 15, 1, 1, 14, 15), "=", TokenType.ASSIGNATION),
+                Token(Position(16, 25, 1, 1, 16, 25), "\" N:()+/\"", TokenType.SYMBOL),
+                Token(Position(25, 26, 1, 1, 25, 26), ";", TokenType.DELIMITER),
+            )
+        val result = lexer.tokenize(input, Position())
+        var i = 0
+        while (i < result.size) {
+            assertEquals(tokenList[i].getType(), result[i].getType())
+            assertEquals(tokenList[i].getValue(), result[i].getValue())
+            assertEquals(tokenList[i].getPosition(), result[i].getPosition())
+            i++
+        }
+    }
 }

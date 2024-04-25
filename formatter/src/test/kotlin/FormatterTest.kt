@@ -14,6 +14,7 @@ import ingsis.formatter.utils.FormatterRule
 import ingsis.formatter.utils.readJsonAndStackMap
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 class FormatterTest {
     @Test
@@ -186,7 +187,12 @@ class FormatterTest {
     fun testFormatWithPrintFunction() {
         val scanners = listOf(ScanPrintLine())
         val formatter = Formatter(scanners)
-        val token = Token(Position(8, 8, 1, 1, 8, 8), "4", TokenType.INTEGER)
+        val token =
+            Token(
+                Position(8, 8, 1, 1, 8, 8),
+                "4",
+                TokenType.INTEGER,
+            )
         val value = SingleValue(token)
         val function = PrintLine(Position(0, 6, 1, 1, 0, 6), value)
         val ruleMap = readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")
@@ -220,5 +226,36 @@ class FormatterTest {
                 "\tprintln(4);\n" +
                 "}"
         assertEquals(expected, formatter.format(ifStatement, readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")))
+    }
+
+    @Test
+    fun testCreatePrintScriptFormatterV1() {
+        val formaterV1 = PrintScriptFormatter.createFormatter("VERSION_1")
+        val scanners = listOf(ScanDeclaration(), ScanAssignation(), ScanPrintLine(), ScanCompoundAssignation())
+        val printLineStatement = PrintLine(Position(), SingleValue(Token(Position(), "4", TokenType.INTEGER)))
+        assertEquals(
+            formaterV1.format(printLineStatement, "src/main/kotlin/ingsis/formatter/rules/rules.json"),
+            Formatter(scanners).format(printLineStatement, "src/main/kotlin/ingsis/formatter/rules/rules.json"),
+        )
+    }
+
+    @Test
+    fun testCreatePrintScriptFormatterWithInvalidVersion() {
+        val formaterV1 = PrintScriptFormatter.createFormatter("VERSION_4")
+        val scanners = listOf(ScanDeclaration(), ScanAssignation(), ScanPrintLine(), ScanCompoundAssignation())
+        val printLineStatement = PrintLine(Position(), SingleValue(Token(Position(), "4", TokenType.INTEGER)))
+        assertEquals(
+            formaterV1.format(printLineStatement, "src/main/kotlin/ingsis/formatter/rules/rules.json"),
+            Formatter(scanners).format(printLineStatement, "src/main/kotlin/ingsis/formatter/rules/rules.json"),
+        )
+    }
+
+    @Test
+    fun testInvalidPathToReadRules() {
+        val formaterV1 = PrintScriptFormatter.createFormatter("VERSION_1")
+        val printLineStatement = PrintLine(Position(), SingleValue(Token(Position(), "4", TokenType.INTEGER)))
+        assertThrows<Exception> {
+            formaterV1.format(printLineStatement, "src/main/kotlin/ingsis/formatter/rules/rules2.json")
+        }
     }
 }
