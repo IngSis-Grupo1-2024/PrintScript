@@ -23,8 +23,8 @@ object PrintScriptSca {
                     listOf(
                         ScanPrintLine(arrayListOf(TokenType.INTEGER, TokenType.STRING)),
                         ScanIdentifierCase(),
-                        ScanReadInput(arrayListOf(TokenType.INTEGER, TokenType.STRING))
-                    )
+                        ScanReadInput(arrayListOf(TokenType.INTEGER, TokenType.STRING)),
+                    ),
                 )
             else ->
                 Sca(
