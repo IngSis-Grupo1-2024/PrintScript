@@ -234,8 +234,8 @@ class FormatterTest {
         val scanners = listOf(ScanDeclaration(), ScanAssignation(), ScanPrintLine(), ScanCompoundAssignation())
         val printLineStatement = PrintLine(Position(), SingleValue(Token(Position(), "4", TokenType.INTEGER)))
         assertEquals(
-            formaterV1.format(printLineStatement, "src/main/kotlin/ingsis/formatter/rules/rules.json"),
-            Formatter(scanners).format(printLineStatement, "src/main/kotlin/ingsis/formatter/rules/rules.json"),
+            formaterV1.format(printLineStatement, readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")),
+            Formatter(scanners).format(printLineStatement, readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")),
         )
     }
 
@@ -245,8 +245,8 @@ class FormatterTest {
         val scanners = listOf(ScanDeclaration(), ScanAssignation(), ScanPrintLine(), ScanCompoundAssignation())
         val printLineStatement = PrintLine(Position(), SingleValue(Token(Position(), "4", TokenType.INTEGER)))
         assertEquals(
-            formaterV1.format(printLineStatement, "src/main/kotlin/ingsis/formatter/rules/rules.json"),
-            Formatter(scanners).format(printLineStatement, "src/main/kotlin/ingsis/formatter/rules/rules.json"),
+            formaterV1.format(printLineStatement, readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")),
+            Formatter(scanners).format(printLineStatement, readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")),
         )
     }
 
@@ -255,7 +255,7 @@ class FormatterTest {
         val formaterV1 = PrintScriptFormatter.createFormatter("VERSION_1")
         val printLineStatement = PrintLine(Position(), SingleValue(Token(Position(), "4", TokenType.INTEGER)))
         assertThrows<Exception> {
-            formaterV1.format(printLineStatement, "src/main/kotlin/ingsis/formatter/rules/rules2.json")
+            formaterV1.format(printLineStatement, readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules2.json"))
         }
     }
 }

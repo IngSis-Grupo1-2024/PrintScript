@@ -4,6 +4,7 @@ import ingsis.components.Position
 import ingsis.components.Token
 import ingsis.components.statement.Statement
 import ingsis.formatter.PrintScriptFormatter
+import ingsis.formatter.utils.readJsonAndStackMap
 import ingsis.interpreter.PrintScriptInterpreter
 import ingsis.interpreter.interpretStatement.Input
 import ingsis.lexer.PrintScriptLexer
@@ -11,6 +12,7 @@ import ingsis.parser.PrintScriptParser
 import ingsis.parser.error.ParserError
 import ingsis.sca.PrintScriptSca
 import ingsis.utils.OutputEmitter
+import ingsis.utils.ReadScaRulesFile
 import ingsis.utils.Result
 import java.io.FileInputStream
 import java.io.InputStream
@@ -158,7 +160,7 @@ class Cli(outputEmitter: OutputEmitter, version: Version, input: Input) {
         }
         if (parser.isThereAnIf()) {
             result.append(
-                formatter.format(parser.getIfStatement(), rulePath),
+                formatter.format(parser.getIfStatement(), readJsonAndStackMap(rulePath)),
             )
         }
         writeInFile(file.toString(), result.toString())
@@ -195,6 +197,8 @@ class Cli(outputEmitter: OutputEmitter, version: Version, input: Input) {
         var tokens: List<Token>
         var statement: List<Statement?>
         var result = StringBuilder()
+        val scaRules = ReadScaRulesFile()
+        scaRules.readSCARulesAndStackMap(rulePath)
         for (line in lines) {
             tokens = tokenizeWithLexer(line)
             if (tokens.isEmpty()) continue
@@ -209,7 +213,7 @@ class Cli(outputEmitter: OutputEmitter, version: Version, input: Input) {
 
         if (parser.isThereAnIf()) {
             result.append(
-                sca.analyze(parser.getIfStatement(), rulePath),
+                sca.analyze(parser.getIfStatement(), scaRules),
             )
         }
 
