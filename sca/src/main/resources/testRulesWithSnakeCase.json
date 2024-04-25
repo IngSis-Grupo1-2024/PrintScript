@@ -1,0 +1,14 @@
+{
+  "println": {
+    "expression": false,
+    "identifier": false,
+    "literal": true
+  },
+  "identifier_format": {
+    "format": "snake case"
+  },
+  "readinput":{
+    "expression": false,
+    "literal": true
+  }
+}
