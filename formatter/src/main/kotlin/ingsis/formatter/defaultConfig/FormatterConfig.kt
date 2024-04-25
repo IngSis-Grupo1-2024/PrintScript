@@ -1,6 +1,6 @@
 package ingsis.formatter.defaultConfig
 
-fun getDefaultBeforeDeclarationSpaces(): Int {
+fun getDefaultDeclarationSpaces(): Int {
     return 1
 }
 

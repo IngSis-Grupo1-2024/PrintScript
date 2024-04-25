@@ -4,6 +4,7 @@ import ingsis.components.statement.Statement
 import ingsis.sca.result.InvalidResult
 import ingsis.sca.scan.ScanIdentifierCase
 import ingsis.sca.scan.ScanPrintLine
+import ingsis.sca.scan.ScanReadInput
 import ingsis.sca.scan.ScanStatement
 import ingsis.utils.ReadScaRulesFile
 
@@ -15,6 +16,14 @@ object PrintScriptSca {
                     listOf(
                         ScanPrintLine(arrayListOf(TokenType.INTEGER, TokenType.STRING)),
                         ScanIdentifierCase(),
+                    ),
+                )
+            "VERSION_2" ->
+                Sca(
+                    listOf(
+                        ScanPrintLine(arrayListOf(TokenType.INTEGER, TokenType.STRING)),
+                        ScanIdentifierCase(),
+                        ScanReadInput(arrayListOf(TokenType.INTEGER, TokenType.STRING)),
                     ),
                 )
             else ->
