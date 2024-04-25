@@ -87,15 +87,24 @@ class FormatterTest {
     fun testFormatWithPrintFunction() {
         val scanners = listOf(ScanPrintLine())
         val formatter = Formatter(scanners)
-        val token = Token(Position(8, 8, 1, 1, 8, 8), "4", TokenType.INTEGER)
+        val token =
+            Token(
+                Position(8, 8, 1, 1, 8, 8),
+                "4",
+                TokenType.INTEGER,
+            )
         val value = SingleValue(token)
-        val function = PrintLine(Position(0, 6, 1, 1, 0, 6), value)
+        val function =
+            PrintLine(
+                Position(0, 6, 1, 1, 0, 6),
+                value,
+            )
         val result = formatter.format(function, "src/main/kotlin/ingsis/formatter/rules/rules.json")
         val expected =
             "\n" +
-                    "\n" +
-                    "println(4);" +
-                    "\n"
+                "\n" +
+                "println(4);" +
+                "\n"
         assertEquals(expected, result)
     }
 
@@ -106,7 +115,7 @@ class FormatterTest {
         val printLineStatement = PrintLine(Position(), SingleValue(Token(Position(), "4", TokenType.INTEGER)))
         assertEquals(
             formaterV1.format(printLineStatement, "src/main/kotlin/ingsis/formatter/rules/rules.json"),
-            Formatter(scanners).format(printLineStatement, "src/main/kotlin/ingsis/formatter/rules/rules.json")
+            Formatter(scanners).format(printLineStatement, "src/main/kotlin/ingsis/formatter/rules/rules.json"),
         )
     }
 
@@ -117,7 +126,7 @@ class FormatterTest {
         val printLineStatement = PrintLine(Position(), SingleValue(Token(Position(), "4", TokenType.INTEGER)))
         assertEquals(
             formaterV1.format(printLineStatement, "src/main/kotlin/ingsis/formatter/rules/rules.json"),
-            Formatter(scanners).format(printLineStatement, "src/main/kotlin/ingsis/formatter/rules/rules.json")
+            Formatter(scanners).format(printLineStatement, "src/main/kotlin/ingsis/formatter/rules/rules.json"),
         )
     }
 
