@@ -1,6 +1,6 @@
 package ingsis.formatter.defaultConfig
 
-fun getDefaultBeforeDeclarationSpaces(): Int {
+fun getDefaultDeclarationSpaces(): Int {
     return 1
 }
 
@@ -9,5 +9,9 @@ fun getDefaultPrintlnNewLines(): Int {
 }
 
 fun getDefaultAssignationSpaces(): Int {
+    return 1
+}
+
+fun getDefaultIfTabs(): Int {
     return 1
 }

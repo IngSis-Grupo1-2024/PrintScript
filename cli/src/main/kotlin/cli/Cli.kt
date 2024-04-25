@@ -4,6 +4,7 @@ import ingsis.components.Position
 import ingsis.components.Token
 import ingsis.components.statement.Statement
 import ingsis.formatter.PrintScriptFormatter
+import ingsis.formatter.utils.readJsonAndStackMap
 import ingsis.interpreter.PrintScriptInterpreter
 import ingsis.interpreter.interpretStatement.Input
 import ingsis.lexer.PrintScriptLexer
@@ -165,7 +166,7 @@ class Cli(outputEmitter: OutputEmitter, version: Version, input: Input) {
         statements.forEach { statement ->
             if (statement != null) {
                 result.append(
-                    formatter.format(statement, rulePath),
+                    formatter.format(statement, readJsonAndStackMap(rulePath)),
                 )
             }
         }
