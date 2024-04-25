@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import util.InputReader
 import util.PrintOutputEmitterTests
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -1755,7 +1756,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
 
@@ -1808,7 +1809,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
 
@@ -1861,7 +1862,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
 
@@ -1914,7 +1915,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
 
@@ -1973,7 +1974,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
 
@@ -2037,7 +2038,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
 
@@ -2095,7 +2096,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
 
@@ -2155,7 +2156,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
 
@@ -2193,7 +2194,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
         val position = Position()
@@ -2233,7 +2234,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
         val position = Position()
@@ -2273,7 +2274,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
         val position = Position()
@@ -2313,7 +2314,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
         val position = Position()
@@ -2353,7 +2354,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
         val position = Position()
@@ -2393,7 +2394,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
         val position = Position()
@@ -2433,7 +2434,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
         val position = Position()
@@ -2473,7 +2474,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
         val position = Position()
@@ -2513,7 +2514,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
         val position = Position()
@@ -2553,7 +2554,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
         val position = Position()
@@ -2597,7 +2598,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
         val position = Position()
@@ -2641,7 +2642,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
         val position = Position()
@@ -2685,7 +2686,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                 ),
             )
         val position = Position()
@@ -2735,7 +2736,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                     CompoundAssignationReadInputInterpreter(InputReader(), scanners),
                 ),
             )
@@ -2783,7 +2784,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                     CompoundAssignationReadInputInterpreter(InputReader(), scanners),
                 ),
             )
@@ -2831,7 +2832,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                     CompoundAssignationReadInputInterpreter(InputReader(), scanners),
                 ),
             )
@@ -2879,7 +2880,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                     CompoundAssignationReadInputInterpreter(InputReader(), scanners),
                 ),
             )
@@ -2929,7 +2930,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                     CompoundAssignationReadInputInterpreter(InputReader(), scanners),
                 ),
             )
@@ -2979,7 +2980,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                     CompoundAssignationReadInputInterpreter(InputReader(), scanners),
                 ),
             )
@@ -3029,7 +3030,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                     CompoundAssignationReadInputInterpreter(InputReader(), scanners),
                 ),
             )
@@ -3077,7 +3078,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                     CompoundAssignationReadInputInterpreter(InputReader(), scanners),
                 ),
             )
@@ -3119,7 +3120,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                     CompoundAssignationReadInputInterpreter(InputReader(), scanners),
                     AssignationReadInputInterpreter(InputReader(), scanners),
                 ),
@@ -3161,7 +3162,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                     CompoundAssignationReadInputInterpreter(InputReader(), scanners),
                     AssignationReadInputInterpreter(InputReader(), scanners),
                 ),
@@ -3203,7 +3204,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                     CompoundAssignationReadInputInterpreter(InputReader(), scanners),
                     AssignationReadInputInterpreter(InputReader(), scanners),
                 ),
@@ -3245,7 +3246,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                     CompoundAssignationReadInputInterpreter(InputReader(), scanners),
                     AssignationReadInputInterpreter(InputReader(), scanners),
                 ),
@@ -3287,7 +3288,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                     AssignationReadInputInterpreter(InputReader(), scanners),
                 ),
             )
@@ -3333,7 +3334,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                     AssignationReadInputInterpreter(InputReader(), scanners),
                 ),
             )
@@ -3379,7 +3380,7 @@ class InterpreterTest {
                     AssignationInterpreter(scanners),
                     DeclarationInterpreter(),
                     CompoundAssignationInterpreter(scanners),
-                    IfInterpreter(scanners, "VERSION_2", outputEmitter),
+                    IfInterpreter(scanners, "VERSION_2", outputEmitter, InputReader()),
                     AssignationReadInputInterpreter(InputReader(), scanners),
                 ),
             )
