@@ -1,4 +1,4 @@
-package modules.parser
+package parser
 
 import ingsis.components.Position
 import ingsis.components.Token
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 
 class ParserTest {
-    private val parser = PrintScriptParser.createParser("VERSION_1")
+    private val parser = PrintScriptParser.createParser("VERSION_2")
     private val position = Position()
 
     @Test
@@ -32,7 +32,7 @@ class ParserTest {
                 position,
             )
         print(parser.parse(tokens).toString())
-        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
+        assertEquals(listOf(astExpected).toString(), parser.parse(tokens).toString())
     }
 
     @Test
@@ -121,7 +121,7 @@ class ParserTest {
                     Token(position, "8", TokenType.INTEGER),
                 ),
             )
-        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
+        assertEquals(listOf(astExpected).toString(), parser.parse(tokens).toString())
     }
 
     @Test
@@ -145,7 +145,7 @@ class ParserTest {
                     SingleValue(Token(position, "3", TokenType.INTEGER)),
                 ),
             )
-        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
+        assertEquals(listOf(astExpected).toString(), parser.parse(tokens).toString())
     }
 
     @Test
@@ -173,7 +173,7 @@ class ParserTest {
                     Token(position, "8", TokenType.INTEGER),
                 ),
             )
-        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
+        assertEquals(listOf(astExpected).toString(), parser.parse(tokens).toString())
     }
 
     @Test
@@ -205,7 +205,7 @@ class ParserTest {
                     ),
                 ),
             )
-        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
+        assertEquals(listOf(astExpected).toString(), parser.parse(tokens).toString())
     }
 
     @Test
@@ -237,7 +237,7 @@ class ParserTest {
                     ),
                 ),
             )
-        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
+        assertEquals(listOf(astExpected).toString(), parser.parse(tokens).toString())
     }
 
     @Test
@@ -276,7 +276,7 @@ class ParserTest {
                 ),
             )
 
-        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
+        assertEquals(listOf(astExpected).toString(), parser.parse(tokens).toString())
     }
 
     @Test
@@ -368,7 +368,7 @@ class ParserTest {
                     ),
                 ),
             )
-        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
+        assertEquals(listOf(astExpected).toString(), parser.parse(tokens).toString())
     }
 
     @Test
@@ -411,7 +411,7 @@ class ParserTest {
                 ),
             )
 
-        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
+        assertEquals(listOf(astExpected).toString(), parser.parse(tokens).toString())
     }
 
     @Test
@@ -472,7 +472,7 @@ class ParserTest {
                 ),
             )
 
-        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
+        assertEquals(listOf(astExpected).toString(), parser.parse(tokens).toString())
     }
 
     @Test
@@ -490,7 +490,7 @@ class ParserTest {
                 position,
                 SingleValue(Token(position, "c", TokenType.IDENTIFIER)),
             )
-        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
+        assertEquals(listOf(astExpected).toString(), parser.parse(tokens).toString())
     }
 
     @Test
@@ -514,7 +514,7 @@ class ParserTest {
                     SingleValue(Token(position, "c", TokenType.IDENTIFIER)),
                 ),
             )
-        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
+        assertEquals(listOf(astExpected).toString(), parser.parse(tokens).toString())
     }
 
     @Test
@@ -546,7 +546,7 @@ class ParserTest {
                     ),
                 ),
             )
-        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
+        assertEquals(listOf(astExpected).toString(), parser.parse(tokens).toString())
     }
 
     @Test
@@ -651,7 +651,7 @@ class ParserTest {
                     ),
                 ),
             )
-        assertEquals(astExpected.toString(), parser.parse(tokens).toString())
+        assertEquals(listOf(astExpected).toString(), parser.parse(tokens).toString())
     }
 
     @Test

@@ -1,6 +1,7 @@
 package app
 
 import cli.Cli
+import cli.InputEmitter
 import cli.PrintOutputEmitter
 import cli.Version
 import com.github.ajalt.clikt.core.CliktCommand
@@ -40,7 +41,10 @@ class Validate : CliktCommand(help = "Validates a PrintScript script file") {
 
     private fun startCli() {
         if (version == "v1") {
-            cli = Cli(PrintOutputEmitter(), Version.VERSION_1)
+            cli = Cli(PrintOutputEmitter(), Version.VERSION_1, InputEmitter())
+        }
+        if (version == "v2") {
+            cli = Cli(PrintOutputEmitter(), Version.VERSION_2, InputEmitter())
         }
     }
 }

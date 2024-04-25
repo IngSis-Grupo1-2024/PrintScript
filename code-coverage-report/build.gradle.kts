@@ -7,7 +7,7 @@ repositories {
 }
 
 dependencies {
-
+    jacocoAggregation(project(":app"))
 }
 
 

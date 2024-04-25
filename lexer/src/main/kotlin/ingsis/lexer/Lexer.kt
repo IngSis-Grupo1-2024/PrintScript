@@ -8,6 +8,7 @@ object PrintScriptLexer {
     fun createLexer(version: String): Lexer {
         return when (version) {
             "VERSION_1" -> version1()
+            "VERSION_2" -> version2()
             else -> version1()
         }
     }
@@ -23,6 +24,22 @@ object PrintScriptLexer {
                 TokenAssignator(TokenType.PARENTHESIS, listOf("(", ")")),
                 TokenAssignator(TokenType.DECLARATION, listOf(":")),
                 TokenAssignator(TokenType.ASSIGNATION, listOf("=")),
+            ),
+        )
+
+    private fun version2() =
+        Lexer(
+            listOf(
+                TokenAssignator(TokenType.KEYWORD, listOf("let", "const")),
+                TokenAssignator(TokenType.FUNCTION, listOf("println", "readEnv", "readInput")),
+                TokenAssignator(TokenType.TYPE, listOf("number", "string", "boolean")),
+                TokenAssignator(TokenType.OPERATOR, listOf("+", "-", "/", "*", "==", "!=", ">", "<", ">=", "<=")),
+                TokenAssignator(TokenType.DELIMITER, listOf(";")),
+                TokenAssignator(TokenType.PARENTHESIS, listOf("(", ")")),
+                TokenAssignator(TokenType.DECLARATION, listOf(":")),
+                TokenAssignator(TokenType.ASSIGNATION, listOf("=")),
+                TokenAssignator(TokenType.BRACES, listOf("{", "}")),
+                TokenAssignator(TokenType.FUNCTION_KEYWORD, listOf("if", "else")),
             ),
         )
 }

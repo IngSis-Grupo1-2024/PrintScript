@@ -8,5 +8,5 @@ interface ScanStatement {
 
     fun canHandleWODelimiter(tokens: List<Token>): Boolean
 
-    fun makeAST(tokens: List<Token>): Statement
+    fun makeAST(tokens: List<Token>): Statement?
 }

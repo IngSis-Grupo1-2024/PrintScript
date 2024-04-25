@@ -7,6 +7,8 @@ object PrintScriptFormatter {
     fun createFormatter(version: String): Formatter {
         return when (version) {
             "VERSION_1" -> Formatter(listOf(ScanDeclaration(), ScanAssignation(), ScanPrintLine(), ScanCompoundAssignation()))
+            "VERSION_2" -> Formatter(listOf(ScanDeclaration(), ScanAssignation(), ScanPrintLine(), ScanCompoundAssignation(), ScanIf()))
+
             else -> Formatter(listOf(ScanDeclaration(), ScanAssignation(), ScanPrintLine(), ScanCompoundAssignation()))
         }
     }

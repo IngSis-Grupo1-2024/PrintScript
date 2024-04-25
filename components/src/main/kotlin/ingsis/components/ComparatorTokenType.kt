@@ -1,7 +1,20 @@
 package ingsis.components
 
-class ComparatorTokenType : Comparator<TokenType> {
-    private val leafTypes = listOf(TokenType.TYPE, TokenType.INTEGER, TokenType.STRING, TokenType.DOUBLE, TokenType.IDENTIFIER)
+object PrintScriptComparatorTokenType {
+    fun createComparatorTokenType(version: String): ComparatorTokenType {
+        return when (version) {
+            "VERSION_1" -> ComparatorTokenType(leafTypesV1())
+            "VERSION_2" -> ComparatorTokenType(leafTypesV2())
+            else -> ComparatorTokenType(leafTypesV1())
+        }
+    }
+
+    private fun leafTypesV1() = listOf(TokenType.TYPE, TokenType.INTEGER, TokenType.STRING, TokenType.DOUBLE, TokenType.IDENTIFIER)
+
+    private fun leafTypesV2() = leafTypesV1() + listOf(TokenType.BOOLEAN)
+}
+
+class ComparatorTokenType(private val leafTypes: List<TokenType>) : Comparator<TokenType> {
     private val rootTypes = listOf(TokenType.ASSIGNATION, TokenType.OPERATOR)
 
     // it returns 0 if they are equals

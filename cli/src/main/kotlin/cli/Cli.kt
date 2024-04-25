@@ -6,21 +6,23 @@ import ingsis.components.statement.Statement
 import ingsis.formatter.PrintScriptFormatter
 import ingsis.formatter.utils.readJsonAndStackMap
 import ingsis.interpreter.PrintScriptInterpreter
+import ingsis.interpreter.interpretStatement.Input
 import ingsis.lexer.PrintScriptLexer
 import ingsis.parser.PrintScriptParser
 import ingsis.parser.error.ParserError
 import ingsis.sca.PrintScriptSca
 import ingsis.utils.OutputEmitter
+import ingsis.utils.ReadScaRulesFile
 import ingsis.utils.Result
 import java.io.FileInputStream
 import java.io.InputStream
 import java.io.PrintWriter
 import java.nio.file.Path
 
-class Cli(outputEmitter: OutputEmitter, version: Version) {
+class Cli(outputEmitter: OutputEmitter, version: Version, input: Input) {
     private val lexer = PrintScriptLexer.createLexer(version.toString())
     private val parser = PrintScriptParser.createParser(version.toString())
-    private val interpreter = PrintScriptInterpreter.createInterpreter(version.toString(), outputEmitter)
+    private val interpreter = PrintScriptInterpreter.createInterpreter(version.toString(), outputEmitter, input)
     private val formatter = PrintScriptFormatter.createFormatter(version.toString())
     private val sca = PrintScriptSca.createSCA(version.toString())
     private var position = Position()
@@ -32,7 +34,7 @@ class Cli(outputEmitter: OutputEmitter, version: Version) {
     fun executeInputStream(inputStream: InputStream) {
         val inputReader = InputReader(inputStream)
         var tokens: List<Token>
-        var statement: Statement
+        var statement: List<Statement?>
         var variableMap = HashMap<String, Result>()
         var line: String? = inputReader.nextLine()
         while (line != null) {
@@ -41,11 +43,23 @@ class Cli(outputEmitter: OutputEmitter, version: Version) {
                 tokens = tokenizeWithLexer(l)
                 if (tokens.isEmpty()) continue
                 statement = parse(tokens)
-                variableMap = interpreter.interpret(statement, variableMap)
+                if (statement.isEmpty()) continue
+                variableMap = interpret(statement, variableMap)
             }
             line = inputReader.nextLine()
             incrementOneLine()
         }
+    }
+
+    private fun interpret(
+        statements: List<Statement?>,
+        variableMap: HashMap<String, Result>,
+    ): java.util.HashMap<String, Result> {
+        var map = variableMap
+        statements.forEach { statement ->
+            if (statement != null) map = interpreter.interpret(statement, map)
+        }
+        return map
     }
 
     private fun tokenizeWithLexer(line: String): List<Token> {
@@ -66,7 +80,7 @@ class Cli(outputEmitter: OutputEmitter, version: Version) {
             )
     }
 
-    private fun parse(tokens: List<Token>): Statement = parser.parse(tokens)
+    private fun parse(tokens: List<Token>): List<Statement?> = parser.parse(tokens)
 
     private fun splitLines(codeLines: String): List<String> {
         val delimiter = ";"
@@ -127,23 +141,36 @@ class Cli(outputEmitter: OutputEmitter, version: Version) {
     ) {
         val lines = splitLines(codeLines)
         var tokens: List<Token>
-        var statement: Statement
-        val result = StringBuilder()
-        val formatterRuleMap = readJsonAndStackMap(rulePath)
+        var statement: List<Statement?>
+        var result = StringBuilder()
         if (lines.isEmpty()) return writeInFile(file.toString(), "empty file")
         for (line in lines) {
             tokens = tokenizeWithLexer(line)
             if (tokens.isEmpty()) continue
             try {
                 statement = parse(tokens)
-                result.append(
-                    formatter.format(statement, formatterRuleMap),
-                )
+                if (statement.isEmpty()) continue
+                result = format(result, statement, rulePath)
             } catch (e: ParserError) {
                 result.append("\n" + e.localizedMessage + " in position :" + e.getTokenPosition())
             }
         }
         writeInFile(file.toString(), result.toString())
+    }
+
+    private fun format(
+        result: StringBuilder,
+        statements: List<Statement?>,
+        rulePath: String,
+    ): StringBuilder {
+        statements.forEach { statement ->
+            if (statement != null) {
+                result.append(
+                    formatter.format(statement, readJsonAndStackMap(rulePath)),
+                )
+            }
+        }
+        return result
     }
 
     fun analyzeFileInFileOutput(
@@ -160,19 +187,15 @@ class Cli(outputEmitter: OutputEmitter, version: Version) {
     ): String {
         val lines = splitLines(codeLines)
         var tokens: List<Token>
-        var statement: Statement
-        val result = StringBuilder()
+        var statement: List<Statement?>
+        var result = StringBuilder()
         for (line in lines) {
             tokens = tokenizeWithLexer(line)
             if (tokens.isEmpty()) continue
             try {
                 statement = parse(tokens)
-                result.append(
-                    sca.analyze(
-                        statement,
-                        rulePath,
-                    ),
-                )
+                if (statement.isEmpty()) continue
+                result = analyze(result, statement, rulePath)
             } catch (e: ParserError) {
                 result.append("\n" + e.localizedMessage + " in position :" + e.getTokenPosition())
             }
@@ -181,5 +204,25 @@ class Cli(outputEmitter: OutputEmitter, version: Version) {
             return "SUCCESSFUL ANALYSIS"
         }
         return result.toString()
+    }
+
+    private fun analyze(
+        result: StringBuilder,
+        statements: List<Statement?>,
+        rulePath: String,
+    ): StringBuilder {
+        val rules = ReadScaRulesFile()
+        rules.readSCARulesAndStackMap(rulePath)
+        statements.forEach { statement ->
+            if (statement != null) {
+                result.append(
+                    sca.analyze(
+                        statement,
+                        rules,
+                    ),
+                )
+            }
+        }
+        return result
     }
 }

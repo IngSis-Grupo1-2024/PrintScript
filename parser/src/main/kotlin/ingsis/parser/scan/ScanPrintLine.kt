@@ -6,8 +6,15 @@ import ingsis.components.statement.PrintLine
 import ingsis.components.statement.Statement
 import ingsis.parser.error.ParserError
 
-class ScanPrintLine : ScanStatement {
-    private val scanValue = ScanValue()
+object PSScanPrintLine {
+    fun createPrintLine(version: String): ScanPrintLine {
+        return ScanPrintLine(scanValue(version))
+    }
+
+    private fun scanValue(version: String) = PrintScriptScanValue.createScanValue(version)
+}
+
+class ScanPrintLine(private val scanValue: ScanValue) : ScanStatement {
     private val functionTypes = listOf(TokenType.FUNCTION, TokenType.PARENTHESIS)
 
     override fun canHandle(tokens: List<Token>): Boolean {

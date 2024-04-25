@@ -22,9 +22,6 @@ class ScanEqualsOperator : ScanOperatorType {
         val firstValue = checkIfVariableDefined(left, map)
         val secondValue = checkIfVariableDefined(right, map)
 
-        val firstType = firstValue.getType().getValue()
-        val secondType = secondValue.getType().getValue()
-
         if (firstValue == secondValue) {
             return SingleValue(Token(Position(), "true", TokenType.BOOLEAN))
         }
