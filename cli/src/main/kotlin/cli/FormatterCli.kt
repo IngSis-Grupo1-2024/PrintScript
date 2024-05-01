@@ -14,7 +14,7 @@ class FormatterCli(outputEmitter: OutputEmitter, version: Version, input: Input)
         rulePath: String,
         input: Path,
         output: Path,
-    )  {
+    ) {
         val inputStream = formatInputStream(rulePath, FileInputStream(input.toFile()))
         writeInputStreamInFile(inputStream, output)
     }
@@ -22,7 +22,7 @@ class FormatterCli(outputEmitter: OutputEmitter, version: Version, input: Input)
     fun formatFile(
         rulePath: String,
         file: Path,
-    )  {
+    ) {
         val inputStream = formatInputStream(rulePath, FileInputStream(file.toFile()))
         writeInputStreamInFile(inputStream, file)
     }
@@ -35,8 +35,11 @@ class FormatterCli(outputEmitter: OutputEmitter, version: Version, input: Input)
         var line: String? = inputReader.nextLine()
         val writer = FileWriter(output.toFile())
         while (line != null) {
-            if(line == "") writer.write("\n")
-            else writer.write(line + "\n")
+            if (line == "") {
+                writer.write("\n")
+            } else {
+                writer.write(line + "\n")
+            }
             line = inputReader.nextLine()
         }
         writer.close()
@@ -45,13 +48,13 @@ class FormatterCli(outputEmitter: OutputEmitter, version: Version, input: Input)
     fun formatInputStream(
         rulePath: String,
         inputStream: InputStream,
-    ): InputStream  {
+    ): InputStream {
         val inputReader = InputReader(inputStream)
         var tokens: List<Token>
         var statement: List<Statement?>
         var result: InputStream = ByteArrayInputStream(ByteArray(0))
         var line: String? = inputReader.nextLine()
-        val ruleMap : Map<String, FormatterRule> = getFormatterMap(rulePath)
+        val ruleMap: Map<String, FormatterRule> = getFormatterMap(rulePath)
         while (line != null) {
             val lines = splitLines(line)
             for (l in lines) {
@@ -83,7 +86,7 @@ class FormatterCli(outputEmitter: OutputEmitter, version: Version, input: Input)
 
     private fun format(
         statements: List<Statement?>,
-        ruleMap:  Map<String, FormatterRule>,
+        ruleMap: Map<String, FormatterRule>,
     ): String {
         val result = StringBuilder()
         statements.forEach { statement ->
@@ -98,9 +101,9 @@ class FormatterCli(outputEmitter: OutputEmitter, version: Version, input: Input)
 
     private fun getFormatBytes(
         statements: List<Statement?>,
-        ruleMap:  Map<String, FormatterRule>,
+        ruleMap: Map<String, FormatterRule>,
     ): ByteArrayInputStream {
-        val result : String = format(statements, ruleMap)
+        val result: String = format(statements, ruleMap)
         return ByteArrayInputStream(result.toByteArray())
     }
 }

@@ -16,9 +16,11 @@ class AnalyzeCli(outputEmitter: OutputEmitter, version: Version, input: Input) :
     ) {
         writeInFile(outputFilePath.toString(), analyzeFile(rulePath, inputFilePath))
     }
-    fun analyzeFile(rulePath: String, filePath: Path): String =
-        analyzeInputStream(rulePath, FileInputStream(filePath.toFile()))
 
+    fun analyzeFile(
+        rulePath: String,
+        filePath: Path,
+    ): String = analyzeInputStream(rulePath, FileInputStream(filePath.toFile()))
 
     fun analyzeInputStream(
         rulePath: String,
@@ -57,5 +59,4 @@ class AnalyzeCli(outputEmitter: OutputEmitter, version: Version, input: Input) :
         }
         return result.toString()
     }
-
 }

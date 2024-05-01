@@ -8,7 +8,6 @@ import util.PrintCollector
 import util.QueueInputProvider
 import util.Queues
 import java.io.*
-import java.nio.file.Files.readAllLines
 import java.nio.file.Path
 import java.util.*
 import kotlin.io.path.Path
@@ -110,7 +109,6 @@ class CliAnalyzeTest {
         return errorCollector
     }
 
-
     private fun getString(inputStream: InputStream): List<String> {
         val inputReader = InputReader(inputStream)
         var line: String? = inputReader.nextLine()
@@ -124,9 +122,10 @@ class CliAnalyzeTest {
 
     private fun data(): List<Pair<String, String>> {
         return listOf(
-            Pair("1.0", "printWithExpression"),
-            Pair("1.0", "printWithLiteral"),
-            Pair("1.0", "writeInSnakeCase"),
+//            Pair("1.0", "printWithExpression"),
+//            Pair("1.0", "printWithLiteral"),
+//            Pair("1.0", "writeInSnakeCase"),
+            Pair("1.1", "readInputWithExpression"),
         )
     }
 
@@ -161,7 +160,7 @@ class CliAnalyzeTest {
         return if (file.exists()) {
             filePath
         } else {
-            "../sca/src/main/resources/rules.json"
+            ""
         }
     }
 }

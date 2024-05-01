@@ -8,7 +8,7 @@ class AssignationSpaces(
     private val ruleMap: Map<String, FormatterRule>,
 ) {
     fun getAssignationSpaces(): String {
-        return if ((ruleMap["assignation"]!!.isOn())) {
+        return if (ruleMap.containsKey("assignation") && ruleMap["assignation"]!!.isOn()) {
             generateSpaces(ruleMap["assignation"]!!.quantity)
         } else {
             generateSpaces(getDefaultAssignationSpaces())

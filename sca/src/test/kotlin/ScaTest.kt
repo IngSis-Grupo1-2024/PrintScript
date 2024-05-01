@@ -1,4 +1,3 @@
-
 import ingsis.components.Position
 import ingsis.components.Token
 import ingsis.components.TokenType
@@ -17,33 +16,36 @@ import org.junit.jupiter.api.Test
 
 class ScaTest {
     @Test
-    fun testScanAssignationWithVariable() {
+    fun testScanPrintLineWithVariable() {
         val printLine = PrintLine(Position(), SingleValue(Token(Position(), "a", TokenType.IDENTIFIER)))
         val scanPrintLine = ScanPrintLine(emptyList())
         val sca = Sca(listOf(scanPrintLine))
         val ruleMap = ReadScaRulesFile()
         ruleMap.readSCARulesAndStackMap("src/main/resources/rules.json")
-        Assertions.assertEquals("PRINT_LINE with IDENTIFIER is not allowed at line 1 and column 1\n", sca.analyze(printLine, ruleMap))
+        assertEquals(
+            "PRINT_LINE with IDENTIFIER is not allowed at line 1 and column 1\n",
+            sca.analyze(printLine, ruleMap),
+        )
     }
 
     @Test
-    fun testScanAssignationWithLiteral() {
+    fun testScanPrintLineWithLiteral() {
         val printLine = PrintLine(Position(), SingleValue(Token(Position(), "1", TokenType.INTEGER)))
         val scanPrintLine = ScanPrintLine(arrayListOf(TokenType.INTEGER))
         val sca = Sca(listOf(scanPrintLine))
         val ruleMap = ReadScaRulesFile()
         ruleMap.readSCARulesAndStackMap("src/main/resources/rules.json")
-        Assertions.assertEquals("", sca.analyze(printLine, ruleMap))
+        assertEquals("", sca.analyze(printLine, ruleMap))
     }
 
     @Test
-    fun testScanAssignationWithString() {
+    fun testScanPrintLineWithString() {
         val printLine = PrintLine(Position(), SingleValue(Token(Position(), "hello world", TokenType.STRING)))
         val scanPrintLine = ScanPrintLine(arrayListOf(TokenType.STRING))
         val sca = Sca(listOf(scanPrintLine))
         val ruleMap = ReadScaRulesFile()
         ruleMap.readSCARulesAndStackMap("src/main/resources/rules.json")
-        Assertions.assertEquals("", sca.analyze(printLine, ruleMap))
+        assertEquals("", sca.analyze(printLine, ruleMap))
     }
 
     @Test
@@ -63,7 +65,10 @@ class ScaTest {
         val sca = Sca(listOf(scanPrintLine))
         val ruleMap = ReadScaRulesFile()
         ruleMap.readSCARulesAndStackMap("src/main/resources/rules.json")
-        Assertions.assertEquals("PRINT_LINE with expression is not allowed at line 1 and column 1\n", sca.analyze(printLine, ruleMap))
+        Assertions.assertEquals(
+            "PRINT_LINE with expression is not allowed at line 1 and column 1\n",
+            sca.analyze(printLine, ruleMap),
+        )
     }
 
     @Test
@@ -79,7 +84,10 @@ class ScaTest {
         val sca = Sca(listOf(scanPrintLine))
         val ruleMap = ReadScaRulesFile()
         ruleMap.readSCARulesAndStackMap("src/main/resources/testRulesWithNoLiteral.json")
-        Assertions.assertEquals("PRINT_LINE with INTEGER is not allowed at line 1 and column 1\n", sca.analyze(printLine, ruleMap))
+        Assertions.assertEquals(
+            "PRINT_LINE with INTEGER is not allowed at line 1 and column 1\n",
+            sca.analyze(printLine, ruleMap),
+        )
     }
 
     @Test
@@ -95,7 +103,10 @@ class ScaTest {
         val sca = Sca(listOf(scanPrintLine))
         val ruleMap = ReadScaRulesFile()
         ruleMap.readSCARulesAndStackMap("src/main/resources/testRulesWithNoLiteral.json")
-        Assertions.assertEquals("PRINT_LINE with STRING is not allowed at line 1 and column 1\n", sca.analyze(printLine, ruleMap))
+        Assertions.assertEquals(
+            "PRINT_LINE with STRING is not allowed at line 1 and column 1\n",
+            sca.analyze(printLine, ruleMap),
+        )
     }
 
     @Test
@@ -201,6 +212,28 @@ class ScaTest {
     }
 
     @Test
+    fun testScanReadInputWithOperatorAsValue() {
+        val operator =
+            Operator(
+                Token(Position(), "+", TokenType.OPERATOR),
+                SingleValue(
+                    Token(Position(), "1", TokenType.INTEGER),
+                ),
+                SingleValue(Token(Position(), "2", TokenType.INTEGER)),
+            )
+        val variable = Variable("x", Position())
+        val assignationReadInput = AssignationReadInput(Position(), variable, operator)
+        val scanReadInput = ScanReadInput(arrayListOf(TokenType.STRING))
+        val sca = Sca(listOf(scanReadInput))
+        val ruleMap = ReadScaRulesFile()
+        ruleMap.readSCARulesAndStackMap("src/main/resources/rules.json")
+        Assertions.assertEquals(
+            "ASSIGNATION_READ_INPUT with expression is not allowed at line 1 and column 1\n",
+            sca.analyze(assignationReadInput, ruleMap),
+        )
+    }
+
+    @Test
     fun testScanCompoundReadInputWithInvalidLiteralString() {
         val value = SingleValue(Token(Position(), "4", TokenType.INTEGER))
         val declaration =
@@ -224,7 +257,7 @@ class ScaTest {
     @Test
     fun testDefaultConfigFile() {
         assertEquals(true, getDefaultBooleanValue("identifier"))
-        assertEquals(true, getDefaultBooleanValue("expression"))
+        assertEquals(false, getDefaultBooleanValue("expression"))
         assertEquals(true, getDefaultBooleanValue("literal"))
         assertEquals(false, getDefaultBooleanValue("invalid"))
         assertEquals(ScanCamelCase::class, getDefaultCase()::class)

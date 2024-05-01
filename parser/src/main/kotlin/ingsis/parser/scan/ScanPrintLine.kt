@@ -44,8 +44,7 @@ class ScanPrintLine(private val scanValue: ScanValue) : ScanStatement {
         return false
     }
 
-    private fun isPrintLine(tokens: List<Token>): Boolean =
-        tokens[0].getValue() == "println"
+    private fun isPrintLine(tokens: List<Token>): Boolean = tokens[0].getValue() == "println"
 
     override fun makeAST(tokens: List<Token>): Statement {
         val printLinePosition = tokens[0].getPosition()

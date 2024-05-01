@@ -93,15 +93,18 @@ abstract class Cli(outputEmitter: OutputEmitter, version: Version, input: Input)
 
     protected fun getIfStatement(): Statement = parser.getIfStatement()
 
-    protected fun getFormatterMap(rulePath: String): Map<String, FormatterRule>{
-        if(rulePath == "") return emptyMap()
+    protected fun getFormatterMap(rulePath: String): Map<String, FormatterRule> {
+        if (rulePath == "") return emptyMap()
         val gson = Gson()
         val fileContent = getFileContent(rulePath)
-        val typeToken : Type = object : TypeToken<Map<String, FormatterRule>>() {}.type
+        val typeToken: Type = object : TypeToken<Map<String, FormatterRule>>() {}.type
         return gson.fromJson(fileContent, typeToken)
     }
 
-    protected fun getSCAMap(rulePath: String): ReadScaRulesFile{
+    protected fun getSCAMap(rulePath: String): ReadScaRulesFile {
+        if (rulePath == "") {
+            return ReadScaRulesFile()
+        }
         val ruleMap = ReadScaRulesFile()
         ruleMap.readSCARulesAndStackMap(rulePath)
         return ruleMap

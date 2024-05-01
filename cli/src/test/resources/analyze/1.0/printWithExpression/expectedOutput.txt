@@ -1,14 +1,1 @@
-
-error: delimiter (;) expected at {
-	startOffset: 12,
-	endOffset: 13,
-	startLine: 1,
-	endLine: 1,
-	startColumn: 12,
-	endColumn: 13} in position :{
-	startOffset: 12,
-	endOffset: 13,
-	startLine: 1,
-	endLine: 1,
-	startColumn: 12,
-	endColumn: 13}
+PRINT_LINE with expression is not allowed at line 1 and column 10

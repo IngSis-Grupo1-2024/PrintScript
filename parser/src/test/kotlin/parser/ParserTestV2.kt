@@ -781,6 +781,7 @@ class ParserTestV2 {
         parserV2.parse(elseTokensDeclaration)
         assertEquals(listOf(astExpected).toString(), parserV2.parse(elseTokensLastBraces).toString())
     }
+
     @Test
     fun `test 025 - function read input with an string as value in simple assignation`() {
         val tokens =
@@ -802,5 +803,4 @@ class ParserTestV2 {
             exception.message,
         )
     }
-
 }

@@ -1,5 +1,6 @@
 {
   "println": {
+    "on": true,
     "expression": false,
     "identifier": false,
     "literal": false
@@ -7,6 +8,7 @@
   "identifier_format": {
   },
   "readinput":{
+    "on": true,
     "expression": false,
     "literal": false
   }

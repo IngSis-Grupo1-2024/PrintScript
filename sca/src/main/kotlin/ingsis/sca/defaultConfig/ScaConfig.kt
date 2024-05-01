@@ -7,7 +7,7 @@ fun getDefaultBooleanValue(name: String): Boolean {
     return if (name == "identifier") {
         true
     } else if (name == "expression") {
-        true
+        false
     } else if (name == "literal") {
         true
     } else {

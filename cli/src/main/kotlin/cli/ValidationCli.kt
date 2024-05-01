@@ -1,20 +1,13 @@
 package cli
 
-import ingsis.components.Position
 import ingsis.components.Token
-import ingsis.formatter.PrintScriptFormatter
-import ingsis.interpreter.PrintScriptInterpreter
 import ingsis.interpreter.interpretStatement.Input
-import ingsis.lexer.PrintScriptLexer
-import ingsis.parser.PrintScriptParser
-import ingsis.sca.PrintScriptSca
 import ingsis.utils.OutputEmitter
 import java.io.FileInputStream
 import java.io.InputStream
 import java.nio.file.Path
 
 class ValidationCli(outputEmitter: OutputEmitter, version: Version, input: Input) : Cli(outputEmitter, version, input) {
-
     fun validateFile(filePath: Path): String {
         return validate(FileInputStream(filePath.toFile()))
     }

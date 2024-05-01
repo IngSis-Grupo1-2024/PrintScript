@@ -109,7 +109,6 @@ class CliFormatter {
         return errorCollector
     }
 
-
     private fun getString(inputStream: InputStream): List<String> {
         val inputReader = InputReader(inputStream)
         var line: String? = inputReader.nextLine()

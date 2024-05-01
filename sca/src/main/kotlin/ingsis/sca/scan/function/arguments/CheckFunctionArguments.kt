@@ -92,7 +92,7 @@ private fun isInMap(
     string: String,
     ruleMap: Map<String, Boolean>,
 ): Boolean {
-    return if (ruleMap.containsKey(string)) {
+    return if (ruleMap.containsKey(string) && ruleMap["on"]!!) {
         ruleMap[string]!!
     } else {
         getDefaultBooleanValue(string)
