@@ -94,6 +94,7 @@ abstract class Cli(outputEmitter: OutputEmitter, version: Version, input: Input)
     protected fun getIfStatement(): Statement = parser.getIfStatement()
 
     protected fun getFormatterMap(rulePath: String): Map<String, FormatterRule>{
+        if(rulePath == "") return emptyMap()
         val gson = Gson()
         val fileContent = getFileContent(rulePath)
         val typeToken : Type = object : TypeToken<Map<String, FormatterRule>>() {}.type

@@ -34,16 +34,9 @@ class FormatterCli(outputEmitter: OutputEmitter, version: Version, input: Input)
         val inputReader = InputReader(inputStream)
         var line: String? = inputReader.nextLine()
         val writer = FileWriter(output.toFile())
-        var string = ""
         while (line != null) {
-            if(line == "") {
-                writer.write("\n")
-                string += "\n"
-            }
-            else {
-                writer.write(line)
-                string += line
-            }
+            if(line == "") writer.write("\n")
+            else writer.write(line + "\n")
             line = inputReader.nextLine()
         }
         writer.close()
@@ -107,7 +100,7 @@ class FormatterCli(outputEmitter: OutputEmitter, version: Version, input: Input)
         statements: List<Statement?>,
         ruleMap:  Map<String, FormatterRule>,
     ): ByteArrayInputStream {
-        val result = format(statements, ruleMap)
+        val result : String = format(statements, ruleMap)
         return ByteArrayInputStream(result.toByteArray())
     }
 }

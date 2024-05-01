@@ -1,5 +1,5 @@
 const booleanValue: boolean  =  true;
-if{
+if(booleanValue){
 
 
 	println('if statement working correctly');

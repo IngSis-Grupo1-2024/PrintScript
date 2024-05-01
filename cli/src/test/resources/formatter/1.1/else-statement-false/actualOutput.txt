@@ -1,8 +1,12 @@
 const booleanResult: boolean  =  false;
-if{
+if(booleanResult){
 
 
-	println(else statement not working correctly trying);
+	println('else statement not working correctly');
+} else{
+
+
+	println('else statement working correctly');
 }
 
-println(outside of conditional);
+println('outside of conditional');
