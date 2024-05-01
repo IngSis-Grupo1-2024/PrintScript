@@ -1,22 +1,22 @@
 {
   "afterDeclaration": {
-    "on": true,
+    "on": false,
     "quantity": 1
   },
   "beforeDeclaration": {
-    "on": true,
+    "on": false,
     "quantity": 0
   },
   "assignation": {
-    "on": true,
+    "on": false,
     "quantity": 2
   },
   "println": {
-    "on": true,
+    "on": false,
     "quantity": 2
   },
   "if": {
-    "on": true,
+    "on": false,
     "quantity": 1
   }
 

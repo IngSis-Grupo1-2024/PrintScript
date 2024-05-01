@@ -2,12 +2,12 @@
   "println": {
     "expression": false,
     "identifier": false,
-    "literal": true
+    "literal": false
   },
   "identifier_format": {
   },
   "readinput":{
     "expression": false,
-    "literal": true
+    "literal": false
   }
 }

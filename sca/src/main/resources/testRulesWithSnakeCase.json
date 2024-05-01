@@ -5,6 +5,7 @@
     "literal": true
   },
   "identifier_format": {
+    "format": "snake case"
   },
   "readinput":{
     "expression": false,

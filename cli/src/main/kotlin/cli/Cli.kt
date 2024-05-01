@@ -4,6 +4,7 @@ import ingsis.components.Position
 import ingsis.components.Token
 import ingsis.components.statement.Statement
 import ingsis.formatter.PrintScriptFormatter
+import ingsis.formatter.utils.readJsonAndStackMap
 import ingsis.interpreter.PrintScriptInterpreter
 import ingsis.interpreter.interpretStatement.Input
 import ingsis.lexer.PrintScriptLexer
@@ -11,6 +12,7 @@ import ingsis.parser.PrintScriptParser
 import ingsis.parser.error.ParserError
 import ingsis.sca.PrintScriptSca
 import ingsis.utils.OutputEmitter
+import ingsis.utils.ReadScaRulesFile
 import ingsis.utils.Result
 import java.io.FileInputStream
 import java.io.InputStream
@@ -172,7 +174,7 @@ class Cli(outputEmitter: OutputEmitter, version: Version, input: Input) {
         statements.forEach { statement ->
             if (statement != null) {
                 result.append(
-                    formatter.format(statement, rulePath),
+                    formatter.format(statement, readJsonAndStackMap(rulePath)),
                 )
             }
         }
@@ -224,12 +226,14 @@ class Cli(outputEmitter: OutputEmitter, version: Version, input: Input) {
         statements: List<Statement?>,
         rulePath: String,
     ): StringBuilder {
+        val rules = ReadScaRulesFile()
+        rules.readSCARulesAndStackMap(rulePath)
         statements.forEach { statement ->
             if (statement != null) {
                 result.append(
                     sca.analyze(
                         statement,
-                        rulePath,
+                        rules,
                     ),
                 )
             }
