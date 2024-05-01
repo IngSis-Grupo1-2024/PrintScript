@@ -34,35 +34,33 @@ class ScanIf : ScanStatement {
     ): String {
         val value = ValueExtractor(ifStatement.getComparison()).getValue()
         val formatter = PrintScriptFormatter.createFormatter("VERSION_2")
-        var string = "if(${value}){\n"
+        var string = "if($value){\n"
         string += formatBlock(ifStatement.getIfBlock(), ruleMap, tabs, formatter)
         string += "}"
-        if (ifStatement.getElseStatement().isNotEmpty()){
+        if (ifStatement.getElseStatement().isNotEmpty()) {
             string += buildBlockWithoutCondition(ifStatement.getElseStatement(), tabs, ruleMap, "else")
         }
         return string
-
     }
 
     private fun buildBlockWithoutCondition(
         ifBlock: List<Statement>,
         tabs: String,
         ruleMap: Map<String, FormatterRule>,
-        type: String
+        type: String,
     ): String {
         val formatter = PrintScriptFormatter.createFormatter("VERSION_2")
-        var string = " ${type}{\n"
+        var string = " $type{\n"
         string += formatBlock(ifBlock, ruleMap, tabs, formatter)
         string += "}"
         return string
-
     }
 
     private fun formatBlock(
         ifBlock: List<Statement>,
         ruleMap: Map<String, FormatterRule>,
         tabs: String,
-        formatter: Formatter
+        formatter: Formatter,
     ): String {
         var string1 = ""
         for (statement in ifBlock) {

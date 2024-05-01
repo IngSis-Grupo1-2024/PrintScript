@@ -356,12 +356,13 @@ class FormatterTest {
         val ifStatement = If(booleanTrue, elseStatement, listOf(declaration, function))
         val expected =
             "if(true){\n" +
-                    "\tlet x: number;\n\n\n" +
-                    "\tprintln('4');\n" +
-                    "} else{\n\n\n" +
-                    "\tprintln('4');\n}"
+                "\tlet x: number;\n\n\n" +
+                "\tprintln('4');\n" +
+                "} else{\n\n\n" +
+                "\tprintln('4');\n}"
         assertEquals(expected, formatter.format(ifStatement, readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")))
     }
+
     @Test
     fun testIfWithTabsFromRulesAndOperator() {
         val scanners = listOf(ScanIf())
@@ -382,9 +383,9 @@ class FormatterTest {
         val ifStatement = If(comparison, elseStatement, listOf(declaration, function))
         val expected =
             "if(4 < 5){\n" +
-                    "\tlet x: number;\n\n\n" +
-                    "\tprintln('4');\n" +
-                    "}"
+                "\tlet x: number;\n\n\n" +
+                "\tprintln('4');\n" +
+                "}"
         assertEquals(expected, formatter.format(ifStatement, readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")))
     }
 }
