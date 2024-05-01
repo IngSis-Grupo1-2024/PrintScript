@@ -1,8 +1,0 @@
-const booleanValue: boolean  =  true;
-if{
-
-
-	println(if statement working correctly);
-}
-
-println(outside of conditional);

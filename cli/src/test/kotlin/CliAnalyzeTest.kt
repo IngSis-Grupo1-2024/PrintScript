@@ -12,7 +12,7 @@ import java.nio.file.Path
 import java.util.*
 import kotlin.io.path.Path
 
-class CliFormatter {
+class CliAnalyzeTest {
     @Test
     fun testFormatWithInputStream() {
         val data = data()
@@ -129,8 +129,8 @@ class CliFormatter {
             Pair("1.0", "string-and-number-concat"),
             Pair("1.1", "if-statement-true"),
             Pair("1.1", "if-statement-false"),
-//            Pair("1.1", "else-statement-true"),
-//            Pair("1.1", "else-statement-false"),
+            Pair("1.1", "else-statement-true"),
+            Pair("1.1", "else-statement-false"),
             Pair("1.1", "read-input"),
         )
     }
