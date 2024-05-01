@@ -1,6 +1,7 @@
 package app
 
 import cli.AnalyzeCli
+import cli.FormatterCli
 import cli.Version
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
@@ -36,9 +37,9 @@ class Analyzer : CliktCommand(help = "Analyze a PrintScript script file") {
     override fun run() {
         startAnalyzerCli()
         if (outputPresent()) {
-            analyzeCli.analyzeFileInFileOutput(rulesSCA.toString(), fileInput.readText(), fileOutput!!.toString())
+            analyzeCli.analyzeFileInFileOutput(rulesSCA.toString(), fileInput, fileOutput!!)
         } else {
-            print(analyzeCli.analyzeFile(rulesSCA.toString(), fileInput.readText()))
+            print(analyzeCli.analyzeFile(rulesSCA.toString(), fileInput))
         }
     }
 

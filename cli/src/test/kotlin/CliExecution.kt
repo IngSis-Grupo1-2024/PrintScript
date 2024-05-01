@@ -19,7 +19,7 @@ class CliExecution {
         for ((version, fileName) in data) {
             val testDirectory = "src/test/resources/print-statement/$version/$fileName/"
             val srcFile = File(testDirectory + "main.ps")
-            val expectedOutput: List<String> = readLines(testDirectory + "expectedOutput.txt")
+            val expectedOutput: List<String> = readLines(testDirectory + "output.txt")
             val input: List<String> = readLinesIfExists(testDirectory + "input.txt").orElse(emptyList())
 
             var errorCollector = ErrorCollector()

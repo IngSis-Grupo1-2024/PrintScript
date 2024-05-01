@@ -7,7 +7,6 @@ import ingsis.interpreter.interpretStatement.Input
 import ingsis.parser.error.ParserError
 import ingsis.utils.OutputEmitter
 import java.io.*
-import java.nio.charset.StandardCharsets
 import java.nio.file.Path
 
 class FormatterCli(outputEmitter: OutputEmitter, version: Version, input: Input) : Cli(outputEmitter, version, input) {
@@ -35,9 +34,16 @@ class FormatterCli(outputEmitter: OutputEmitter, version: Version, input: Input)
         val inputReader = InputReader(inputStream)
         var line: String? = inputReader.nextLine()
         val writer = FileWriter(output.toFile())
+        var string = ""
         while (line != null) {
-            if(line == "") writer.write("\n")
-            else writer.write(line + "\n")
+            if(line == "") {
+                writer.write("\n")
+                string += "\n"
+            }
+            else {
+                writer.write(line)
+                string += line
+            }
             line = inputReader.nextLine()
         }
         writer.close()

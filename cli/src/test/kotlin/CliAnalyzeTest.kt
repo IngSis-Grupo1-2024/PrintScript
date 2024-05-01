@@ -8,6 +8,7 @@ import util.PrintCollector
 import util.QueueInputProvider
 import util.Queues
 import java.io.*
+import java.nio.file.Files.readAllLines
 import java.nio.file.Path
 import java.util.*
 import kotlin.io.path.Path
@@ -17,9 +18,9 @@ class CliAnalyzeTest {
     fun testFormatWithInputStream() {
         val data = data()
         for ((version, fileName) in data) {
-            val testDirectory = "src/test/resources/formatter/$version/$fileName/"
+            val testDirectory = "src/test/resources/analyze/$version/$fileName/"
             val srcFile = File(testDirectory + "main.ps")
-            val expectedOutput: List<String> = readLines(testDirectory + "expectedOutput.txt")
+            val expectedOutput: List<String> = readLinesIfExists(testDirectory + "expectedOutput.txt").orElse(emptyList())
             val input: List<String> = readLinesIfExists(testDirectory + "input.txt").orElse(emptyList())
             val rulePath: String = getRulePath(testDirectory + "rulePath.txt")
 
@@ -28,14 +29,14 @@ class CliAnalyzeTest {
             val printCollector = PrintCollector()
 
             val fileInputStream = FileInputStream(srcFile)
-            val formatterCli = createFormatter(version, inputProvider, printCollector)
+            val analyzeCli = createAnalyzer(version, inputProvider, printCollector)
 
-            val pair = format(formatterCli, errorCollector, fileInputStream, rulePath)
+            val pair = format(analyzeCli, errorCollector, fileInputStream, rulePath)
             errorCollector = pair.first
             val formatOutput = pair.second
 
             assertThat(errorCollector.errors, CoreMatchers.`is`(emptyList<Any>()))
-            assertThat(formatOutput, CoreMatchers.`is`(expectedOutput))
+            assertThat(formatOutput.lines(), CoreMatchers.`is`(expectedOutput))
         }
     }
 
@@ -43,10 +44,10 @@ class CliAnalyzeTest {
     fun testFormatWithOutputFile() {
         val data = data()
         for ((version, fileName) in data) {
-            val testDirectory = "src/test/resources/formatter/$version/$fileName/"
+            val testDirectory = "src/test/resources/analyze/$version/$fileName/"
 
             val srcFile = Path(testDirectory + "main.ps")
-            val expectedOutput: List<String> = readLines(testDirectory + "expectedOutput.txt")
+            val expectedOutput: List<String> = readLinesIfExists(testDirectory + "expectedOutput.txt").orElse(emptyList())
             val actualOutputFile = Path(testDirectory + "actualOutput.txt")
             val input: List<String> = readLinesIfExists(testDirectory + "input.txt").orElse(emptyList())
             val rulePath: String = getRulePath(testDirectory + "rulePath.txt")
@@ -55,9 +56,9 @@ class CliAnalyzeTest {
             val inputProvider = QueueInputProvider(Queues.toQueue(input))
             val printCollector = PrintCollector()
 
-            val formatterCli = createFormatter(version, inputProvider, printCollector)
+            val formatterCli = createAnalyzer(version, inputProvider, printCollector)
 
-            errorCollector = formatInFile(formatterCli, errorCollector, srcFile, actualOutputFile, rulePath)
+            errorCollector = analyzeInFile(formatterCli, errorCollector, srcFile, actualOutputFile, rulePath)
 
             val actualOutput = readLinesIfExists(testDirectory + "actualOutput.txt").orElse(emptyList())
 
@@ -66,41 +67,41 @@ class CliAnalyzeTest {
         }
     }
 
-    private fun createFormatter(
+    private fun createAnalyzer(
         version: String,
         inputProvider: QueueInputProvider,
         printCollector: PrintCollector,
-    ): FormatterCli {
-        val v = if (version == "1/0") Version.VERSION_1 else Version.VERSION_2
-        return FormatterCli(printCollector, v, inputProvider)
+    ): AnalyzeCli {
+        val v = if (version == "1.0") Version.VERSION_1 else Version.VERSION_2
+        return AnalyzeCli(printCollector, v, inputProvider)
     }
 
     private fun format(
-        formatterCli: FormatterCli,
+        analyzeCli: AnalyzeCli,
         errorCollector: ErrorCollector,
         fileInputStream: FileInputStream,
         rulePath: String,
-    ): Pair<ErrorCollector, List<String>> {
-        var inputStream: InputStream = ByteArrayInputStream("".toByteArray())
+    ): Pair<ErrorCollector, String> {
+        var string = ""
         try {
-            inputStream = formatterCli.formatInputStream(rulePath, fileInputStream)
+            string = analyzeCli.analyzeInputStream(rulePath, fileInputStream)
         } catch (e: Exception) {
             errorCollector.reportError(e.localizedMessage)
         } catch (e: Error) {
             errorCollector.reportError(e.localizedMessage)
         }
-        return Pair(errorCollector, getString(inputStream))
+        return Pair(errorCollector, string)
     }
 
-    private fun formatInFile(
-        formatterCli: FormatterCli,
+    private fun analyzeInFile(
+        analyzeCli: AnalyzeCli,
         errorCollector: ErrorCollector,
         fileInput: Path,
         fileOutput: Path,
         rulePath: String,
     ): ErrorCollector {
         try {
-            formatterCli.formatFileResultInOutput(rulePath, fileInput, fileOutput)
+            analyzeCli.analyzeFileInFileOutput(rulePath, fileInput, fileOutput)
         } catch (e: Exception) {
             errorCollector.reportError(e.localizedMessage)
         } catch (e: Error) {
@@ -123,15 +124,9 @@ class CliAnalyzeTest {
 
     private fun data(): List<Pair<String, String>> {
         return listOf(
-            Pair("1.0", "arithmetic-operations"),
-            Pair("1.0", "arithmetic-operations-decimal"),
-            Pair("1.0", "simple-declare-assign"),
-            Pair("1.0", "string-and-number-concat"),
-            Pair("1.1", "if-statement-true"),
-            Pair("1.1", "if-statement-false"),
-            Pair("1.1", "else-statement-true"),
-            Pair("1.1", "else-statement-false"),
-            Pair("1.1", "read-input"),
+            Pair("1.0", "printWithExpression"),
+            Pair("1.0", "printWithLiteral"),
+            Pair("1.0", "writeInSnakeCase"),
         )
     }
 
@@ -148,12 +143,13 @@ class CliAnalyzeTest {
     private fun readLinesIfExists(filePath: String): Optional<List<String>> {
         val file = File(filePath)
         if (file.exists()) {
-            val s = Scanner(file)
-            val list = ArrayList<String>()
-            while (s.hasNextLine()) {
-                list.add(s.nextLine())
-            }
-            s.close()
+            val list = file.readText().lines()
+//            val s = Scanner(file)
+//            val list = ArrayList<String>()
+//            while (s.hasNextLine()) {
+//                list.add(s.nextLine())
+//            }
+//            s.close()
             return Optional.of(list)
         }
 
@@ -165,7 +161,7 @@ class CliAnalyzeTest {
         return if (file.exists()) {
             filePath
         } else {
-            "../formatter/src/main/kotlin/ingsis/formatter/rules/rules.json"
+            "../sca/src/main/resources/rules.json"
         }
     }
 }

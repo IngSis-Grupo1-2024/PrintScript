@@ -102,8 +102,7 @@ abstract class Cli(outputEmitter: OutputEmitter, version: Version, input: Input)
 
     protected fun getSCAMap(rulePath: String): ReadScaRulesFile{
         val ruleMap = ReadScaRulesFile()
-        val fileContent = getFileContent(rulePath)
-        ruleMap.readSCARulesAndStackMap(fileContent)
+        ruleMap.readSCARulesAndStackMap(rulePath)
         return ruleMap
     }
 
