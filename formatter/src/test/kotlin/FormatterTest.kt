@@ -53,7 +53,7 @@ class FormatterTest {
         val elseStatement = Else(listOf())
         val ifStatement = If(booleanTrue, elseStatement, listOf(declaration, function))
         val expected =
-            "if{\n" +
+            "if(true){\n" +
                 "\tlet x: number;\n\n\n" +
                 "\tprintln(4);\n" +
                 "}"
@@ -338,7 +338,57 @@ class FormatterTest {
         val elseStatement = Else(listOf())
         val ifStatement = If(booleanTrue, elseStatement, listOf(declaration, function))
         val expected =
-            "if{\n" +
+            "if(true){\n" +
+                "\tlet x: number;\n\n\n" +
+                "\tprintln('4');\n" +
+                "}"
+        assertEquals(expected, formatter.format(ifStatement, readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")))
+    }
+
+    @Test
+    fun testIfAndElseWithTabsFromRules() {
+        val scanners = listOf(ScanIf())
+        val formatter = Formatter(scanners)
+        val booleanTrue = SingleValue(Token(Position(), "true", TokenType.BOOLEAN))
+        val keyword = Keyword(Modifier.MUTABLE, "let", Position())
+        val variable = Variable("x", Position(5, 5, 1, 1, 5, 5))
+        val type = Type(TokenType.INTEGER, Position(14, 14, 1, 1, 14, 14))
+        val position = Position(8, 8, 1, 1, 8, 8)
+        val declaration = Declaration(keyword, variable, type, position)
+        val token = Token(Position(8, 8, 1, 1, 8, 8), "4", TokenType.STRING)
+        val value = SingleValue(token)
+        val function = PrintLine(Position(0, 6, 1, 1, 0, 6), value)
+        val elseStatement = Else(listOf(function))
+        val ifStatement = If(booleanTrue, elseStatement, listOf(declaration, function))
+        val expected =
+            "if(true){\n" +
+                "\tlet x: number;\n\n\n" +
+                "\tprintln('4');\n" +
+                "} else{\n\n\n" +
+                "\tprintln('4');\n}"
+        assertEquals(expected, formatter.format(ifStatement, readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")))
+    }
+
+    @Test
+    fun testIfWithTabsFromRulesAndOperator() {
+        val scanners = listOf(ScanIf())
+        val formatter = Formatter(scanners)
+        val four = Token(Position(3, 3, 1, 1, 3, 3), "4", TokenType.INTEGER)
+        val plus = Token(Position(4, 4, 1, 1, 4, 4), "<", TokenType.OPERATOR)
+        val five = Token(Position(5, 5, 1, 1, 5, 5), "5", TokenType.INTEGER)
+        val comparison = Operator(plus, Operator(four), Operator(five))
+        val keyword = Keyword(Modifier.MUTABLE, "let", Position())
+        val variable = Variable("x", Position(5, 5, 1, 1, 5, 5))
+        val type = Type(TokenType.INTEGER, Position(14, 14, 1, 1, 14, 14))
+        val position = Position(8, 8, 1, 1, 8, 8)
+        val declaration = Declaration(keyword, variable, type, position)
+        val token = Token(Position(8, 8, 1, 1, 8, 8), "4", TokenType.STRING)
+        val value = SingleValue(token)
+        val function = PrintLine(Position(0, 6, 1, 1, 0, 6), value)
+        val elseStatement = Else(listOf())
+        val ifStatement = If(comparison, elseStatement, listOf(declaration, function))
+        val expected =
+            "if(4 < 5){\n" +
                 "\tlet x: number;\n\n\n" +
                 "\tprintln('4');\n" +
                 "}"
