@@ -1,0 +1,8 @@
+const booleanResult: boolean  =  true;
+if{
+
+
+	println(else statement working correctly);
+}
+
+println(outside of conditional);
