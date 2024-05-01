@@ -29,7 +29,7 @@ class ScanPrintLine(private val scanValue: ScanValue) : ScanStatement {
     override fun canHandleWODelimiter(tokens: List<Token>): Boolean {
         if (tokens.size < functionTypes.size + 1) return false
         val tokenTypes = getTokenTypes(tokens)
-        if (hasFunctionTypes(tokenTypes)) {
+        if (hasFunctionTypes(tokenTypes) && isPrintLine(tokens)) {
             if (!hasLastParenthesis(tokens)) {
                 throw ParserError(
                     ":error: ')' expected.",
@@ -43,6 +43,9 @@ class ScanPrintLine(private val scanValue: ScanValue) : ScanStatement {
 
         return false
     }
+
+    private fun isPrintLine(tokens: List<Token>): Boolean =
+        tokens[0].getValue() == "println"
 
     override fun makeAST(tokens: List<Token>): Statement {
         val printLinePosition = tokens[0].getPosition()
