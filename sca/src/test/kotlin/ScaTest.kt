@@ -4,11 +4,15 @@ import ingsis.components.Token
 import ingsis.components.TokenType
 import ingsis.components.statement.*
 import ingsis.sca.Sca
+import ingsis.sca.defaultConfig.getDefaultBooleanValue
+import ingsis.sca.defaultConfig.getDefaultCase
 import ingsis.sca.scan.ScanIdentifierCase
 import ingsis.sca.scan.ScanPrintLine
 import ingsis.sca.scan.ScanReadInput
+import ingsis.sca.scan.cases.ScanCamelCase
 import ingsis.utils.ReadScaRulesFile
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class ScaTest {
@@ -215,5 +219,14 @@ class ScaTest {
             "COMPOUND_ASSIGNATION_READ_INPUT with INTEGER is not allowed at line 1 and column 1\n",
             sca.analyze(assignationReadInput, ruleMap),
         )
+    }
+
+    @Test
+    fun testDefaultConfigFile() {
+        assertEquals(true, getDefaultBooleanValue("identifier"))
+        assertEquals(true, getDefaultBooleanValue("expression"))
+        assertEquals(true, getDefaultBooleanValue("literal"))
+        assertEquals(false, getDefaultBooleanValue("invalid"))
+        assertEquals(ScanCamelCase::class, getDefaultCase()::class)
     }
 }

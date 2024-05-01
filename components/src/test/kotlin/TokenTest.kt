@@ -13,4 +13,13 @@ class TokenTest {
         assertEquals(TokenType.ASSIGNATION, token.getType())
         assertEquals(Position(), token.getPosition())
     }
+
+    @Test
+    fun testCopyAToken() {
+        val token = Token(Position(), "=", TokenType.ASSIGNATION)
+        val copy = token.copy()
+        assertEquals(token.getValue(), copy.getValue())
+        assertEquals(token.getType(), copy.getType())
+        assertEquals(token.getPosition(), copy.getPosition())
+    }
 }
