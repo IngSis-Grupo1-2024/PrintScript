@@ -71,14 +71,14 @@ class FormatterTest {
     fun testFormatWithSimpleDeclaration() {
         val scanners = listOf(ScanDeclaration())
         val formatter = Formatter(scanners)
-        val keyword = Keyword(Modifier.MUTABLE, "let", Position())
+        val keyword = Keyword(Modifier.IMMUTABLE, "const", Position())
         val variable = Variable("x", Position(5, 5, 1, 1, 5, 5))
         val type = Type(TokenType.INTEGER, Position(14, 14, 1, 1, 14, 14))
         val position = Position(8, 8, 1, 1, 8, 8)
         val declaration = Declaration(keyword, variable, type, position)
         val ruleMap = readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")
         val result = formatter.format(declaration, ruleMap)
-        val expected = "let x: number;\n"
+        val expected = "const x: number;\n"
         assertEquals(expected, result)
     }
 
@@ -134,13 +134,13 @@ class FormatterTest {
         val variable = Variable("x", Position(1, 1, 1, 1, 1, 1))
         val four = Token(Position(3, 3, 1, 1, 3, 3), "4", TokenType.INTEGER)
         val plus = Token(Position(4, 4, 1, 1, 4, 4), "+", TokenType.INTEGER)
-        val five = Token(Position(5, 5, 1, 1, 5, 5), "5", TokenType.INTEGER)
+        val five = Token(Position(5, 5, 1, 1, 5, 5), "5", TokenType.STRING)
         val value = Operator(plus, Operator(four), Operator(five))
         val position = Position(2, 2, 1, 1, 2, 2)
         val assignation = Assignation(position, variable, value)
         val ruleMap = readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")
         val result = formatter.format(assignation, ruleMap)
-        val expected = "x  =  4 + 5;\n"
+        val expected = "x  =  4 + '5';\n"
         assertEquals(expected, result)
     }
 
@@ -149,8 +149,9 @@ class FormatterTest {
         val scanners = listOf(ScanCompoundAssignation())
         val formatter = Formatter(scanners)
         val int = Token(Position(16, 16, 1, 1, 1, 1), "4", TokenType.INTEGER)
+
         val value = SingleValue(int)
-        val keyword = Keyword(Modifier.MUTABLE, "let", Position())
+        val keyword = Keyword(Modifier.IMMUTABLE, "const", Position())
         val variable = Variable("x", Position(5, 5, 1, 1, 5, 5))
         val type = Type(TokenType.INTEGER, Position(14, 14, 1, 1, 14, 14))
         val declarationPosition = Position(8, 8, 1, 1, 8, 8)
@@ -159,7 +160,123 @@ class FormatterTest {
         val compoundAssignation = CompoundAssignation(assignationPosition, declaration, value)
         val ruleMap = readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")
         val result = formatter.format(compoundAssignation, ruleMap)
-        val expected = "let x: number  =  4;\n"
+        val expected = "const x: number  =  4;\n"
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun testReadInputInAssignation() {
+        val scanners = listOf(ScanCompoundAssignation(), ScanReadInput())
+        val formatter = Formatter(scanners)
+        val variable = Variable("x", Position(5, 5, 1, 1, 5, 5))
+        val int = Token(Position(16, 16, 1, 1, 1, 1), "4", TokenType.INTEGER)
+        val value = SingleValue(int)
+        val readInput = AssignationReadInput(Position(), variable, value)
+        val ruleMap = readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")
+        val result = formatter.format(readInput, ruleMap)
+        val expected = "x  =  readInput(4);\n"
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun testReadEnvInAssignation() {
+        val scanners = listOf(ScanReadEnv())
+        val formatter = Formatter(scanners)
+        val variable = Variable("x", Position(5, 5, 1, 1, 5, 5))
+        val readEnv = AssignationReadEnv(Position(), variable, "TOKEN")
+        val ruleMap = readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")
+        val result = formatter.format(readEnv, ruleMap)
+        val expected = "x  =  readEnv(\"TOKEN\");\n"
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun testReadEnvInCompoundAssignation() {
+        val scanners = listOf(ScanReadEnv())
+        val formatter = Formatter(scanners)
+        val keyword = Keyword(Modifier.IMMUTABLE, "const", Position())
+        val variable = Variable("x", Position(5, 5, 1, 1, 5, 5))
+        val type = Type(TokenType.INTEGER, Position(14, 14, 1, 1, 14, 14))
+        val declarationPosition = Position(8, 8, 1, 1, 8, 8)
+        val declaration = Declaration(keyword, variable, type, declarationPosition)
+        val readEnv = CompoundAssignationReadEnv(Position(), declaration, "MY_TOKEN")
+        val ruleMap = readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")
+        val result = formatter.format(readEnv, ruleMap)
+        val expected = "const x: number  =  readEnv(\"MY_TOKEN\");\n"
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun testReadInputCompoundAssignation() {
+        val scanners = listOf(ScanDeclaration(), ScanReadInput())
+        val keyword = Keyword(Modifier.IMMUTABLE, "const", Position())
+        val variable = Variable("x", Position(5, 5, 1, 1, 5, 5))
+        val type = Type(TokenType.INTEGER, Position(14, 14, 1, 1, 14, 14))
+        val declarationPosition = Position(8, 8, 1, 1, 8, 8)
+        val declaration = Declaration(keyword, variable, type, declarationPosition)
+        val formatter = Formatter(scanners)
+        val int = Token(Position(16, 16, 1, 1, 1, 1), "4", TokenType.INTEGER)
+        val value = SingleValue(int)
+        val readInput = CompoundAssignationReadInput(Position(), declaration, value)
+        val ruleMap = readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")
+        val result = formatter.format(readInput, ruleMap)
+        val expected = "const x: number  =  readInput(4);\n"
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun testReadInputCompoundAssignationWithOperatorWithIntegerAndString() {
+        val scanners = listOf(ScanDeclaration(), ScanReadInput())
+        val keyword = Keyword(Modifier.IMMUTABLE, "const", Position())
+        val variable = Variable("x", Position(5, 5, 1, 1, 5, 5))
+        val type = Type(TokenType.INTEGER, Position(14, 14, 1, 1, 14, 14))
+        val declarationPosition = Position(8, 8, 1, 1, 8, 8)
+        val declaration = Declaration(keyword, variable, type, declarationPosition)
+        val formatter = Formatter(scanners)
+        val four = Token(Position(3, 3, 1, 1, 3, 3), "4", TokenType.INTEGER)
+        val plus = Token(Position(4, 4, 1, 1, 4, 4), "+", TokenType.INTEGER)
+        val five = Token(Position(5, 5, 1, 1, 5, 5), "5", TokenType.STRING)
+        val value = Operator(plus, Operator(four), Operator(five))
+        val readInput = CompoundAssignationReadInput(Position(), declaration, value)
+        val ruleMap = readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")
+        val result = formatter.format(readInput, ruleMap)
+        val expected = "const x: number  =  readInput(4 + '5');\n"
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun testReadInputCompoundAssignationWithOperatorWithIntegers() {
+        val scanners = listOf(ScanDeclaration(), ScanReadInput())
+        val keyword = Keyword(Modifier.IMMUTABLE, "const", Position())
+        val variable = Variable("x", Position(5, 5, 1, 1, 5, 5))
+        val type = Type(TokenType.INTEGER, Position(14, 14, 1, 1, 14, 14))
+        val declarationPosition = Position(8, 8, 1, 1, 8, 8)
+        val declaration = Declaration(keyword, variable, type, declarationPosition)
+        val formatter = Formatter(scanners)
+        val four = Token(Position(3, 3, 1, 1, 3, 3), "4", TokenType.INTEGER)
+        val plus = Token(Position(4, 4, 1, 1, 4, 4), "+", TokenType.INTEGER)
+        val five = Token(Position(5, 5, 1, 1, 5, 5), "5", TokenType.INTEGER)
+        val value = Operator(plus, Operator(four), Operator(five))
+        val readInput = CompoundAssignationReadInput(Position(), declaration, value)
+        val ruleMap = readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")
+        val result = formatter.format(readInput, ruleMap)
+        val expected = "const x: number  =  readInput(4 + 5);\n"
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun testReadInputInAssignationWithOperator() {
+        val scanners = listOf(ScanCompoundAssignation(), ScanReadInput())
+        val formatter = Formatter(scanners)
+        val variable = Variable("x", Position(5, 5, 1, 1, 5, 5))
+        val four = Token(Position(3, 3, 1, 1, 3, 3), "4", TokenType.INTEGER)
+        val plus = Token(Position(4, 4, 1, 1, 4, 4), "+", TokenType.INTEGER)
+        val five = Token(Position(5, 5, 1, 1, 5, 5), "5", TokenType.STRING)
+        val value = Operator(plus, Operator(four), Operator(five))
+        val readInput = AssignationReadInput(Position(), variable, value)
+        val ruleMap = readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")
+        val result = formatter.format(readInput, ruleMap)
+        val expected = "x  =  readInput(4 + '5');\n"
         assertEquals(expected, result)
     }
 
@@ -209,7 +326,7 @@ class FormatterTest {
         val type = Type(TokenType.INTEGER, Position(14, 14, 1, 1, 14, 14))
         val position = Position(8, 8, 1, 1, 8, 8)
         val declaration = Declaration(keyword, variable, type, position)
-        val token = Token(Position(8, 8, 1, 1, 8, 8), "4", TokenType.INTEGER)
+        val token = Token(Position(8, 8, 1, 1, 8, 8), "4", TokenType.STRING)
         val value = SingleValue(token)
         val function = PrintLine(Position(0, 6, 1, 1, 0, 6), value)
         val elseStatement = Else(listOf())
@@ -217,7 +334,7 @@ class FormatterTest {
         val expected =
             "if{\n" +
                 "\tlet x: number;\n\n\n" +
-                "\tprintln(4);\n" +
+                "\tprintln('4');\n" +
                 "}"
         assertEquals(expected, formatter.format(ifStatement, readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")))
     }
