@@ -1,0 +1,5 @@
+let someNumber: number  =  1;
+let someString: string  =  'hello world ';
+
+
+println(someString + someNumber);

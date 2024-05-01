@@ -22,7 +22,6 @@ class CliValidation {
             val validationCli = createValidationCli(version)
             errorCollector = validate(validationCli, errorCollector, fileInputStream)
             val shouldBeValid = fileName.startsWith("valid")
-            print(shouldBeValid)
             val errorMatcher = getErrorMatcherForExpectedResult(shouldBeValid)
             assertThat(errorCollector.errors, errorMatcher)
         }

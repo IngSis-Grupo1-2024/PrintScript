@@ -17,7 +17,7 @@ class Format : CliktCommand(help = "Formats a PrintScript script file") {
         .help { "the file path for the PrintScript code" }
 
     private val version by argument()
-        .choice("v1")
+        .choice("v1", "v2")
         .help { "the version of the printscript" }
 
     private val fileOutput by argument()
@@ -48,5 +48,6 @@ class Format : CliktCommand(help = "Formats a PrintScript script file") {
         if (version == "v1") {
             formatter = FormatterCli(PrintOutputEmitter(), Version.VERSION_1, InputEmitter())
         }
+        else formatter = FormatterCli(PrintOutputEmitter(), Version.VERSION_2, InputEmitter())
     }
 }
