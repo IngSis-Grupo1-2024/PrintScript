@@ -1,14 +1,8 @@
 package appTest
 
-import cli.Version
 import ingsis.parser.error.ParserError
-import org.hamcrest.CoreMatchers
-import org.hamcrest.MatcherAssert.assertThat
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import util.AnalyzeKT
-import util.FormatKT
 import util.ValidateKT
 import java.io.File
 import java.io.FileNotFoundException
@@ -16,16 +10,17 @@ import java.util.*
 
 class ValidationTest {
     private val validate = ValidateKT()
+
     @Test
     fun `v1 - test 01 - print line with one operator`() {
         val data = data()
-        for((version, direc) in data){
+        for ((version, direc) in data) {
             val versionCommand = getVersion(version)
             val testDirectory = "src/test/resources/validation/$version/$direc/"
             val srcFile = testDirectory + "main.ps"
             val actualOutputFile = testDirectory + "actualOutput.txt"
             val shouldBeValid = direc.startsWith("valid")
-            if(!shouldBeValid){
+            if (!shouldBeValid) {
                 println(srcFile)
                 assertThrows<ParserError> {
                     validate.validate("validate", srcFile, versionCommand, actualOutputFile)
@@ -35,8 +30,11 @@ class ValidationTest {
     }
 
     private fun getVersion(version: String): String {
-        return if(version == "1/0") "v1"
-        else "v2"
+        return if (version == "1/0") {
+            "v1"
+        } else {
+            "v2"
+        }
     }
 
     private fun data(): List<Pair<String, String>> {

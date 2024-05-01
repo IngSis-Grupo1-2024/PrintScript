@@ -122,9 +122,9 @@ class CliAnalyzeTest {
 
     private fun data(): List<Pair<String, String>> {
         return listOf(
-//            Pair("1.0", "printWithExpression"),
-//            Pair("1.0", "printWithLiteral"),
-//            Pair("1.0", "writeInSnakeCase"),
+            Pair("1.0", "printWithExpression"),
+            Pair("1.0", "printWithLiteral"),
+            Pair("1.0", "writeInSnakeCase"),
             Pair("1.1", "readInputWithExpression"),
         )
     }

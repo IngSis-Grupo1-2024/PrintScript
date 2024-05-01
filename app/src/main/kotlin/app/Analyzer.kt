@@ -4,12 +4,10 @@ import cli.AnalyzeCli
 import cli.Version
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
-import com.github.ajalt.clikt.parameters.arguments.default
 import com.github.ajalt.clikt.parameters.arguments.help
 import com.github.ajalt.clikt.parameters.arguments.optional
 import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.clikt.parameters.types.path
-import kotlin.io.path.Path
 
 class Analyzer : CliktCommand(help = "Analyze a PrintScript script file") {
     private val fileInput by argument()
@@ -35,20 +33,21 @@ class Analyzer : CliktCommand(help = "Analyze a PrintScript script file") {
     override fun run() {
         startAnalyzerCli()
         if (outputPresent()) {
-            if(rulePathPresent())
+            if (rulePathPresent()) {
                 analyzeCli.analyzeFileInFileOutput(rulesSCA.toString(), fileInput, fileOutput!!)
-            else analyzeCli.analyzeFileInFileOutput("", fileInput, fileOutput!!)
-
+            } else {
+                analyzeCli.analyzeFileInFileOutput("", fileInput, fileOutput!!)
+            }
         } else {
-            if(rulePathPresent())
+            if (rulePathPresent()) {
                 print(analyzeCli.analyzeFile(rulesSCA.toString(), fileInput))
-            else
+            } else {
                 print(analyzeCli.analyzeFile("", fileInput))
+            }
         }
     }
 
-    private fun rulePathPresent(): Boolean =
-        rulesSCA != null
+    private fun rulePathPresent(): Boolean = rulesSCA != null
 
     private fun outputPresent(): Boolean = fileOutput != null
 

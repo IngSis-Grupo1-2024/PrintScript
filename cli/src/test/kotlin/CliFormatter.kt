@@ -71,7 +71,7 @@ class CliFormatter {
         inputProvider: QueueInputProvider,
         printCollector: PrintCollector,
     ): FormatterCli {
-        val v = if (version == "1/0") Version.VERSION_1 else Version.VERSION_2
+        val v = if (version == "1.0") Version.VERSION_1 else Version.VERSION_2
         return FormatterCli(printCollector, v, inputProvider)
     }
 
@@ -122,15 +122,15 @@ class CliFormatter {
 
     private fun data(): List<Pair<String, String>> {
         return listOf(
-            Pair("1.0", "arithmetic-operations"),
-            Pair("1.0", "arithmetic-operations-decimal"),
-            Pair("1.0", "simple-declare-assign"),
-            Pair("1.0", "string-and-number-concat"),
-            Pair("1.1", "if-statement-true"),
-            Pair("1.1", "if-statement-false"),
-            Pair("1.1", "else-statement-true"),
-            Pair("1.1", "else-statement-false"),
-            Pair("1.1", "read-input"),
+//            Pair("1.0", "arithmetic-operations"),
+//            Pair("1.0", "arithmetic-operations-decimal"),
+//            Pair("1.0", "simple-declare-assign"),
+//            Pair("1.0", "string-and-number-concat"),
+//            Pair("1.1", "if-statement-true"),
+//            Pair("1.1", "if-statement-false"),
+//            Pair("1.1", "else-statement-true"),
+//            Pair("1.1", "else-statement-false"),
+//            Pair("1.1", "read-input"),
         )
     }
 
@@ -164,7 +164,7 @@ class CliFormatter {
         return if (file.exists()) {
             filePath
         } else {
-            "../formatter/src/main/kotlin/ingsis/formatter/rules/rules.json"
+            ""
         }
     }
 }

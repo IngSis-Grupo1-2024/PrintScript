@@ -1,6 +1,5 @@
 package appTest
 
-import cli.Version
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.Test
@@ -11,10 +10,11 @@ import java.util.*
 
 class FormatterTest {
     private val formatter = FormatKT()
+
     @Test
     fun `v1 - test 01 - print line with one operator`() {
         val data = data()
-        for((version, direc) in data){
+        for ((version, direc) in data) {
             val versionCommand = getVersion(version)
             val testDirectory = "src/test/resources/formatter/$version/$direc/"
             val srcFile = testDirectory + "main.ps"
@@ -26,14 +26,16 @@ class FormatterTest {
 
             val actualOutput = readLinesIfExists(testDirectory + "actualOutput.txt").orElse(emptyList())
 
-
             assertThat(actualOutput, CoreMatchers.`is`(expectedOutput))
         }
     }
 
     private fun getVersion(version: String): String {
-        return if(version == "1.0") "v1"
-        else "v2"
+        return if (version == "1.0") {
+            "v1"
+        } else {
+            "v2"
+        }
     }
 
     private fun data(): List<Pair<String, String>> {

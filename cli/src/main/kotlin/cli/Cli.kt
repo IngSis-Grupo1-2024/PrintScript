@@ -106,7 +106,7 @@ abstract class Cli(outputEmitter: OutputEmitter, version: Version, input: Input)
             return ReadScaRulesFile()
         }
         val ruleMap = ReadScaRulesFile()
-        if(rulePath == "") return ruleMap
+        if (rulePath == "") return ruleMap
         ruleMap.readSCARulesAndStackMap(rulePath)
         return ruleMap
     }

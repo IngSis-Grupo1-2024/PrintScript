@@ -1,5 +1,4 @@
-let result: number;
-result  =  5;
-
+let result : number;
+result = 5;
 
 println(result);

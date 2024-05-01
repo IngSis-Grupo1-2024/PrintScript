@@ -9,7 +9,7 @@ class FormatKT() {
         inputFilePath: String,
         version: String,
         outputFilePath: String,
-        ruleFilePath: String
+        ruleFilePath: String,
     ) {
         App()
             .subcommands(Validate(), Execution(), Analyzer(), Format())

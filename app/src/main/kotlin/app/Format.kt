@@ -47,7 +47,8 @@ class Format : CliktCommand(help = "Formats a PrintScript script file") {
     private fun startFormatter() {
         if (version == "v1") {
             formatter = FormatterCli(PrintOutputEmitter(), Version.VERSION_1, InputEmitter())
+        } else {
+            formatter = FormatterCli(PrintOutputEmitter(), Version.VERSION_2, InputEmitter())
         }
-        else formatter = FormatterCli(PrintOutputEmitter(), Version.VERSION_2, InputEmitter())
     }
 }
