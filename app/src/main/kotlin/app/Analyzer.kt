@@ -1,8 +1,6 @@
 package app
 
-import cli.Cli
-import cli.InputEmitter
-import cli.PrintOutputEmitter
+import cli.AnalyzeCli
 import cli.Version
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
@@ -33,22 +31,22 @@ class Analyzer : CliktCommand(help = "Analyze a PrintScript script file") {
         .help { "OPTIONAL: this are the rules for the SCA" }
         .default(Path("../sca/src/main/resources/rules.json"))
 
-    private lateinit var cli: Cli
+    private lateinit var analyzeCli: AnalyzeCli
 
     override fun run() {
-        startCli()
+        startAnalyzerCli()
         if (outputPresent()) {
-            cli.analyzeFileInFileOutput(rulesSCA.toString(), fileInput.readText(), fileOutput!!.toString())
+            analyzeCli.analyzeFileInFileOutput(rulesSCA.toString(), fileInput.readText(), fileOutput!!.toString())
         } else {
-            print(cli.analyzeFile(rulesSCA.toString(), fileInput.readText()))
+            print(analyzeCli.analyzeFile(rulesSCA.toString(), fileInput.readText()))
         }
     }
 
     private fun outputPresent(): Boolean = fileOutput != null
 
-    private fun startCli() {
+    private fun startAnalyzerCli() {
         if (version == "v1") {
-            cli = Cli(PrintOutputEmitter(), Version.VERSION_1, InputEmitter())
+            analyzeCli = AnalyzeCli(PrintOutputEmitter(), Version.VERSION_1, InputEmitter())
         }
     }
 }
