@@ -16,7 +16,7 @@ publishing {
     }
     publications {
         create<MavenPublication>("maven") {
-            version = "1.1.3-SNAPSHOT"
+            version = "1.1.4-SNAPSHOT"
             from(components["java"])
         }
     }
