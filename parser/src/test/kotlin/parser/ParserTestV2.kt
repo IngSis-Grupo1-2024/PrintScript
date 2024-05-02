@@ -781,4 +781,26 @@ class ParserTestV2 {
         parserV2.parse(elseTokensDeclaration)
         assertEquals(listOf(astExpected).toString(), parserV2.parse(elseTokensLastBraces).toString())
     }
+
+    @Test
+    fun `test 025 - function read input with an string as value in simple assignation`() {
+        val tokens =
+            listOf(
+                Token(position, "readInput", TokenType.FUNCTION),
+                Token(position, "(", TokenType.PARENTHESIS),
+                Token(position, "this is a text", TokenType.STRING),
+                Token(position, ")", TokenType.PARENTHESIS),
+                Token(position, ";", TokenType.DELIMITER),
+            )
+        val astExpected: Statement =
+            PrintLine(
+                position,
+                SingleValue(Token(position, "this is a text", TokenType.STRING)),
+            )
+        val exception = assertThrows<ParserError> { parserV2.parse(tokens) }
+        assertEquals(
+            "PrintScript couldn't parse that code.",
+            exception.message,
+        )
+    }
 }

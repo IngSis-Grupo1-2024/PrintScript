@@ -7,6 +7,9 @@ plugins {
 }
 
 dependencies {
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.1.0")
+    testImplementation("junit:junit:4.13.1")
+    implementation("com.google.code.gson:gson:2.8.9")
     api(project(":components"))
     api(project(":sca"))
     api(project(":lexer"))

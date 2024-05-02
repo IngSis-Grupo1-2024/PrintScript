@@ -4,6 +4,7 @@ import ingsis.components.statement.Statement
 import ingsis.sca.result.InvalidResult
 import ingsis.sca.scan.ScanIdentifierCase
 import ingsis.sca.scan.ScanPrintLine
+import ingsis.sca.scan.ScanReadInput
 import ingsis.sca.scan.ScanStatement
 import ingsis.utils.ReadScaRulesFile
 
@@ -15,6 +16,14 @@ object PrintScriptSca {
                     listOf(
                         ScanPrintLine(arrayListOf(TokenType.INTEGER, TokenType.STRING)),
                         ScanIdentifierCase(),
+                    ),
+                )
+            "VERSION_2" ->
+                Sca(
+                    listOf(
+                        ScanPrintLine(arrayListOf(TokenType.INTEGER, TokenType.STRING)),
+                        ScanIdentifierCase(),
+                        ScanReadInput(arrayListOf(TokenType.INTEGER, TokenType.STRING)),
                     ),
                 )
             else ->
@@ -35,20 +44,12 @@ class Sca(private val scanners: List<ScanStatement>) {
 
     fun analyze(
         statement: Statement,
-        jsonPath: String,
+        rules: ReadScaRulesFile,
     ): String {
         val result = StringBuilder()
-        var jsonReader = ReadScaRulesFile()
-        try {
-            jsonReader.readSCARulesAndStackMap(jsonPath)
-        } catch (
-            e: Exception,
-        ) {
-            println("Error reading the rules file")
-        }
         for (scan in scanners) {
             if (scan.canHandle(statement)) {
-                when (val scanResult = scan.analyze(statement, jsonReader)) {
+                when (val scanResult = scan.analyze(statement, rules)) {
                     is InvalidResult -> {
                         result.append(
                             "${scanResult.getMessage()} at line " +

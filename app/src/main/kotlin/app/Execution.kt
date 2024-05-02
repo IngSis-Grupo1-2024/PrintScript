@@ -1,8 +1,6 @@
 package app
 
-import cli.Cli
-import cli.InputEmitter
-import cli.PrintOutputEmitter
+import cli.ExecutionCli
 import cli.Version
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
@@ -25,14 +23,14 @@ class Execution : CliktCommand(help = "Executes a PrintScript script file") {
         .help { "OPTIONAL: the file where the output will be put" }
         .optional()
 
-    private lateinit var cli: Cli
+    private lateinit var executionCli: ExecutionCli
 
     override fun run() {
         startCli()
 //        if (outputPresent()) {
 //            cli.startCliResultInFile(fileInput.readText(), fileOutput!!.toString())
 //        } else {
-        cli.executeFile(fileInput)
+        executionCli.executeFile(fileInput)
 //        }
     }
 
@@ -40,8 +38,8 @@ class Execution : CliktCommand(help = "Executes a PrintScript script file") {
 
     private fun startCli() {
         if (version == "v1") {
-            cli = Cli(PrintOutputEmitter(), Version.VERSION_1, InputEmitter())
+            executionCli = ExecutionCli(PrintOutputEmitter(), Version.VERSION_1, InputEmitter())
         }
-        cli = Cli(PrintOutputEmitter(), Version.VERSION_2, InputEmitter())
+        executionCli = ExecutionCli(PrintOutputEmitter(), Version.VERSION_2, InputEmitter())
     }
 }

@@ -1,2 +1,9 @@
 let x : number = 1 + 2;
-println(1 + x);
+let y: number = x + 4;
+println(y);
+
+if(true){
+    println("hola maxi");
+}else{
+    println("hola mati");
+}

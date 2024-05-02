@@ -10,6 +10,8 @@ plugins {
 }
 
 dependencies {
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.1.0")
+    testImplementation("junit:junit:4.13.1")
     api(project(":cli"))
     implementation("com.github.ajalt.clikt:clikt:4.3.0")
 }

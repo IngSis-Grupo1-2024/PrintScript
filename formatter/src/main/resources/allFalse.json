@@ -1,0 +1,23 @@
+{
+  "afterDeclaration": {
+    "on": false,
+    "quantity": 1
+  },
+  "beforeDeclaration": {
+    "on": false,
+    "quantity": 0
+  },
+  "assignation": {
+    "on": false,
+    "quantity": 2
+  },
+  "println": {
+    "on": false,
+    "quantity": 2
+  },
+  "if": {
+    "on": false,
+    "quantity": 1
+  }
+
+}

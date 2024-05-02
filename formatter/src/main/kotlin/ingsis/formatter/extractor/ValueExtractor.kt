@@ -1,5 +1,7 @@
 package ingsis.formatter.extractor
 
+import ingsis.components.Token
+import ingsis.components.TokenType
 import ingsis.components.statement.Operator
 import ingsis.components.statement.Value
 
@@ -18,10 +20,17 @@ class ValueExtractor(private val value: Value) {
         if (!value.isLeaf()) {
             val operator = value as Operator
             inorderTraversalHelper(operator.getLeftOperator(), stringBuilder)
-            stringBuilder.append(operator.getToken().getValue()).append(" ")
+            stringBuilder.append(checkIfString(operator.getToken())).append(" ")
             inorderTraversalHelper(operator.getRightOperator(), stringBuilder)
         } else {
-            stringBuilder.append((value.getToken()).getValue()).append(" ")
+            stringBuilder.append(checkIfString(value.getToken())).append(" ")
         }
+    }
+
+    private fun checkIfString(valueToken: Token): String {
+        if (valueToken.getType() == TokenType.STRING) {
+            return "'${valueToken.getValue()}'"
+        }
+        return valueToken.getValue()
     }
 }

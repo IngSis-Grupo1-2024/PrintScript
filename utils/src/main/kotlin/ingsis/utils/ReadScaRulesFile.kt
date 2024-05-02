@@ -6,12 +6,8 @@ import java.io.File
 
 class ReadScaRulesFile() {
     private var printLnRuleMap = HashMap<String, Boolean>()
+    private var readInputRuleMap = HashMap<String, Boolean>()
     private var identifierFormat = String()
-
-    constructor(printLnRuleMap: HashMap<String, Boolean>, identifierFormat: String) : this() {
-        this.printLnRuleMap = printLnRuleMap
-        this.identifierFormat = identifierFormat
-    }
 
     fun readSCARulesAndStackMap(jsonPath: String) {
         val objectMapper = jacksonObjectMapper()
@@ -21,6 +17,8 @@ class ReadScaRulesFile() {
                 handlePrintln(ruleProps)
             } else if (ruleName == "identifier_format") {
                 handleIdentifierFormat(ruleProps)
+            } else if (ruleName == "readinput") {
+                handleReadInput(ruleProps)
             }
         }
     }
@@ -40,6 +38,18 @@ class ReadScaRulesFile() {
             printLnMap[value] = printLnOptions.getValue(value) as Boolean
         }
         printLnRuleMap = printLnMap
+    }
+
+    private fun handleReadInput(readInputOptions: Map<String, Any>) {
+        val readInputMap = HashMap<String, Boolean>()
+        for (value in readInputOptions.keys) {
+            readInputMap[value] = readInputOptions.getValue(value) as Boolean
+        }
+        readInputRuleMap = readInputMap
+    }
+
+    fun getFunctionRuleMap(): HashMap<String, Boolean> {
+        return readInputRuleMap
     }
 
     fun getPrintLnRuleMap(): HashMap<String, Boolean> {

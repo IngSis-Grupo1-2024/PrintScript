@@ -13,15 +13,3 @@ fun main(args: Array<String>) {
         .subcommands(Validate(), Execution(), Analyzer(), Format())
         .main(args)
 }
-
-class Exec() {
-    fun execute(
-        command: String,
-        inputFilePath: String,
-        version: String,
-    ) {
-        App()
-            .subcommands(Validate(), Execution(), Analyzer(), Format())
-            .main(listOf(command, inputFilePath, version))
-    }
-}

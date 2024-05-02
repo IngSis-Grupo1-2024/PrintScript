@@ -1,8 +1,6 @@
 package app
 
-import cli.Cli
-import cli.InputEmitter
-import cli.PrintOutputEmitter
+import cli.FormatterCli
 import cli.Version
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
@@ -12,7 +10,6 @@ import com.github.ajalt.clikt.parameters.arguments.optional
 import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.clikt.parameters.types.path
 import kotlin.io.path.Path
-import kotlin.io.path.readText
 
 class Format : CliktCommand(help = "Formats a PrintScript script file") {
     private val fileInput by argument()
@@ -20,7 +17,7 @@ class Format : CliktCommand(help = "Formats a PrintScript script file") {
         .help { "the file path for the PrintScript code" }
 
     private val version by argument()
-        .choice("v1")
+        .choice("v1", "v2")
         .help { "the version of the printscript" }
 
     private val fileOutput by argument()
@@ -33,23 +30,25 @@ class Format : CliktCommand(help = "Formats a PrintScript script file") {
         .help { "OPTIONAL: this are the rules" }
         .default(Path("../formatter/src/main/kotlin/ingsis/formatter/rules/rules.json"))
 
-    private lateinit var cli: Cli
+    private lateinit var formatter: FormatterCli
 
     override fun run() {
-        startCli()
+        startFormatter()
 
         if (outputPresent()) {
-            cli.format(rulesFormatter.toString(), fileInput.readText(), fileOutput!!)
+            formatter.formatFileResultInOutput(rulesFormatter.toString(), fileInput, fileOutput!!)
         } else {
-            cli.format(rulesFormatter.toString(), fileInput.readText(), fileInput)
+            formatter.formatFile(rulesFormatter.toString(), fileInput)
         }
     }
 
     private fun outputPresent(): Boolean = fileOutput != null
 
-    private fun startCli() {
+    private fun startFormatter() {
         if (version == "v1") {
-            cli = Cli(PrintOutputEmitter(), Version.VERSION_1, InputEmitter())
+            formatter = FormatterCli(PrintOutputEmitter(), Version.VERSION_1, InputEmitter())
+        } else {
+            formatter = FormatterCli(PrintOutputEmitter(), Version.VERSION_2, InputEmitter())
         }
     }
 }

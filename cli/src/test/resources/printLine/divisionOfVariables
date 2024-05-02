@@ -1,7 +1,0 @@
-let x: number = 10;
-let y: number = 20;
-println(y / x);
-
-let a: string = "co";
-let b: string = "ni";
-println(a / b);

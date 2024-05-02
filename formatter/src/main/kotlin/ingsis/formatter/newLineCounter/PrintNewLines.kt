@@ -8,7 +8,7 @@ class PrintNewLines(
     private val ruleMap: Map<String, FormatterRule>,
 ) {
     fun getPrintlnLines(): String {
-        return if (ruleMap["println"]!!.isOn()) {
+        return if (ruleMap.containsKey("println") && ruleMap["println"]!!.isOn()) {
             generateNewLines(ruleMap["println"]!!.quantity)
         } else {
             generateNewLines(getDefaultPrintlnNewLines())
