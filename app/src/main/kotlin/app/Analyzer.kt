@@ -54,6 +54,8 @@ class Analyzer : CliktCommand(help = "Analyze a PrintScript script file") {
     private fun startAnalyzerCli() {
         if (version == "v1") {
             analyzeCli = AnalyzeCli(PrintOutputEmitter(), Version.VERSION_1, InputEmitter())
+        } else if (version == "v2") {
+            analyzeCli = AnalyzeCli(PrintOutputEmitter(), Version.VERSION_2, InputEmitter())
         }
     }
 }

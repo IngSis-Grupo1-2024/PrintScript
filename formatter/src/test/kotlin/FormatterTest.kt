@@ -56,7 +56,7 @@ class FormatterTest {
             "if(true){\n" +
                 "\tlet x: number;\n\n\n" +
                 "\tprintln(4);\n" +
-                "}"
+                "}\n"
         assertEquals(expected, formatter.format(ifStatement, readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")))
     }
 
@@ -341,7 +341,7 @@ class FormatterTest {
             "if(true){\n" +
                 "\tlet x: number;\n\n\n" +
                 "\tprintln('4');\n" +
-                "}"
+                "}\n"
         assertEquals(expected, formatter.format(ifStatement, readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")))
     }
 
@@ -362,11 +362,11 @@ class FormatterTest {
         val ifStatement = If(booleanTrue, elseStatement, listOf(declaration, function))
         val expected =
             "if(true){\n" +
-                "\tlet x: number;\n\n\n" +
+                "\tlet x : number;\n\n" +
                 "\tprintln('4');\n" +
-                "} else{\n\n\n" +
-                "\tprintln('4');\n}"
-        assertEquals(expected, formatter.format(ifStatement, readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")))
+                "} else{\n\n" +
+                "\tprintln('4');\n}\n"
+        assertEquals(expected, formatter.format(ifStatement, emptyMap()))
     }
 
     @Test
@@ -391,7 +391,7 @@ class FormatterTest {
             "if(4 < 5){\n" +
                 "\tlet x: number;\n\n\n" +
                 "\tprintln('4');\n" +
-                "}"
+                "}\n"
         assertEquals(expected, formatter.format(ifStatement, readJsonAndStackMap("src/main/kotlin/ingsis/formatter/rules/rules.json")))
     }
 

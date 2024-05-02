@@ -38,9 +38,9 @@ class ScanIf : ScanStatement {
         string += formatBlock(ifStatement.getIfBlock(), ruleMap, tabs, formatter)
         string += "}"
         if (ifStatement.getElseStatement().isNotEmpty()) {
-            string += buildBlockWithoutCondition(ifStatement.getElseStatement(), tabs, ruleMap, "else")
+            return string + buildBlockWithoutCondition(ifStatement.getElseStatement(), tabs, ruleMap, "else")
         }
-        return string
+        return string + "\n"
     }
 
     private fun buildBlockWithoutCondition(
@@ -52,7 +52,7 @@ class ScanIf : ScanStatement {
         val formatter = PrintScriptFormatter.createFormatter("VERSION_2")
         var string = " $type{\n"
         string += formatBlock(ifBlock, ruleMap, tabs, formatter)
-        string += "}"
+        string += "}\n"
         return string
     }
 

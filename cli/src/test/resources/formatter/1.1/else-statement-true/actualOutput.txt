@@ -1,10 +1,8 @@
-const booleanResult: boolean  =  true;
+const booleanResult : boolean = true;
 if(booleanResult){
-
 
 	println('else statement working correctly');
 } else{
-
 
 	println('else statement not working correctly');
 }

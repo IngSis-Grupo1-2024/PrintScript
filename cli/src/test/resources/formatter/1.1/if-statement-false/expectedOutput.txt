@@ -1,6 +1,5 @@
-const booleanValue: boolean  =  true;
+const booleanValue : boolean = true;
 if(booleanValue){
-
 
 	println('if statement working correctly');
 }

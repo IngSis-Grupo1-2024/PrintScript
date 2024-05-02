@@ -122,15 +122,15 @@ class CliFormatter {
 
     private fun data(): List<Pair<String, String>> {
         return listOf(
-//            Pair("1.0", "arithmetic-operations"),
-//            Pair("1.0", "arithmetic-operations-decimal"),
-//            Pair("1.0", "simple-declare-assign"),
-//            Pair("1.0", "string-and-number-concat"),
-//            Pair("1.1", "if-statement-true"),
-//            Pair("1.1", "if-statement-false"),
-//            Pair("1.1", "else-statement-true"),
-//            Pair("1.1", "else-statement-false"),
-//            Pair("1.1", "read-input"),
+            Pair("1.0", "arithmetic-operations"),
+            Pair("1.0", "arithmetic-operations-decimal"),
+            Pair("1.0", "simple-declare-assign"),
+            Pair("1.0", "string-and-number-concat"),
+            Pair("1.1", "if-statement-true"),
+            Pair("1.1", "if-statement-false"),
+            Pair("1.1", "else-statement-true"),
+            Pair("1.1", "else-statement-false"),
+            Pair("1.1", "read-input"),
         )
     }
 
