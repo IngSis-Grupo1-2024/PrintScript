@@ -39,7 +39,8 @@ class Execution : CliktCommand(help = "Executes a PrintScript script file") {
     private fun startCli() {
         if (version == "v1") {
             executionCli = ExecutionCli(PrintOutputEmitter(), Version.VERSION_1, InputEmitter())
+        } else if (version == "v2") {
+            executionCli = ExecutionCli(PrintOutputEmitter(), Version.VERSION_2, InputEmitter())
         }
-        executionCli = ExecutionCli(PrintOutputEmitter(), Version.VERSION_2, InputEmitter())
     }
 }
