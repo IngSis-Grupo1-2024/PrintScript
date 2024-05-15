@@ -7,7 +7,7 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/maxigeist/PrintScript")
+            url = uri("https://maven.pkg.github.com/IngSis-Grupo1-2024/PrintScript")
             credentials {
                 username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_AUTHOR")
                 password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
